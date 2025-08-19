@@ -37,8 +37,7 @@
     {#each dashboardApps as app}
       <div class="app-card" on:click={() => launchApp(app)} role="button" tabindex="0">
         <div class="app-icon">{app.icon}</div>
-        <div class="app-name">{app.name} <button>:</button> </div>
-
+        <div class="app-name">{app.name} <button class="app-menu">:</button> </div>
       </div>
     {/each}
   </div>
