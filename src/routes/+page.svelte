@@ -60,15 +60,18 @@
     </div>
   {/if}
 
-  {#each $windows as win (win.id)}
-    <Window {...win} onClose={closeWindow}>
-      {#if win.iframeSrc}
-        <iframe src={win.iframeSrc} title={win.title} />
-      {:else}
-        <p>{win.content}</p>
-      {/if}
-    </Window>
-  {/each}
+  <!-- Fenster nur im Desktop-Modus anzeigen -->
+  {#if $currentView === 'desktop'}
+    {#each $windows as win (win.id)}
+      <Window {...win} onClose={closeWindow}>
+        {#if win.iframeSrc}
+          <iframe src={win.iframeSrc} title={win.title} />
+        {:else}
+          <p>{win.content}</p>
+        {/if}
+      </Window>
+    {/each}
+  {/if}
 </div>
 
 <style>

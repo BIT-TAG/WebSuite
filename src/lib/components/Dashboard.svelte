@@ -43,10 +43,10 @@
     closeMenu();
     
     switch(action) {
-      case 'open':
+      case 'window':
         launchApp(app);
         break;
-      case 'openNewTab':
+      case 'tab':
         window.open(app.url, '_blank');
         break;
       case 'info':
@@ -93,10 +93,10 @@
             </button>
             {#if openMenuId === app.name}
               <div class="context-menu">
-                <button on:click={(e) => handleAppAction(app, 'open', e)}>
+                <button on:click={(e) => handleAppAction(app, 'window', e)}>
                   🖥️ Im Fenster öffnen
                 </button>
-                <button on:click={(e) => handleAppAction(app, 'openNewTab', e)}>
+                <button on:click={(e) => handleAppAction(app, 'tab', e)}>
                   🔗 In neuem Tab öffnen
                 </button>
                 <button on:click={(e) => handleAppAction(app, 'info', e)}>
@@ -110,10 +110,14 @@
     {/each}
   </div>
 
-  <div>
-    <div>
+  <div class="dashboard-stats">
+    <div class="stat-card">
       <h3>Offene Fenster</h3>
-      <div>{$windows.length}</div>
+      <div class="stat-value">{$windows.length}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Verfügbare Apps</h3>
+      <div class="stat-value">{dashboardApps.length}</div>
     </div>
   </div>
 </div>
