@@ -29,7 +29,7 @@
         class:active={$currentView === 'desktop'}
         on:click={switchToDesktop}
       >
-        🖥️ Desktop
+        🖥️ Desktop {$windows.length}
       </button>
       <button 
         class="nav-switch" 
