@@ -111,7 +111,7 @@
   </div>
 
   <div>
-    <div class="stat-card">
+    <div>
       <h3>Offene Fenster</h3>
       <div class="stat-value">{$windows.length}</div>
     </div>
