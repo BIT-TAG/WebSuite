@@ -113,7 +113,7 @@
   <div>
     <div>
       <h3>Offene Fenster</h3>
-      <div class="stat-value">{$windows.length}</div>
+      <div>{$windows.length}</div>
     </div>
   </div>
 </div>
