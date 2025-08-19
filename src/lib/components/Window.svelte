@@ -1,6 +1,8 @@
 <!-- src/lib/components/Window.svelte -->
 <script>
   import { moveWindow, bringToFront } from '$lib/stores/windows';
+  import { onMount, onDestroy } from 'svelte';
+  
   export let id;
   export let title;
   export let position;
@@ -17,6 +19,7 @@
       x: event.clientX - position.x,
       y: event.clientY - position.y
     };
+    event.preventDefault();
   }
 
   function handleMouseMove(event) {
@@ -32,19 +35,26 @@
     dragging = false;
   }
 
-  // globales Mouse-Handling
-  window.addEventListener('mousemove', handleMouseMove);
-  window.addEventListener('mouseup', handleMouseUp);
+  onMount(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  });
+  
+  onDestroy(() => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  });
 </script>
 
 <div
   class="window"
   style="left: {position.x}px; top: {position.y}px; z-index: {zIndex};"
-  on:mousedown={() => bringToFront(id)}
+  role="dialog"
+  aria-labelledby="title-{id}"
 >
-  <div class="titlebar" on:mousedown={handleMouseDown}>
-    <span>{title}</span>
-    <button on:click={() => onClose(id)}>✖</button>
+  <div class="titlebar" on:mousedown={handleMouseDown} role="none">
+    <span id="title-{id}">{title}</span>
+    <button on:click={() => onClose(id)} aria-label="Fenster schließen">✖</button>
   </div>
   <div class="content">
     <slot />
@@ -58,20 +68,41 @@
     height: 300px;
     background: white;
     border: 1px solid #ccc;
+    border-radius: 8px;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    resize: both;
+    min-width: 200px;
+    min-height: 150px;
   }
+  
   .titlebar {
-    background: #444;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 0.5rem;
     cursor: move;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     user-select: none;
   }
+  
+  .titlebar button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .titlebar button:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
   .content {
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.5rem);
     padding: 0.5rem;
+    overflow: auto;
   }
 </style>
