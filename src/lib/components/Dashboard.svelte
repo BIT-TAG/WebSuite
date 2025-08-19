@@ -110,7 +110,7 @@
     {/each}
   </div>
 
-  <div class="dashboard-stats">
+  <div>
     <div class="stat-card">
       <h3>Offene Fenster</h3>
       <div class="stat-value">{$windows.length}</div>
