@@ -1,28 +1,29 @@
 <!-- src/lib/components/Dashboard.svelte -->
 <script>
   import { windows, openWindow } from '$lib/stores/windows';
+  import { switchToDesktop } from '$lib/stores/view';
 
   const dashboardApps = [
     { name: 'Wikipedia', icon: '📚', url: 'https://de.wikipedia.org' },
-    { name: 'Calculator', icon: '🧮', content: 'Taschenrechner-App' },
-    { name: 'Notes', icon: '📝', content: 'Notizen-App' },
-    { name: 'Weather', icon: '🌤️', content: 'Wetter-App' },
-    { name: 'Calendar', icon: '📅', content: 'Kalender-App' },
-    { name: 'Music', icon: '🎵', content: 'Musik-App' }
+    { name: 'Calculator', icon: '🧮', url: 'https://www.calculator.net' },
+    { name: 'Notes', icon: '📝', url: 'https://keep.google.com' },
+    { name: 'Weather', icon: '🌤️', url: 'https://weather.com' },
+    { name: 'Calendar', icon: '📅', url: 'https://calendar.google.com' },
+    { name: 'Music', icon: '🎵', url: 'https://open.spotify.com' },
+    { name: 'YouTube', icon: '📺', url: 'https://youtube.com' },
+    { name: 'GitHub', icon: '💻', url: 'https://github.com' },
+    { name: 'Maps', icon: '🗺️', url: 'https://maps.google.com' }
   ];
 
   function launchApp(app) {
-    if (app.url) {
-      openWindow({
-        title: app.name,
-        iframeSrc: app.url
-      });
-    } else {
-      openWindow({
-        title: app.name,
-        content: app.content
-      });
-    }
+    // Fenster öffnen
+    openWindow({
+      title: app.name,
+      iframeSrc: app.url
+    });
+    
+    // Automatisch zum Desktop wechseln
+    switchToDesktop();
   }
 </script>
 
