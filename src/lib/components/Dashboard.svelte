@@ -115,10 +115,6 @@
       <h3>Offene Fenster</h3>
       <div class="stat-value">{$windows.length}</div>
     </div>
-    <div class="stat-card">
-      <h3>Verfügbare Apps</h3>
-      <div class="stat-value">{dashboardApps.length}</div>
-    </div>
   </div>
 </div>
 
