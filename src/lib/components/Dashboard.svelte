@@ -110,16 +110,6 @@
     {/each}
   </div>
 
-  <div class="dashboard-stats">
-    <div class="stat-card">
-      <h3>Offene Fenster</h3>
-      <div class="stat-value">{$windows.length}</div>
-    </div>
-    <div class="stat-card">
-      <h3>Verfügbare Apps</h3>
-      <div class="stat-value">{dashboardApps.length}</div>
-    </div>
-  </div>
 </div>
 
 <style>
@@ -244,36 +234,5 @@
 
   .context-menu button:not(:last-child) {
     border-bottom: 1px solid #eee;
-  }
-
-  .dashboard-stats {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .stat-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    padding: 1rem;
-    text-align: center;
-    flex: 1;
-    backdrop-filter: blur(10px);
-  }
-
-  .stat-card h3 {
-    margin: 0 0 0.5rem 0;
-    font-size: 0.8rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .stat-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #667eea;
   }
 </style>
