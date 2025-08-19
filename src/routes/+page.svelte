@@ -1,7 +1,9 @@
 <!-- src/routes/+page.svelte -->
 <script>
   import { windows, openWindow, closeWindow } from '$lib/stores/windows';
+  import { currentView, switchToDesktop, switchToDashboard } from '$lib/stores/view';
   import Window from '$lib/components/Window.svelte';
+  import Dashboard from '$lib/components/Dashboard.svelte';
 
   function openExample() {
     openWindow({
@@ -19,12 +21,44 @@
 </script>
 
 <div class="desktop">
-  <h1>Web Desktop</h1>
-  
-  <div class="taskbar">
-    <button on:click={openExample}>Fenster öffnen</button>
-    <button on:click={openIframeApp}>Wikipedia öffnen</button>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <div class="nav-switches">
+      <button 
+        class="nav-switch" 
+        class:active={$currentView === 'desktop'}
+        on:click={switchToDesktop}
+      >
+        🖥️ Desktop
+      </button>
+      <button 
+        class="nav-switch" 
+        class:active={$currentView === 'dashboard'}
+        on:click={switchToDashboard}
+      >
+        📊 Dashboard
+      </button>
+    </div>
   </div>
+
+  <!-- Content Area -->
+  <div class="content-area">
+    {#if $currentView === 'desktop'}
+      <div class="desktop-content">
+        <h1>Web Desktop</h1>
+      </div>
+    {:else}
+      <Dashboard />
+    {/if}
+  </div>
+  
+  <!-- Taskbar (nur im Desktop-Modus) -->
+  {#if $currentView === 'desktop'}
+    <div class="taskbar">
+      <button on:click={openExample}>Fenster öffnen</button>
+      <button on:click={openIframeApp}>Wikipedia öffnen</button>
+    </div>
+  {/if}
 
   {#each $windows as win (win.id)}
     <Window {...win} onClose={closeWindow}>
@@ -40,16 +74,71 @@
 <style>
   .desktop {
     height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
     position: relative;
     overflow: hidden;
+  }
+  
+  .nav-header {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+  }
+  
+  .nav-switches {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.25rem;
+  }
+  
+  .nav-switch {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .nav-switch:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  
+  .nav-switch.active {
+    background: white;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .content-area {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+  }
+  
+  .desktop-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   h1 {
     color: white;
     text-align: center;
-    padding: 1rem;
     margin: 0;
+    font-size: 3rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
   
   .taskbar {
