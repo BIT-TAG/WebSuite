@@ -13,13 +13,9 @@
 	const tabsContentVariants = tv({
 		base: "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 	});
-</script>
 
-<script lang="ts" context="module">
-	import type { ComponentType } from "svelte";
-	
 	export const Tabs = TabsPrimitive.Root;
-	export const TabsList: ComponentType<any> = TabsPrimitive.List;
-	export const TabsTrigger: ComponentType<any> = TabsPrimitive.Trigger;
-	export const TabsContent: ComponentType<any> = TabsPrimitive.Content;
+	export const TabsList = TabsPrimitive.List;
+	export const TabsTrigger = TabsPrimitive.Trigger;
+	export const TabsContent = TabsPrimitive.Content;
 </script>

@@ -9,7 +9,7 @@
   import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
   import PomodoroMenuBar from '$lib/components/PomodoroMenuBar.svelte';
   import SettingsPopup from '$lib/components/SettingsPopup.svelte';
-  import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '$lib/components/ui';
+  import { Button, Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
   import { Settings } from 'lucide-svelte';
   
   let showSettings = false;
@@ -39,32 +39,20 @@
   <!-- Navigation Header -->
   <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <div class="flex h-14 items-center justify-between px-6">
-      <Tabs value={$currentView} class="w-auto">
-        <TabsList class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-          <TabsTrigger 
-            value="desktop" 
-            on:click={switchToDesktop}
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
+      <Tabs value={$currentView}>
+        <TabsList>
+          <TabsTrigger value="desktop" on:click={switchToDesktop}>
             🖥️ Desktop
             {#if $windows.length > 0}
-              <span class="ml-1 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-primary text-primary-foreground">
+              <span class="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
                 {$windows.length}
               </span>
             {/if}
           </TabsTrigger>
-          <TabsTrigger 
-            value="dashboard" 
-            on:click={switchToDashboard}
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
+          <TabsTrigger value="dashboard" on:click={switchToDashboard}>
             📊 Dashboard
           </TabsTrigger>
-          <TabsTrigger 
-            value="kanban" 
-            on:click={switchToKanban}
-            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-          >
+          <TabsTrigger value="kanban" on:click={switchToKanban}>
             📋 Kanban
           </TabsTrigger>
         </TabsList>
@@ -76,7 +64,6 @@
           variant="ghost" 
           size="icon"
           on:click={() => showSettings = true}
-          class="h-10 w-10"
         >
           <Settings class="h-4 w-4"></Settings>
         </Button>

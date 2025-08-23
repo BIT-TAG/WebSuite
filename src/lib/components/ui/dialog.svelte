@@ -21,17 +21,13 @@
 	const descriptionVariants = tv({
 		base: "text-sm text-muted-foreground"
 	});
-</script>
 
-<script lang="ts" context="module">
-	import type { ComponentType } from "svelte";
-	
 	export const Dialog = DialogPrimitive.Root;
-	export const DialogTrigger: ComponentType<any> = DialogPrimitive.Trigger;
-	export const DialogContent: ComponentType<any> = DialogPrimitive.Content;
-	export const DialogHeader: ComponentType<any> = DialogPrimitive.Header;
-	export const DialogTitle: ComponentType<any> = DialogPrimitive.Title;
-	export const DialogDescription: ComponentType<any> = DialogPrimitive.Description;
-	export const DialogClose: ComponentType<any> = DialogPrimitive.Close;
-	export const DialogOverlay: ComponentType<any> = DialogPrimitive.Overlay;
+	export const DialogTrigger = DialogPrimitive.Trigger;
+	export const DialogContent = DialogPrimitive.Content;
+	export const DialogHeader = DialogPrimitive.Header;
+	export const DialogTitle = DialogPrimitive.Title;
+	export const DialogDescription = DialogPrimitive.Description;
+	export const DialogClose = DialogPrimitive.Close;
+	export const DialogOverlay = DialogPrimitive.Overlay;
 </script>
