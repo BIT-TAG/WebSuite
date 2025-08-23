@@ -66,10 +66,10 @@
     position: absolute;
     width: 400px;
     height: 300px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     overflow: hidden;
     resize: both;
     min-width: 200px;
@@ -77,8 +77,8 @@
   }
   
   .titlebar {
-    background: #3b82f6;
-    color: white;
+    background: var(--accent-color);
+    color: var(--accent-foreground);
     padding: 0.75rem 1rem;
     cursor: move;
     display: flex;
@@ -90,23 +90,24 @@
   }
   
   .titlebar button {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     border: none;
-    color: white;
+    color: var(--accent-foreground);
     padding: 0.375rem 0.625rem;
-    border-radius: 6px;
+    border-radius: calc(var(--radius) - 2px);
     cursor: pointer;
     font-size: 0.75rem;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .titlebar button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.25);
   }
   
   .content {
     height: calc(100% - 3rem);
     padding: 1rem;
     overflow: auto;
+    color: var(--text-primary);
   }
 </style>

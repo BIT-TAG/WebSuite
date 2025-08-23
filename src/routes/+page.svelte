@@ -110,22 +110,23 @@
   }
   
   .nav-header {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-light);
-    padding: 1rem 1.5rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   }
   
   .nav-switches {
     display: flex;
-    gap: 0.25rem;
-    background: var(--bg-tertiary);
-    border-radius: 12px;
-    padding: 0.375rem;
+    gap: 0.125rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    padding: 0.25rem;
+    border: 1px solid var(--border);
   }
   
   .nav-right {
@@ -136,49 +137,51 @@
   
   .nav-switch {
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.875rem;
-    font-weight: 400;
+    transition: all 150ms ease;
+    font-size: 0.8125rem;
+    font-weight: 500;
     white-space: nowrap;
+    position: relative;
   }
   
   .nav-switch:hover {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--bg-hover);
     color: var(--text-primary);
   }
   
   .nav-switch.active {
     background: var(--bg-primary);
     color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     font-weight: 500;
   }
   
   .settings-btn {
-    background: var(--bg-tertiary);
+    background: var(--bg-secondary);
     border: none;
-    color: var(--text-secondary);
-    padding: 0.625rem;
-    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.5rem;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 1.125rem;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
   
   .settings-btn:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
-    transform: rotate(90deg);
+    border-color: var(--border-medium);
   }
   
   .content-area {
@@ -202,11 +205,12 @@
   }
   
   h1 {
-    color: white;
+    color: var(--text-primary);
     text-align: center;
     margin: 0;
-    font-size: 2.5rem;
-    font-weight: 300;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
   
   .taskbar {
@@ -214,33 +218,39 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--bg-primary);
     padding: 0.5rem;
     display: flex;
     gap: 0.5rem;
+    border-top: 1px solid var(--border);
   }
   
   button {
     background: var(--accent-color);
-    color: white;
+    color: var(--accent-foreground);
     border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    transition: all 150ms ease;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
   
   button:hover {
     background: var(--accent-hover);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   }
   
   :global(body) {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-secondary);
     color: var(--text-primary);
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
   }
   
   :global(iframe) {
@@ -250,11 +260,7 @@
   }
   
   /* Dark theme support for nav header */
-  :global(.dark-theme) .nav-header {
-    background: rgba(15, 23, 42, 0.95);
-  }
-  
-  :global(.dark-theme) .nav-switch:hover {
-    background: rgba(51, 65, 85, 0.7);
+  :global(.dark-theme) .nav-switches {
+    background: var(--bg-tertiary);
   }
 </style>

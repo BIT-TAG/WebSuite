@@ -242,26 +242,26 @@
   
   .view-btn {
     background: transparent;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    border-radius: calc(var(--radius) - 2px);
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.875rem;
-    font-weight: 400;
+    transition: all 150ms ease;
+    font-size: 0.8125rem;
+    font-weight: 500;
     white-space: nowrap;
   }
   
   .view-btn:hover {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--bg-hover);
     color: var(--text-primary);
   }
   
   .view-btn.active {
     background: var(--bg-primary);
     color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     font-weight: 500;
   }
   
@@ -281,12 +281,12 @@
   .kanban-column {
     min-width: 320px;
     background: var(--bg-primary);
-    border-radius: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 
   .column-header {
@@ -295,7 +295,7 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border);
   }
 
   .column-header h3 {
@@ -307,9 +307,9 @@
 
   .card-count {
     background: var(--accent-color);
-    color: white;
+    color: var(--accent-foreground);
     padding: 0.375rem 0.75rem;
-    border-radius: 20px;
+    border-radius: calc(var(--radius) * 2);
     font-size: 0.75rem;
     font-weight: 500;
   }
@@ -325,18 +325,18 @@
 
   .kanban-card {
     background: var(--bg-primary);
-    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     cursor: grab;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 150ms ease;
   }
 
   .kanban-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-    border-color: var(--border-medium);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transform: translateY(-1px);
+    border-color: var(--accent-color);
   }
 
   .kanban-card:active {
@@ -365,34 +365,34 @@
   }
   
   .pomodoro-btn {
-    background: #fef3c7;
+    background: hsl(54 91.7% 95.3%);
     border: none;
-    color: #d97706;
+    color: hsl(24.6 95% 53.1%);
     padding: 0.375rem;
-    border-radius: 6px;
+    border-radius: calc(var(--radius) - 2px);
     cursor: pointer;
     font-size: 0.75rem;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .pomodoro-btn:hover {
-    background: #fde68a;
+    background: hsl(54 91.7% 90%);
     transform: scale(1.05);
   }
   
   .delete-btn {
-    background: #fef2f2;
+    background: hsl(0 85.7% 97.3%);
     border: none;
-    color: #dc2626;
+    color: hsl(0 84.2% 60.2%);
     padding: 0.375rem;
-    border-radius: 6px;
+    border-radius: calc(var(--radius) - 2px);
     cursor: pointer;
     font-size: 0.75rem;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
 
   .delete-btn:hover {
-    background: #fecaca;
+    background: hsl(0 85.7% 92%);
   }
 
   .card-description {
@@ -410,48 +410,48 @@
   
   .priority-badge {
     padding: 0.25rem 0.625rem;
-    border-radius: 12px;
+    border-radius: calc(var(--radius) * 2);
     font-size: 0.75rem;
     font-weight: 500;
-    color: white;
+    color: var(--accent-foreground);
   }
   
   .priority-high {
-    background: #ef4444;
+    background: hsl(0 84.2% 60.2%);
   }
   
   .priority-medium {
-    background: #f59e0b;
+    background: hsl(24.6 95% 53.1%);
   }
   
   .priority-low {
-    background: #10b981;
+    background: hsl(142.1 76.2% 36.3%);
   }
   
   .assignee-badge {
-    background: var(--bg-tertiary);
-    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
     padding: 0.25rem 0.625rem;
-    border-radius: 12px;
+    border-radius: calc(var(--radius) * 2);
     font-size: 0.75rem;
   }
 
   .add-card-form {
     background: var(--bg-hover);
-    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.25rem;
-    border: 2px dashed var(--border-medium);
   }
 
   .card-input, .card-textarea {
     width: 100%;
-    border: 1px solid var(--border-light);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 0.75rem;
     margin-bottom: 0.75rem;
     font-family: inherit;
     font-size: 0.875rem;
-    transition: border-color 0.2s ease;
+    transition: all 150ms ease;
     background: var(--bg-primary);
     color: var(--text-primary);
   }
@@ -459,7 +459,7 @@
   .card-input:focus, .card-textarea:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px var(--accent-light);
+    box-shadow: 0 0 0 2px var(--accent-color);
   }
 
   .form-buttons {
@@ -470,46 +470,46 @@
   .save-btn, .cancel-btn {
     padding: 0.625rem 1.25rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
 
   .save-btn {
-    background: #10b981;
-    color: white;
+    background: hsl(142.1 76.2% 36.3%);
+    color: var(--accent-foreground);
   }
 
   .save-btn:hover {
-    background: #059669;
+    background: hsl(142.1 76.2% 31%);
   }
 
   .cancel-btn {
-    background: #ef4444;
-    color: white;
+    background: hsl(0 84.2% 60.2%);
+    color: var(--accent-foreground);
   }
 
   .cancel-btn:hover {
-    background: #dc2626;
+    background: hsl(0 84.2% 55%);
   }
 
   .add-card-btn {
     width: 100%;
     padding: 1rem;
     background: var(--bg-hover);
-    border: 2px dashed var(--accent-color);
-    border-radius: 12px;
+    border: 1px dashed var(--accent-color);
+    border-radius: var(--radius);
     color: var(--accent-color);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
 
   .add-card-btn:hover {
-    background: var(--accent-light);
+    background: var(--bg-primary);
     border-style: solid;
   }
 </style>

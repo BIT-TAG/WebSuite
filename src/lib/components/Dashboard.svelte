@@ -151,31 +151,31 @@
 
   .app-card {
     background: var(--bg-primary);
-    border-radius: 16px;
-    padding: 2rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 2px solid transparent;
+    transition: all 150ms ease;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     position: relative;
   }
 
   .app-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: var(--border-medium);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-color: var(--accent-color);
   }
 
   .app-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.75rem;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
   }
 
   .app-name {
     font-weight: 500;
     color: var(--text-primary);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -187,18 +187,19 @@
   }
 
   .app-menu {
-    background: var(--bg-tertiary);
+    background: var(--bg-secondary);
     border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    transition: all 0.2s ease;
+    font-size: 0.625rem;
+    color: var(--text-muted);
+    transition: all 150ms ease;
   }
 
   .app-menu:hover {
@@ -211,33 +212,30 @@
     top: 100%;
     right: 0;
     background: var(--bg-primary);
-    border: 1px solid var(--border-light);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     z-index: 1000;
-    min-width: 200px;
+    min-width: 180px;
     overflow: hidden;
   }
 
   .context-menu button {
     display: block;
     width: 100%;
-    padding: 0.875rem 1.25rem;
+    padding: 0.75rem 1rem;
     border: none;
     background: var(--bg-primary);
     text-align: left;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: var(--text-primary);
-    transition: background-color 0.2s ease;
-    font-weight: 400;
+    transition: all 150ms ease;
+    font-weight: 500;
   }
 
   .context-menu button:hover {
     background: var(--bg-hover);
   }
 
-  .context-menu button:not(:last-child) {
-    border-bottom: 1px solid var(--border-light);
-  }
 </style>

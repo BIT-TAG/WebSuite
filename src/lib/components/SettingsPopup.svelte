@@ -103,18 +103,18 @@
   
   .settings-popup {
     background: var(--bg-primary);
-    border-radius: 20px;
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) * 2);
     width: 90%;
     max-width: 480px;
     max-height: 80vh;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--border-light);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   }
   
   .settings-header {
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -129,14 +129,15 @@
   }
   
   .close-btn {
-    background: var(--bg-tertiary);
+    background: var(--bg-secondary);
     border: none;
-    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
     padding: 0.5rem;
-    border-radius: 8px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .close-btn:hover {
@@ -176,7 +177,7 @@
   .setting-item label {
     display: block;
     margin-bottom: 0.75rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     font-size: 0.875rem;
     font-weight: 500;
   }
@@ -189,14 +190,14 @@
   .theme-btn {
     flex: 1;
     padding: 0.875rem 1.25rem;
-    border: 2px solid var(--border-light);
+    border: 1px solid var(--border);
     background: var(--bg-primary);
-    color: var(--text-secondary);
-    border-radius: 12px;
+    color: var(--text-muted);
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .theme-btn:hover {
@@ -207,7 +208,7 @@
   .theme-btn.active {
     border-color: var(--accent-color);
     background: var(--accent-color);
-    color: white;
+    color: var(--accent-foreground);
   }
   
   .color-options {
@@ -219,31 +220,31 @@
   .color-btn {
     width: 48px;
     height: 48px;
-    border: 3px solid transparent;
-    border-radius: 12px;
+    border: 2px solid transparent;
+    border-radius: var(--radius);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--accent-foreground);
     font-weight: 600;
     font-size: 1rem;
   }
   
   .color-btn:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   }
   
   .color-btn.active {
-    border-color: var(--text-primary);
+    border-color: var(--ring);
     transform: scale(1.1);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   }
   
   .info-text {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     font-size: 0.875rem;
     line-height: 1.6;
     margin: 0;

@@ -204,11 +204,11 @@
 
 <style>
   .pomodoro-container {
-    background: white;
-    border-radius: 20px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) * 2);
     padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     max-width: 420px;
     margin: 0 auto;
   }
@@ -220,9 +220,9 @@
   
   .pomodoro-header h3 {
     margin: 0 0 0.75rem 0;
-    color: #1e293b;
+    color: var(--text-primary);
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 600;
   }
   
   .session-info {
@@ -237,10 +237,10 @@
   }
   
   .completed-sessions {
-    color: #64748b;
-    background: #f1f5f9;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
     padding: 0.375rem 0.75rem;
-    border-radius: 20px;
+    border-radius: calc(var(--radius) * 2);
     font-size: 0.75rem;
     font-weight: 500;
   }
@@ -267,27 +267,27 @@
     position: absolute;
     width: 180px;
     height: 180px;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 50%;
   }
   
   .time-text {
     font-size: 2.25rem;
-    font-weight: 300;
-    color: #1e293b;
+    font-weight: 600;
+    color: var(--text-primary);
     z-index: 1;
     font-family: 'Courier New', monospace;
   }
   
   .current-task {
-    background: #f8fafc;
-    border-radius: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     padding: 1.25rem;
     margin-bottom: 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #f1f5f9;
   }
   
   .task-info {
@@ -296,14 +296,14 @@
   
   .task-info strong {
     display: block;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 0.375rem;
     font-weight: 500;
     font-size: 0.875rem;
   }
   
   .task-column {
-    color: #64748b;
+    color: var(--text-muted);
     font-size: 0.8125rem;
   }
   
@@ -313,35 +313,35 @@
   }
   
   .complete-task-btn {
-    background: #10b981;
-    color: white;
+    background: hsl(142.1 76.2% 36.3%);
+    color: var(--accent-foreground);
     border: none;
     padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .complete-task-btn:hover {
-    background: #059669;
+    background: hsl(142.1 76.2% 31%);
   }
   
   .change-task-btn {
-    background: #3b82f6;
-    color: white;
+    background: var(--accent-color);
+    color: var(--accent-foreground);
     border: none;
     padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .change-task-btn:hover {
-    background: #2563eb;
+    background: var(--accent-hover);
   }
   
   .no-task {
@@ -350,19 +350,19 @@
   }
   
   .select-task-btn {
-    background: #f59e0b;
-    color: white;
+    background: hsl(24.6 95% 53.1%);
+    color: var(--accent-foreground);
     border: none;
     padding: 1rem 2rem;
-    border-radius: 12px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .select-task-btn:hover {
-    background: #d97706;
+    background: hsl(24.6 95% 48%);
   }
   
   .timer-controls {
@@ -375,38 +375,38 @@
   .control-btn {
     padding: 0.875rem 1.75rem;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .start-btn, .resume-btn {
-    background: #10b981;
-    color: white;
+    background: hsl(142.1 76.2% 36.3%);
+    color: var(--accent-foreground);
   }
   
   .start-btn:hover, .resume-btn:hover {
-    background: #059669;
+    background: hsl(142.1 76.2% 31%);
   }
   
   .pause-btn {
-    background: #f59e0b;
-    color: white;
+    background: hsl(24.6 95% 53.1%);
+    color: var(--accent-foreground);
   }
   
   .pause-btn:hover {
-    background: #d97706;
+    background: hsl(24.6 95% 48%);
   }
   
   .stop-btn {
-    background: #ef4444;
-    color: white;
+    background: hsl(0 84.2% 60.2%);
+    color: var(--accent-foreground);
   }
   
   .stop-btn:hover {
-    background: #dc2626;
+    background: hsl(0 84.2% 55%);
   }
   
   .session-controls {
@@ -417,26 +417,26 @@
   
   .session-btn {
     padding: 0.625rem 1rem;
-    border: 1px solid #e2e8f0;
-    background: white;
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.8125rem;
-    font-weight: 400;
-    transition: all 0.2s ease;
-    color: #64748b;
+    font-weight: 500;
+    transition: all 150ms ease;
+    color: var(--text-muted);
   }
   
   .session-btn:hover:not(:disabled) {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    background: #f8fafc;
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: var(--bg-hover);
   }
   
   .session-btn.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
+    background: var(--accent-color);
+    color: var(--accent-foreground);
+    border-color: var(--accent-color);
   }
   
   .session-btn:disabled {
@@ -459,20 +459,21 @@
   }
   
   .task-selector {
-    background: white;
-    border-radius: 20px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius) * 2);
     width: 90%;
     max-width: 520px;
     max-height: 80vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   }
   
   .selector-header {
     padding: 1.5rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -480,7 +481,7 @@
   
   .selector-header h4 {
     margin: 0;
-    color: #1e293b;
+    color: var(--text-primary);
     font-weight: 500;
     font-size: 1.125rem;
   }
@@ -490,15 +491,15 @@
     border: none;
     font-size: 1.25rem;
     cursor: pointer;
-    color: #64748b;
+    color: var(--text-muted);
     padding: 0.25rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    border-radius: var(--radius);
+    transition: all 150ms ease;
   }
   
   .close-btn:hover {
-    color: #1e293b;
-    background: #f1f5f9;
+    color: var(--text-primary);
+    background: var(--bg-hover);
   }
   
   .task-list {
@@ -509,21 +510,21 @@
   
   .task-item {
     padding: 1.25rem;
-    border: 1px solid #f1f5f9;
-    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
     margin-bottom: 0.75rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .task-item:hover {
-    background: #f8fafc;
-    border-color: #3b82f6;
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
   }
   
   .task-title {
     font-weight: 500;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 0.75rem;
     font-size: 0.875rem;
   }
@@ -532,7 +533,7 @@
     display: flex;
     gap: 1.25rem;
     font-size: 0.8125rem;
-    color: #64748b;
+    color: var(--text-muted);
   }
   
   .task-description {
@@ -541,30 +542,30 @@
   
   .no-tasks {
     text-align: center;
-    color: #64748b;
+    color: var(--text-muted);
     padding: 3rem 2rem;
     font-style: italic;
   }
   
   .selector-footer {
     padding: 1.5rem;
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--border);
     text-align: center;
   }
   
   .clear-task-btn {
-    background: #64748b;
-    color: white;
+    background: var(--text-muted);
+    color: var(--accent-foreground);
     border: none;
     padding: 0.625rem 1.25rem;
-    border-radius: 8px;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
   
   .clear-task-btn:hover {
-    background: #475569;
+    background: var(--text-secondary);
   }
 </style>
