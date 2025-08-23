@@ -29,6 +29,7 @@
 </DialogPrimitive.Root>
 
 <script lang="ts" context="module">
+	export const Dialog = DialogPrimitive.Root;
 	export const DialogTrigger = DialogPrimitive.Trigger;
 	export const DialogContent = DialogPrimitive.Content;
 	export const DialogHeader = DialogPrimitive.Header;

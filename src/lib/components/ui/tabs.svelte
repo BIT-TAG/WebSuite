@@ -20,6 +20,7 @@
 </TabsPrimitive.Root>
 
 <script lang="ts" context="module">
+	export const Tabs = TabsPrimitive.Root;
 	export const TabsList = TabsPrimitive.List;
 	export const TabsTrigger = TabsPrimitive.Trigger;
 	export const TabsContent = TabsPrimitive.Content;
