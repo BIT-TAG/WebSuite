@@ -20,6 +20,6 @@
 	},
 	"dependencies": {
 		"bits-ui": "^2.8.9",
-		"svelte-dnd-action": "^0.9.61"
+		"svelte-dnd-action": "^0.9.64"
 	}
 }

@@ -5,6 +5,8 @@
   import Window from '$lib/components/Window.svelte';
   import Dashboard from '$lib/components/Dashboard.svelte';
   import KanbanBoard from '$lib/components/KanbanBoard.svelte';
+  import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
+  import PomodoroMenuBar from '$lib/components/PomodoroMenuBar.svelte';
 
   function openExample() {
     openWindow({
@@ -47,6 +49,10 @@
         📋 Kanban
       </button>
     </div>
+    
+    <div class="nav-right">
+      <PomodoroMenuBar />
+    </div>
   </div>
 
   <!-- Content Area -->
@@ -59,6 +65,10 @@
       <Dashboard />
     {:else if $currentView === 'kanban'}
       <KanbanBoard />
+    {:else if $currentView === 'pomodoro'}
+      <div class="pomodoro-content">
+        <PomodoroTimer />
+      </div>
     {/if}
   </div>
   
@@ -97,7 +107,8 @@
     background: rgba(0, 0, 0, 0.9);
     padding: 0.75rem 1rem;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
   }
@@ -108,6 +119,11 @@
     background: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 0.25rem;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
   }
   
   .nav-switch {
@@ -144,6 +160,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .pomodoro-content {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
   }
   
   h1 {

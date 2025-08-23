@@ -1,6 +1,8 @@
 <!-- src/lib/components/KanbanBoard.svelte -->
 <script>
   import { kanbanBoards, activeBoard, addCard, moveCard, deleteCard } from '$lib/stores/kanban';
+  import { startPomodoro } from '$lib/stores/pomodoro';
+  import { switchToDesktop } from '$lib/stores/view';
   import { dndzone } from 'svelte-dnd-action';
   
   let showAddCard = {};
@@ -19,6 +21,11 @@
       newCardDescription = '';
       showAddCard[columnId] = false;
     }
+  }
+  
+  function startPomodoroWithTask(card) {
+    startPomodoro(card);
+    switchToDesktop();
   }
 
   function handleDndConsider(columnId, e) {
@@ -90,13 +97,23 @@
               <div class="kanban-card" data-id={card.id}>
                 <div class="card-header">
                   <h4>{card.title}</h4>
-                  <button 
-                    class="delete-btn"
-                    on:click={() => deleteCard($activeBoard, column.id, card.id)}
-                    aria-label="Karte löschen"
-                  >
-                    ✖
-                  </button>
+                  <div class="card-actions">
+                    <button 
+                      class="pomodoro-btn"
+                      on:click={() => startPomodoroWithTask(card)}
+                      aria-label="Pomodoro starten"
+                      title="Pomodoro Timer für diese Task starten"
+                    >
+                      🍅
+                    </button>
+                    <button 
+                      class="delete-btn"
+                      on:click={() => deleteCard($activeBoard, column.id, card.id)}
+                      aria-label="Karte löschen"
+                    >
+                      ✖
+                    </button>
+                  </div>
                 </div>
                 {#if card.description}
                   <p class="card-description">{card.description}</p>
@@ -250,6 +267,27 @@
     flex: 1;
   }
 
+  .card-actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .pomodoro-btn {
+    background: rgba(76, 175, 80, 0.1);
+    border: none;
+    color: #4caf50;
+    padding: 0.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+  }
+  
+  .pomodoro-btn:hover {
+    background: rgba(76, 175, 80, 0.2);
+    transform: scale(1.1);
+  }
+  
   .delete-btn {
     background: rgba(244, 67, 54, 0.1);
     border: none;
