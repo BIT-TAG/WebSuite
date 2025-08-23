@@ -12,21 +12,4 @@ export { default as TabsContent } from "./tabs/TabsContent.svelte";
 
 // Dialog exports
 import { 
-	Dialog as DialogComponent, 
-	DialogTrigger as DialogTriggerComponent, 
-	DialogContent as DialogContentComponent, 
-	DialogHeader as DialogHeaderComponent, 
-	DialogTitle as DialogTitleComponent, 
-	DialogDescription as DialogDescriptionComponent, 
-	DialogClose as DialogCloseComponent, 
-	DialogOverlay as DialogOverlayComponent 
-} from "./dialog.svelte";
-
-export const Dialog = DialogComponent;
-export const DialogTrigger = DialogTriggerComponent;
-export const DialogContent = DialogContentComponent;
-export const DialogHeader = DialogHeaderComponent;
-export const DialogTitle = DialogTitleComponent;
-export const DialogDescription = DialogDescriptionComponent;
-export const DialogClose = DialogCloseComponent;
-export const DialogOverlay = DialogOverlayComponent;
+export * from "./dialog.svelte";
