@@ -61,14 +61,10 @@
       <div class="desktop-content">
         <h1>Web Desktop</h1>
       </div>
-    {:else}
+    {:else if $currentView === 'dashboard'}
       <Dashboard />
     {:else if $currentView === 'kanban'}
       <KanbanBoard />
-    {:else if $currentView === 'pomodoro'}
-      <div class="pomodoro-content">
-        <PomodoroTimer />
-      </div>
     {/if}
   </div>
   
