@@ -177,6 +177,25 @@
   
   const appIcons = ['🔧', '📱', '💻', '🌐', '📊', '📝', '📚', '🎵', '🎮', '📷', '🗂️', '⚙️'];
   const appColors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#6b7280'];
+  
+  function renderMarkdown(content) {
+    return content
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/~~(.*?)~~/g, '<del>$1</del>')
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+      .replace(/^- \[ \] (.*$)/gim, '<div class="checkbox"><input type="checkbox" disabled> <span>$1</span></div>')
+      .replace(/^- \[x\] (.*$)/gim, '<div class="checkbox checked"><input type="checkbox" checked disabled> <span>$1</span></div>')
+      .replace(/^- (.*$)/gim, '<li>$1</li>')
+      .replace(/^---$/gim, '<hr>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+  }
 </script>
 
 <div class="dashboard" on:click={handleClickOutside}>
@@ -277,7 +296,22 @@
         <!-- Widgets als Apps -->
         {#each visibleWidgets as widget (widget.id)}
           <div class="app-card widget-app">
-            <div class="app-icon widget-icon" style="background: {colorOptions.find(c => c.value === widget.color)?.color || '#3b82f6'}">
+            <div class="widget-preview">
+              <div class="widget-header">
+                <div class="widget-color-indicator" style="background: {colorOptions.find(c => c.value === widget.color)?.color || '#3b82f6'}"></div>
+                <h3 class="widget-title">{widget.title}</h3>
+                <span class="widget-type-badge">{widget.type === 'markdown' ? 'MD' : 'HTML'}</span>
+              </div>
+              <div class="widget-content-preview">
+                {#if widget.type === 'html'}
+                  {@html widget.content}
+                {:else if widget.type === 'markdown'}
+                  <div class="markdown-preview">
+                    {@html renderMarkdown(widget.content)}
+                  </div>
+                {/if}
+              </div>
+            </div>
               <span class="icon-emoji">
                 {#if widget.type === 'markdown'}📝{:else}🔧{/if}
               </span>
@@ -746,6 +780,160 @@
   
   .app-card:hover::before {
     opacity: 1;
+  }
+  
+  .widget-preview {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .widget-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1rem 0.75rem;
+    border-bottom: 1px solid #30363d;
+    flex-shrink: 0;
+  }
+  
+  .widget-color-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .widget-title {
+    flex: 1;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .widget-type-badge {
+    background: #30363d;
+    color: #8b949e;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  
+  .widget-content-preview {
+    flex: 1;
+    padding: 1rem;
+    overflow: hidden;
+    color: #f0f6fc;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+  
+  .markdown-preview {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Markdown Styling */
+  :global(.widget-content-preview h1) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  :global(.widget-content-preview h2) {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    margin: 0.75rem 0 0.5rem 0;
+  }
+  
+  :global(.widget-content-preview h3) {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    margin: 0.5rem 0 0.25rem 0;
+  }
+  
+  :global(.widget-content-preview p) {
+    margin: 0 0 0.75rem 0;
+    color: #f0f6fc;
+  }
+  
+  :global(.widget-content-preview strong) {
+    font-weight: 600;
+    color: #f0f6fc;
+  }
+  
+  :global(.widget-content-preview em) {
+    font-style: italic;
+    color: #8b949e;
+  }
+  
+  :global(.widget-content-preview a) {
+    color: #58a6ff;
+    text-decoration: none;
+  }
+  
+  :global(.widget-content-preview a:hover) {
+    text-decoration: underline;
+  }
+  
+  :global(.widget-content-preview code) {
+    background: #21262d;
+    color: #79c0ff;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+  }
+  
+  :global(.widget-content-preview blockquote) {
+    border-left: 3px solid #30363d;
+    padding-left: 0.75rem;
+    margin: 0.5rem 0;
+    color: #8b949e;
+    font-style: italic;
+  }
+  
+  :global(.widget-content-preview ul) {
+    padding-left: 1rem;
+    margin: 0.5rem 0;
+  }
+  
+  :global(.widget-content-preview li) {
+    margin: 0.25rem 0;
+    color: #f0f6fc;
+  }
+  
+  :global(.widget-content-preview .checkbox) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.25rem 0;
+  }
+  
+  :global(.widget-content-preview .checkbox input) {
+    margin: 0;
+    accent-color: #238636;
+  }
+  
+  :global(.widget-content-preview .checkbox.checked span) {
+    text-decoration: line-through;
+    color: #8b949e;
+  }
+  
+  :global(.widget-content-preview hr) {
+    border: none;
+    height: 1px;
+    background: #30363d;
+    margin: 0.75rem 0;
   }
   
   .app-icon {
