@@ -160,6 +160,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
   
   .pomodoro-content {
     height: 100%;
