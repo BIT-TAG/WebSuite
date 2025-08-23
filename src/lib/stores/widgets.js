@@ -1,6 +1,65 @@
 // src/lib/stores/widgets.js
 import { writable } from 'svelte/store';
 
+// Apps Store
+export const apps = writable([
+  {
+    id: 'wikipedia-app',
+    name: 'Wikipedia',
+    type: 'custom',
+    icon: '📚',
+    url: 'https://de.wikipedia.org',
+    color: '#3b82f6',
+    status: 'Installiert'
+  },
+  {
+    id: 'calculator-app',
+    name: 'Calculator',
+    type: 'custom',
+    icon: '🧮',
+    url: 'https://www.calculator.net',
+    color: '#10b981',
+    status: 'Installiert'
+  },
+  {
+    id: 'notes-app',
+    name: 'Notes',
+    type: 'custom',
+    icon: '📝',
+    url: 'https://keep.google.com',
+    color: '#f59e0b',
+    status: 'Installiert'
+  },
+  {
+    id: 'weather-app',
+    name: 'Weather',
+    type: 'custom',
+    icon: '🌤️',
+    url: 'https://weather.com',
+    color: '#8b5cf6',
+    status: 'Installiert'
+  },
+  {
+    id: 'calendar-app',
+    name: 'Calendar',
+    type: 'custom',
+    icon: '📅',
+    url: 'https://calendar.google.com',
+    color: '#ef4444',
+    status: 'Installiert'
+  },
+  {
+    id: 'github-app',
+    name: 'GitHub',
+    type: 'custom',
+    icon: '💻',
+    url: 'https://github.com',
+    color: '#6b7280',
+    status: 'Installiert'
+  }
+]);
+
+// Widgets Store
 export const widgets = writable([
   {
     id: 'welcome-widget',
@@ -324,6 +383,18 @@ export const widgets = writable([
     color: 'orange'
   }
 ]);
+
+export function addApp(app) {
+  apps.update(a => [...a, {
+    ...app,
+    id: crypto.randomUUID(),
+    status: 'Installiert'
+  }]);
+}
+
+export function deleteApp(id) {
+  apps.update(a => a.filter(app => app.id !== id));
+}
 
 export function addWidget(widget) {
   widgets.update(w => [...w, {

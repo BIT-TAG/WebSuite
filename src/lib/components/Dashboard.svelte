@@ -1,19 +1,22 @@
 <script>
-  import { widgets, addWidget } from '$lib/stores/widgets';
+  import { widgets, addWidget, apps, addApp } from '$lib/stores/widgets';
   import { windows, openWindow } from '$lib/stores/windows';
   import { switchToDesktop } from '$lib/stores/view';
   import Widget from './Widget.svelte';
 
-  const quickApps = [
-    { name: 'Wikipedia', icon: '📚', url: 'https://de.wikipedia.org', color: '#3b82f6' },
-    { name: 'Calculator', icon: '🧮', url: 'https://www.calculator.net', color: '#10b981' },
-    { name: 'Notes', icon: '📝', url: 'https://keep.google.com', color: '#f59e0b' },
-    { name: 'Weather', icon: '🌤️', url: 'https://weather.com', color: '#8b5cf6' },
-    { name: 'Calendar', icon: '📅', url: 'https://calendar.google.com', color: '#ef4444' },
-    { name: 'GitHub', icon: '💻', url: 'https://github.com', color: '#6b7280' }
-  ];
-
-  let showAddWidget = false;
+  let showAddModal = false;
+  let addType = 'app'; // 'app' or 'widget'
+  
+  // App form data
+  let newAppName = '';
+  let newAppType = 'custom'; // 'custom' or 'libreworkspace'
+  let newAppUrl = '';
+  let newAppDomain = '';
+  let newAppAddon = '';
+  let newAppIcon = '🔧';
+  let newAppColor = '#3b82f6';
+  
+  // Widget form data
   let newWidgetTitle = '';
   let newWidgetType = 'markdown';
   let newWidgetContent = '';
@@ -82,9 +85,31 @@
   function launchApp(app) {
     openWindow({
       title: app.name,
-      iframeSrc: app.url
+      iframeSrc: app.type === 'libreworkspace' ? `${app.domain}/${app.addon}` : app.url
     });
     switchToDesktop();
+  }
+
+  function addNewApp() {
+    if (newAppName.trim()) {
+      const appData = {
+        name: newAppName.trim(),
+        type: newAppType,
+        icon: newAppIcon,
+        color: newAppColor
+      };
+      
+      if (newAppType === 'custom') {
+        appData.url = newAppUrl.trim();
+      } else if (newAppType === 'libreworkspace') {
+        appData.domain = newAppDomain.trim();
+        appData.addon = newAppAddon.trim();
+      }
+      
+      addApp(appData);
+      resetAppForm();
+      showAddModal = false;
+    }
   }
 
   function addNewWidget() {
@@ -96,17 +121,27 @@
         color: newWidgetColor
       });
       resetForm();
-      showAddWidget = false;
+      showAddModal = false;
     }
   }
 
-  function useTemplate(template) {
+  function useWidgetTemplate(template) {
     newWidgetTitle = template.name;
     newWidgetType = template.type;
     newWidgetContent = template.content;
   }
 
-  function resetForm() {
+  function resetAppForm() {
+    newAppName = '';
+    newAppType = 'custom';
+    newAppUrl = '';
+    newAppDomain = '';
+    newAppAddon = '';
+    newAppIcon = '🔧';
+    newAppColor = '#3b82f6';
+  }
+  
+  function resetWidgetForm() {
     newWidgetTitle = '';
     newWidgetContent = '';
     newWidgetType = 'markdown';
@@ -114,12 +149,16 @@
   }
 
   function closeModal() {
-    showAddWidget = false;
-    resetForm();
+    showAddModal = false;
+    resetAppForm();
+    resetWidgetForm();
   }
 
   $: visibleWidgets = $widgets.filter(w => w.visible);
-  $: totalItems = visibleWidgets.length + quickApps.length;
+  $: totalItems = visibleWidgets.length + $apps.length;
+  
+  const appIcons = ['🔧', '📱', '💻', '🌐', '📊', '📝', '📚', '🎵', '🎮', '📷', '🗂️', '⚙️'];
+  const appColors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#6b7280'];
 </script>
 
 <div class="dashboard">
@@ -143,11 +182,11 @@
       </div>
       
       <div class="header-right">
-        <button class="add-app-btn" on:click={() => showAddWidget = true}>
+        <button class="add-app-btn" on:click={() => { addType = 'app'; showAddModal = true; }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
-          App hinzufügen
+          Hinzufügen
         </button>
       </div>
     </div>
@@ -166,7 +205,7 @@
         </div>
         <h3>Keine Apps installiert</h3>
         <p>Fügen Sie Ihre erste App hinzu, um loszulegen.</p>
-        <button class="install-btn" on:click={() => showAddWidget = true}>
+        <button class="install-btn" on:click={() => { addType = 'app'; showAddModal = true; }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
@@ -175,15 +214,15 @@
       </div>
     {:else}
       <div class="apps-grid">
-        <!-- Quick Apps -->
-        {#each quickApps as app}
+        <!-- Apps -->
+        {#each $apps as app}
           <div class="app-card" on:click={() => launchApp(app)}>
             <div class="app-icon" style="background: {app.color}">
               <span class="icon-emoji">{app.icon}</span>
             </div>
             <div class="app-info">
               <h3 class="app-name">{app.name}</h3>
-              <p class="app-status">Installiert</p>
+              <p class="app-status">{app.status}</p>
             </div>
             <div class="app-actions">
               <button class="action-btn">
@@ -219,7 +258,7 @@
         {/each}
         
         <!-- Add App Card -->
-        <div class="app-card add-app-card" on:click={() => showAddWidget = true}>
+        <div class="app-card add-app-card" on:click={() => { addType = 'app'; showAddModal = true; }}>
           <div class="add-icon">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 5v14M5 12h14"/>
@@ -230,21 +269,44 @@
             <p>Neue App installieren</p>
           </div>
         </div>
+        
+        <!-- Add Widget Card -->
+        <div class="app-card add-widget-card" on:click={() => { addType = 'widget'; showAddModal = true; }}>
+          <div class="add-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="7" height="9" x="3" y="3" rx="1"/>
+              <rect width="7" height="5" x="14" y="3" rx="1"/>
+              <rect width="7" height="9" x="14" y="12" rx="1"/>
+              <rect width="7" height="5" x="3" y="16" rx="1"/>
+            </svg>
+          </div>
+          <div class="add-text">
+            <h3>Widget hinzufügen</h3>
+            <p>Neues Widget erstellen</p>
+          </div>
+        </div>
       </div>
     {/if}
   </div>
 
-  {#if showAddWidget}
+  {#if showAddModal}
     <div class="modal-overlay" on:click={closeModal}>
       <div class="install-modal" on:click|stopPropagation>
         <div class="modal-header">
           <div class="modal-title">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7,10 12,15 17,10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
+              {#if addType === 'app'}
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              {:else}
+                <rect width="7" height="9" x="3" y="3" rx="1"/>
+                <rect width="7" height="5" x="14" y="3" rx="1"/>
+                <rect width="7" height="9" x="14" y="12" rx="1"/>
+                <rect width="7" height="5" x="3" y="16" rx="1"/>
+              {/if}
             </svg>
-            App installieren
+            {addType === 'app' ? 'App installieren' : 'Widget erstellen'}
           </div>
           <button class="close-btn" on:click={closeModal}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -255,95 +317,212 @@
         </div>
         
         <div class="modal-content">
-          <div class="templates-section">
-            <h4>App-Vorlagen</h4>
-            <div class="templates-grid">
-              {#each widgetTemplates as template}
-                <button 
-                  class="template-card"
-                  on:click={() => useTemplate(template)}
-                >
-                  <div class="template-icon">
-                    {#if template.type === 'markdown'}📝{:else}🔧{/if}
-                  </div>
-                  <div class="template-name">{template.name}</div>
-                </button>
-              {/each}
-            </div>
-          </div>
-          
-          <div class="form-section">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="app-name">App Name</label>
-                <input 
-                  id="app-name"
-                  type="text" 
-                  bind:value={newWidgetTitle}
-                  placeholder="Meine App..."
-                  class="form-input"
-                />
+          {#if addType === 'app'}
+            <!-- App Form -->
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="app-name">App Name</label>
+                  <input 
+                    id="app-name"
+                    type="text" 
+                    bind:value={newAppName}
+                    placeholder="Meine App..."
+                    class="form-input"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="app-type">App Typ</label>
+                  <select id="app-type" bind:value={newAppType} class="form-select">
+                    <option value="custom">Custom App</option>
+                    <option value="libreworkspace">LibreWorkspace App</option>
+                  </select>
+                </div>
               </div>
               
-              <div class="form-group">
-                <label for="app-type">App Typ</label>
-                <select id="app-type" bind:value={newWidgetType} class="form-select">
-                  <option value="markdown">Markdown</option>
-                  <option value="html">HTML</option>
-                </select>
+              {#if newAppType === 'custom'}
+                <div class="form-group">
+                  <label for="app-url">App URL</label>
+                  <input 
+                    id="app-url"
+                    type="url" 
+                    bind:value={newAppUrl}
+                    placeholder="https://example.com"
+                    class="form-input"
+                  />
+                </div>
+              {:else if newAppType === 'libreworkspace'}
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="app-domain">Domain</label>
+                    <input 
+                      id="app-domain"
+                      type="url" 
+                      bind:value={newAppDomain}
+                      placeholder="https://portal.bit-tag.com"
+                      class="form-input"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="app-addon">Addon</label>
+                    <input 
+                      id="app-addon"
+                      type="text" 
+                      bind:value={newAppAddon}
+                      placeholder="calendar"
+                      class="form-input"
+                    />
+                  </div>
+                </div>
+              {/if}
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label>App Icon</label>
+                  <div class="icon-picker">
+                    {#each appIcons as icon}
+                      <button
+                        class="icon-option"
+                        class:active={newAppIcon === icon}
+                        on:click={() => newAppIcon = icon}
+                      >
+                        {icon}
+                      </button>
+                    {/each}
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>App Farbe</label>
+                  <div class="color-picker">
+                    {#each appColors as color}
+                      <button
+                        class="color-option"
+                        class:active={newAppColor === color}
+                        style="background-color: {color}"
+                        on:click={() => newAppColor = color}
+                      >
+                        {#if newAppColor === color}
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                            <polyline points="20,6 9,17 4,12"/>
+                          </svg>
+                        {/if}
+                      </button>
+                    {/each}
+                  </div>
+                </div>
               </div>
             </div>
-            
-            <div class="form-group">
-              <label>App Farbe</label>
-              <div class="color-picker">
-                {#each colorOptions as color}
-                  <button
-                    class="color-option"
-                    class:active={newWidgetColor === color.value}
-                    style="background-color: {color.color}"
-                    on:click={() => newWidgetColor = color.value}
-                    title={color.name}
+          {:else}
+            <!-- Widget Form -->
+            <div class="templates-section">
+              <h4>Widget-Vorlagen</h4>
+              <div class="templates-grid">
+                {#each widgetTemplates as template}
+                  <button 
+                    class="template-card"
+                    on:click={() => useWidgetTemplate(template)}
                   >
-                    {#if newWidgetColor === color.value}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
-                        <polyline points="20,6 9,17 4,12"/>
-                      </svg>
-                    {/if}
+                    <div class="template-icon">
+                      {#if template.type === 'markdown'}📝{:else}🔧{/if}
+                    </div>
+                    <div class="template-name">{template.name}</div>
                   </button>
                 {/each}
               </div>
             </div>
             
-            <div class="form-group">
-              <label for="app-content">App Inhalt</label>
-              <textarea 
-                id="app-content"
-                bind:value={newWidgetContent}
-                placeholder={newWidgetType === 'html' ? 'HTML Code eingeben...' : 'Markdown Text eingeben...'}
-                class="form-textarea"
-                rows="8"
-              ></textarea>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="widget-name">Widget Name</label>
+                  <input 
+                    id="widget-name"
+                    type="text" 
+                    bind:value={newWidgetTitle}
+                    placeholder="Mein Widget..."
+                    class="form-input"
+                  />
+                </div>
+                
+                <div class="form-group">
+                  <label for="widget-type">Widget Typ</label>
+                  <select id="widget-type" bind:value={newWidgetType} class="form-select">
+                    <option value="markdown">Markdown</option>
+                    <option value="html">HTML</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label>Widget Farbe</label>
+                <div class="color-picker">
+                  {#each colorOptions as color}
+                    <button
+                      class="color-option"
+                      class:active={newWidgetColor === color.value}
+                      style="background-color: {color.color}"
+                      on:click={() => newWidgetColor = color.value}
+                      title={color.name}
+                    >
+                      {#if newWidgetColor === color.value}
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                          <polyline points="20,6 9,17 4,12"/>
+                        </svg>
+                      {/if}
+                    </button>
+                  {/each}
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="widget-content">Widget Inhalt</label>
+                <textarea 
+                  id="widget-content"
+                  bind:value={newWidgetContent}
+                  placeholder={newWidgetType === 'html' ? 'HTML Code eingeben...' : 'Markdown Text eingeben...'}
+                  class="form-textarea"
+                  rows="8"
+                ></textarea>
+              </div>
             </div>
-          </div>
+          {/if}
         </div>
         
         <div class="modal-actions">
           <button class="btn btn-secondary" on:click={closeModal}>
             Abbrechen
           </button>
-          <button 
-            class="btn btn-primary" 
-            on:click={addNewWidget}
-            disabled={!newWidgetTitle.trim() || !newWidgetContent.trim()}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7,10 12,15 17,10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            App installieren
-          </button>
+          {#if addType === 'app'}
+            <button 
+              class="btn btn-primary" 
+              on:click={addNewApp}
+              disabled={!newAppName.trim() || (newAppType === 'custom' && !newAppUrl.trim()) || (newAppType === 'libreworkspace' && (!newAppDomain.trim() || !newAppAddon.trim()))}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7,10 12,15 17,10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              App installieren
+            </button>
+          {:else}
+            <button 
+              class="btn btn-primary" 
+              on:click={addNewWidget}
+              disabled={!newWidgetTitle.trim() || !newWidgetContent.trim()}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="7" height="9" x="3" y="3" rx="1"/>
+                <rect width="7" height="5" x="14" y="3" rx="1"/>
+                <rect width="7" height="9" x="14" y="12" rx="1"/>
+                <rect width="7" height="5" x="3" y="16" rx="1"/>
+              </svg>
+              Widget erstellen
+            </button>
+          {/if}
         </div>
       </div>
     </div>
@@ -570,6 +749,25 @@
   .add-app-card:hover {
     border-color: #3b82f6;
     background: rgba(59, 130, 246, 0.05);
+  }
+  
+  .add-widget-card {
+    border: 2px dashed #30363d;
+    background: transparent;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 120px;
+  }
+  
+  .add-widget-card:hover {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.05);
+  }
+  
+  .add-widget-card:hover .add-icon {
+    color: #8b5cf6;
   }
   
   .add-icon {
@@ -860,6 +1058,37 @@
     border-color: #f0f6fc;
     transform: scale(1.1);
     box-shadow: 0 0 0 2px #3b82f6;
+  }
+  
+  .icon-picker {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .icon-option {
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #21262d;
+    font-size: 1.25rem;
+  }
+  
+  .icon-option:hover {
+    transform: scale(1.1);
+    background: #262c36;
+  }
+  
+  .icon-option.active {
+    border-color: #3b82f6;
+    background: #262c36;
+    transform: scale(1.1);
   }
   
   .modal-actions {
