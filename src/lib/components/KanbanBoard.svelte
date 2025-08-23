@@ -10,6 +10,8 @@
   let showAddCard = {};
   let newCardTitle = '';
   let newCardDescription = '';
+  let newCardPriority = 'medium';
+  let newCardAssignee = '';
 
   $: currentBoard = $kanbanBoards.find(board => board.id === $activeBoard);
   $: viewMode = currentBoard?.viewMode || 'kanban';
@@ -18,10 +20,14 @@
     if (newCardTitle.trim()) {
       addCard($activeBoard, columnId, {
         title: newCardTitle.trim(),
-        description: newCardDescription.trim()
+        description: newCardDescription.trim(),
+        priority: newCardPriority,
+        assignee: newCardAssignee.trim()
       });
       newCardTitle = '';
       newCardDescription = '';
+      newCardPriority = 'medium';
+      newCardAssignee = '';
       showAddCard[columnId] = false;
     }
   }
@@ -74,116 +80,240 @@
       )
     );
   }
+
+  function getPriorityColor(priority) {
+    switch(priority) {
+      case 'high': return 'var(--priority-high)';
+      case 'medium': return 'var(--priority-medium)';
+      case 'low': return 'var(--priority-low)';
+      default: return 'var(--priority-medium)';
+    }
+  }
+
+  function getPriorityLabel(priority) {
+    switch(priority) {
+      case 'high': return 'Hoch';
+      case 'medium': return 'Mittel';
+      case 'low': return 'Niedrig';
+      default: return 'Mittel';
+    }
+  }
 </script>
 
 <div class="kanban-container">
-  <div class="kanban-header">
-    <h2>📋 {currentBoard?.title || 'Kanban Board'}</h2>
-    <div class="view-switcher">
-      <button 
-        class="view-btn"
-        class:active={viewMode === 'kanban'}
-        on:click={() => switchView('kanban')}
-      >
-        📋 Kanban
-      </button>
-      <button 
-        class="view-btn"
-        class:active={viewMode === 'list'}
-        on:click={() => switchView('list')}
-      >
-        📝 Liste
-      </button>
-      <button 
-        class="view-btn"
-        class:active={viewMode === 'gantt'}
-        on:click={() => switchView('gantt')}
-      >
-        📊 Gantt
-      </button>
+  <header class="kanban-header">
+    <div class="header-content">
+      <div class="board-info">
+        <h1 class="board-title">
+          <span class="board-icon">📋</span>
+          {currentBoard?.title || 'Kanban Board'}
+        </h1>
+        <p class="board-description">Organisieren Sie Ihre Aufgaben effizient</p>
+      </div>
+      
+      <div class="view-controls">
+        <div class="view-switcher">
+          <button 
+            class="view-btn"
+            class:active={viewMode === 'kanban'}
+            on:click={() => switchView('kanban')}
+          >
+            <span class="view-icon">📋</span>
+            <span class="view-label">Board</span>
+          </button>
+          <button 
+            class="view-btn"
+            class:active={viewMode === 'list'}
+            on:click={() => switchView('list')}
+          >
+            <span class="view-icon">📝</span>
+            <span class="view-label">Liste</span>
+          </button>
+          <button 
+            class="view-btn"
+            class:active={viewMode === 'gantt'}
+            on:click={() => switchView('gantt')}
+          >
+            <span class="view-icon">📊</span>
+            <span class="view-label">Gantt</span>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+  </header>
   
   {#if currentBoard}
-    <div class="board-content">
+    <main class="board-content">
       {#if viewMode === 'kanban'}
         <div class="kanban-board">
           {#each currentBoard.columns as column (column.id)}
-            <div class="kanban-column">
-              <div class="column-header">
-                <h3>{column.title}</h3>
-                <span class="card-count">{column.cards.length}</span>
-              </div>
+            <section class="kanban-column">
+              <header class="column-header">
+                <div class="column-info">
+                  <h2 class="column-title">{column.title}</h2>
+                  <div class="card-count">
+                    <span class="count-number">{column.cards.length}</span>
+                    <span class="count-label">Tasks</span>
+                  </div>
+                </div>
+                <div class="column-actions">
+                  <button 
+                    class="add-card-trigger"
+                    on:click={() => showAddCard[column.id] = true}
+                    aria-label="Neue Karte hinzufügen"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                  </button>
+                </div>
+              </header>
               
               <div 
                 class="cards-container"
                 use:dndzone={{
                   items: column.cards,
-                  flipDurationMs: 300,
-                  dropTargetStyle: {}
+                  flipDurationMs: 200,
+                  dropTargetStyle: { outline: '2px dashed var(--accent-color)', outlineOffset: '4px' }
                 }}
                 on:consider={(e) => handleDndConsider(column.id, e)}
                 on:finalize={(e) => handleDndFinalize(column.id, e)}
               >
                 {#each column.cards as card (card.id)}
-                  <div class="kanban-card" data-id={card.id}>
-                    <div class="card-header">
-                      <h4>{card.title}</h4>
-                      <div class="card-actions">
+                  <article class="kanban-card" data-id={card.id}>
+                    <header class="card-header">
+                      <h3 class="card-title">{card.title}</h3>
+                      <div class="card-menu">
                         <button 
-                          class="pomodoro-btn"
+                          class="card-action pomodoro-action"
                           on:click={() => startPomodoroWithTask(card)}
-                          aria-label="Pomodoro starten"
-                          title="Pomodoro Timer für diese Task starten"
+                          title="Pomodoro Timer starten"
                         >
-                          🍅
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                          </svg>
                         </button>
                         <button 
-                          class="delete-btn"
+                          class="card-action delete-action"
                           on:click={() => deleteCard($activeBoard, column.id, card.id)}
-                          aria-label="Karte löschen"
+                          title="Karte löschen"
                         >
-                          ✖
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                          </svg>
                         </button>
                       </div>
-                    </div>
+                    </header>
+                    
                     {#if card.description}
-                      <p class="card-description">{card.description}</p>
+                      <div class="card-description">
+                        <p>{card.description}</p>
+                      </div>
                     {/if}
-                    {#if card.priority}
+                    
+                    <footer class="card-footer">
                       <div class="card-meta">
-                        <span class="priority-badge priority-{card.priority}">
-                          {card.priority === 'high' ? 'Hoch' : card.priority === 'medium' ? 'Mittel' : 'Niedrig'}
-                        </span>
+                        {#if card.priority}
+                          <div class="priority-indicator" style="--priority-color: {getPriorityColor(card.priority)}">
+                            <span class="priority-dot"></span>
+                            <span class="priority-text">{getPriorityLabel(card.priority)}</span>
+                          </div>
+                        {/if}
+                        
                         {#if card.assignee}
-                          <span class="assignee-badge">👤 {card.assignee}</span>
+                          <div class="assignee-info">
+                            <div class="assignee-avatar">
+                              {card.assignee.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="assignee-name">{card.assignee}</span>
+                          </div>
                         {/if}
                       </div>
-                    {/if}
-                  </div>
+                    </footer>
+                  </article>
                 {/each}
               </div>
               
               {#if showAddCard[column.id]}
                 <div class="add-card-form">
-                  <input 
-                    bind:value={newCardTitle}
-                    placeholder="Titel der Karte..."
-                    class="card-input"
-                    on:keydown={(e) => e.key === 'Enter' && handleAddCard(column.id)}
-                  />
-                  <textarea 
-                    bind:value={newCardDescription}
-                    placeholder="Beschreibung (optional)..."
-                    class="card-textarea"
-                    rows="2"
-                  ></textarea>
-                  <div class="form-buttons">
-                    <button on:click={() => handleAddCard(column.id)} class="save-btn">
-                      Speichern
+                  <div class="form-header">
+                    <h3 class="form-title">Neue Aufgabe</h3>
+                    <button 
+                      class="form-close"
+                      on:click={() => showAddCard[column.id] = false}
+                      aria-label="Formular schließen"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
                     </button>
-                    <button on:click={() => showAddCard[column.id] = false} class="cancel-btn">
+                  </div>
+                  
+                  <div class="form-content">
+                    <div class="form-field">
+                      <label for="card-title-{column.id}" class="field-label">Titel</label>
+                      <input 
+                        id="card-title-{column.id}"
+                        bind:value={newCardTitle}
+                        placeholder="Aufgabentitel eingeben..."
+                        class="field-input"
+                        on:keydown={(e) => e.key === 'Enter' && handleAddCard(column.id)}
+                      />
+                    </div>
+                    
+                    <div class="form-field">
+                      <label for="card-description-{column.id}" class="field-label">Beschreibung</label>
+                      <textarea 
+                        id="card-description-{column.id}"
+                        bind:value={newCardDescription}
+                        placeholder="Zusätzliche Details..."
+                        class="field-textarea"
+                        rows="3"
+                      ></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                      <div class="form-field">
+                        <label for="card-priority-{column.id}" class="field-label">Priorität</label>
+                        <select 
+                          id="card-priority-{column.id}"
+                          bind:value={newCardPriority}
+                          class="field-select"
+                        >
+                          <option value="low">Niedrig</option>
+                          <option value="medium">Mittel</option>
+                          <option value="high">Hoch</option>
+                        </select>
+                      </div>
+                      
+                      <div class="form-field">
+                        <label for="card-assignee-{column.id}" class="field-label">Zugewiesen</label>
+                        <input 
+                          id="card-assignee-{column.id}"
+                          bind:value={newCardAssignee}
+                          placeholder="Name eingeben..."
+                          class="field-input"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-actions">
+                    <button 
+                      class="btn btn-secondary"
+                      on:click={() => showAddCard[column.id] = false}
+                    >
                       Abbrechen
+                    </button>
+                    <button 
+                      class="btn btn-primary"
+                      on:click={() => handleAddCard(column.id)}
+                      disabled={!newCardTitle.trim()}
+                    >
+                      Erstellen
                     </button>
                   </div>
                 </div>
@@ -192,10 +322,13 @@
                   class="add-card-btn"
                   on:click={() => showAddCard[column.id] = true}
                 >
-                  + Karte hinzufügen
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <span>Aufgabe hinzufügen</span>
                 </button>
               {/if}
-            </div>
+            </section>
           {/each}
         </div>
       {:else if viewMode === 'list'}
@@ -203,76 +336,123 @@
       {:else if viewMode === 'gantt'}
         <GanttView />
       {/if}
-    </div>
+    </main>
   {/if}
 </div>
 
 <style>
+  :root {
+    --priority-high: #ef4444;
+    --priority-medium: #f59e0b;
+    --priority-low: #10b981;
+  }
+
   .kanban-container {
     height: 100%;
-    padding: 2rem;
-    background: var(--bg-secondary);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: var(--bg-primary);
+    overflow: hidden;
   }
 
   .kanban-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    flex-shrink: 0;
   }
 
-  .kanban-header h2 {
-    color: var(--text-primary);
-    margin: 0;
-    font-size: 1.875rem;
-    font-weight: 400;
-    letter-spacing: -0.025em;
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
   }
-  
+
+  .board-info {
+    flex: 1;
+  }
+
+  .board-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .board-icon {
+    font-size: 1.75rem;
+  }
+
+  .board-description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .view-controls {
+    flex-shrink: 0;
+  }
+
   .view-switcher {
     display: flex;
-    gap: 0.25rem;
-    background: var(--bg-tertiary);
-    border-radius: 12px;
-    padding: 0.375rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 0.25rem;
+    gap: 0.125rem;
   }
-  
+
   .view-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     background: transparent;
-    color: var(--text-muted);
     border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: calc(var(--radius) - 2px);
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
     cursor: pointer;
-    transition: all 150ms ease;
-    font-size: 0.8125rem;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.875rem;
     font-weight: 500;
+    color: var(--text-secondary);
     white-space: nowrap;
   }
-  
+
   .view-btn:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
   }
-  
+
   .view-btn.active {
     background: var(--bg-primary);
     color: var(--text-primary);
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    font-weight: 500;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   }
-  
+
+  .view-icon {
+    font-size: 1rem;
+  }
+
+  .view-label {
+    font-size: 0.875rem;
+  }
+
   .board-content {
     flex: 1;
     overflow: hidden;
+    padding: 0 2rem 2rem;
   }
 
   .kanban-board {
     display: flex;
-    gap: 1.25rem;
+    gap: 1.5rem;
     height: 100%;
     overflow-x: auto;
     padding-bottom: 1rem;
@@ -280,57 +460,98 @@
 
   .kanban-column {
     min-width: 320px;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+    max-width: 320px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    overflow: hidden;
   }
 
   .column-header {
+    padding: 1.5rem 1.5rem 1rem;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    gap: 1rem;
   }
 
-  .column-header h3 {
-    margin: 0;
-    color: var(--text-primary);
+  .column-info {
+    flex: 1;
+  }
+
+  .column-title {
+    margin: 0 0 0.75rem 0;
     font-size: 1.125rem;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
   }
 
   .card-count {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .count-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    line-height: 1;
+  }
+
+  .count-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .column-actions {
+    flex-shrink: 0;
+  }
+
+  .add-card-trigger {
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .add-card-trigger:hover {
     background: var(--accent-color);
     color: var(--accent-foreground);
-    padding: 0.375rem 0.75rem;
-    border-radius: calc(var(--radius) * 2);
-    font-size: 0.75rem;
-    font-weight: 500;
+    border-color: var(--accent-color);
+    transform: scale(1.05);
   }
 
   .cards-container {
     flex: 1;
+    padding: 1rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     overflow-y: auto;
-    margin-bottom: 1.5rem;
+    min-height: 200px;
   }
 
   .kanban-card {
     background: var(--bg-primary);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: 0.75rem;
     padding: 1.25rem;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     cursor: grab;
-    transition: all 150ms ease;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   }
 
   .kanban-card:hover {
@@ -341,175 +562,312 @@
 
   .kanban-card:active {
     cursor: grabbing;
+    transform: rotate(2deg) scale(1.02);
   }
 
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 0.75rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
-  .card-header h4 {
+  .card-title {
     margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    flex: 1;
     line-height: 1.4;
+    flex: 1;
   }
 
-  .card-actions {
+  .card-menu {
     display: flex;
     gap: 0.375rem;
-  }
-  
-  .pomodoro-btn {
-    background: hsl(54 91.7% 95.3%);
-    border: none;
-    color: hsl(24.6 95% 53.1%);
-    padding: 0.375rem;
-    border-radius: calc(var(--radius) - 2px);
-    cursor: pointer;
-    font-size: 0.75rem;
-    transition: all 150ms ease;
-  }
-  
-  .pomodoro-btn:hover {
-    background: hsl(54 91.7% 90%);
-    transform: scale(1.05);
-  }
-  
-  .delete-btn {
-    background: hsl(0 85.7% 97.3%);
-    border: none;
-    color: hsl(0 84.2% 60.2%);
-    padding: 0.375rem;
-    border-radius: calc(var(--radius) - 2px);
-    cursor: pointer;
-    font-size: 0.75rem;
-    transition: all 150ms ease;
+    opacity: 0;
+    transition: opacity 150ms ease;
   }
 
-  .delete-btn:hover {
-    background: hsl(0 85.7% 92%);
+  .kanban-card:hover .card-menu {
+    opacity: 1;
+  }
+
+  .card-action {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 0.375rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pomodoro-action:hover {
+    background: #fef3c7;
+    color: #d97706;
+    border-color: #fbbf24;
+  }
+
+  .delete-action:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fca5a5;
   }
 
   .card-description {
-    margin: 0 0 0.75rem 0;
+    margin-bottom: 1rem;
+  }
+
+  .card-description p {
+    margin: 0;
     color: var(--text-secondary);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.5;
   }
-  
+
+  .card-footer {
+    margin-top: auto;
+  }
+
   .card-meta {
     display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .priority-badge {
-    padding: 0.25rem 0.625rem;
-    border-radius: calc(var(--radius) * 2);
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--accent-foreground);
-  }
-  
-  .priority-high {
-    background: hsl(0 84.2% 60.2%);
-  }
-  
-  .priority-medium {
-    background: hsl(24.6 95% 53.1%);
-  }
-  
-  .priority-low {
-    background: hsl(142.1 76.2% 36.3%);
-  }
-  
-  .assignee-badge {
-    background: var(--bg-secondary);
-    color: var(--text-muted);
-    padding: 0.25rem 0.625rem;
-    border-radius: calc(var(--radius) * 2);
-    font-size: 0.75rem;
-  }
-
-  .add-card-form {
-    background: var(--bg-hover);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-  }
-
-  .card-input, .card-textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.75rem;
-    margin-bottom: 0.75rem;
-    font-family: inherit;
-    font-size: 0.875rem;
-    transition: all 150ms ease;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-  }
-
-  .card-input:focus, .card-textarea:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px var(--accent-color);
-  }
-
-  .form-buttons {
-    display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.75rem;
   }
 
-  .save-btn, .cancel-btn {
-    padding: 0.625rem 1.25rem;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 0.875rem;
+  .priority-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .priority-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--priority-color);
+  }
+
+  .priority-text {
+    font-size: 0.75rem;
     font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .assignee-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .assignee-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: var(--accent-foreground);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .assignee-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .add-card-form {
+    margin: 0 1.5rem 1.5rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .form-header {
+    padding: 1rem 1.25rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .form-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .form-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.25rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
     transition: all 150ms ease;
   }
 
-  .save-btn {
-    background: hsl(142.1 76.2% 36.3%);
+  .form-close:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .form-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .field-input,
+  .field-textarea,
+  .field-select {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    transition: all 150ms ease;
+    font-family: inherit;
+  }
+
+  .field-input:focus,
+  .field-textarea:focus,
+  .field-select:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+  }
+
+  .field-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-actions {
+    padding: 1rem 1.25rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms ease;
+    border: 1px solid transparent;
+  }
+
+  .btn-secondary {
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    border-color: var(--border);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .btn-primary {
+    background: var(--accent-color);
     color: var(--accent-foreground);
   }
 
-  .save-btn:hover {
-    background: hsl(142.1 76.2% 31%);
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
   }
 
-  .cancel-btn {
-    background: hsl(0 84.2% 60.2%);
-    color: var(--accent-foreground);
-  }
-
-  .cancel-btn:hover {
-    background: hsl(0 84.2% 55%);
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 
   .add-card-btn {
-    width: 100%;
+    margin: 0 1.5rem 1.5rem;
+    background: var(--bg-primary);
+    border: 2px dashed var(--border);
+    color: var(--text-secondary);
     padding: 1rem;
-    background: var(--bg-hover);
-    border: 1px dashed var(--accent-color);
-    border-radius: var(--radius);
-    color: var(--accent-color);
+    border-radius: 0.75rem;
     cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 150ms ease;
   }
 
   .add-card-btn:hover {
-    background: var(--bg-primary);
-    border-style: solid;
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .kanban-header {
+      padding: 1.5rem 1rem 1rem;
+    }
+
+    .header-content {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .board-content {
+      padding: 0 1rem 1rem;
+    }
+
+    .kanban-board {
+      gap: 1rem;
+    }
+
+    .kanban-column {
+      min-width: 280px;
+      max-width: 280px;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
