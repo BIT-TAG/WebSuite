@@ -5,12 +5,10 @@ export { default as Textarea } from "./textarea.svelte";
 export { default as Badge } from "./badge.svelte";
 
 // Tabs exports
-export { 
-	Tabs, 
-	TabsList, 
-	TabsTrigger, 
-	TabsContent 
-} from "./tabs.svelte";
+export { default as Tabs } from "./tabs/Tabs.svelte";
+export { default as TabsList } from "./tabs/TabsList.svelte";
+export { default as TabsTrigger } from "./tabs/TabsTrigger.svelte";
+export { default as TabsContent } from "./tabs/TabsContent.svelte";
 
 // Dialog exports
 export { 
