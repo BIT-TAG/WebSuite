@@ -11,6 +11,4 @@ export { default as TabsTrigger } from "./tabs/TabsTrigger.svelte";
 export { default as TabsContent } from "./tabs/TabsContent.svelte";
 
 // Dialog exports
-import { 
-}
 export * from "./dialog.svelte";
