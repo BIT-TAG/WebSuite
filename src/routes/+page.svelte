@@ -265,6 +265,7 @@
   }
   
   :global(.dark-theme) .nav-switches {
-    background: hsl(210 10% 10%);
+    background: hsl(217.2 32.6% 17.5%);
+    border-color: hsl(217.2 32.6% 25%);
   }
 </style>

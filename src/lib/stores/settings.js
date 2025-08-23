@@ -3,7 +3,7 @@ import { browser } from '$app/environment';
 
 // Default settings
 const defaultSettings = {
-  theme: 'light', // 'light' or 'dark'
+  theme: 'dark', // 'light' or 'dark'
   accentColor: 'blue' // 'blue', 'green', 'purple', 'orange', 'red'
 };
 
