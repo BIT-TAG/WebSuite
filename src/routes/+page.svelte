@@ -108,12 +108,12 @@
     position: relative;
     overflow: hidden;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: hsl(0 0% 100%);
+    background: var(--bg-primary);
   }
   
   .nav-header {
-    background: hsl(0 0% 100%);
-    border-bottom: 1px solid hsl(210 40% 92%);
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
@@ -125,10 +125,10 @@
   .nav-switches {
     display: flex;
     gap: 0.25rem;
-    background: hsl(210 40% 96%);
+    background: var(--bg-secondary);
     border-radius: 8px;
     padding: 4px;
-    border: 1px solid hsl(210 40% 90%);
+    border: 1px solid var(--border);
   }
   
   .nav-right {
@@ -139,7 +139,7 @@
   
   .nav-switch {
     background: transparent;
-    color: hsl(215 20% 65%);
+    color: var(--text-secondary);
     border: none;
     padding: 8px 12px;
     border-radius: 6px;
@@ -152,21 +152,21 @@
   }
   
   .nav-switch:hover {
-    background: hsl(210 40% 92%);
-    color: hsl(210 10% 23%);
+    background: var(--bg-hover);
+    color: var(--text-primary);
   }
   
   .nav-switch.active {
-    background: hsl(0 0% 100%);
-    color: hsl(210 10% 23%);
+    background: var(--bg-primary);
+    color: var(--text-primary);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     font-weight: 500;
   }
   
   .settings-btn {
-    background: hsl(210 40% 98%);
-    border: 1px solid hsl(214.3 31.8% 91.4%);
-    color: hsl(215 20% 65%);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
@@ -180,9 +180,9 @@
   }
   
   .settings-btn:hover {
-    background: hsl(210 40% 92%);
-    color: hsl(210 10% 23%);
-    border-color: hsl(210 40% 85%);
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-medium);
   }
   
   .content-area {
@@ -200,7 +200,7 @@
   }
   
   h1 {
-    color: hsl(210 10% 23%);
+    color: var(--text-primary);
     text-align: center;
     margin: 0;
     font-size: 2.5rem;
@@ -210,7 +210,7 @@
   }
   
   p {
-    color: hsl(215 20% 65%);
+    color: var(--text-secondary);
     margin: 0;
     font-size: 1.25rem;
     font-weight: 400;
@@ -221,16 +221,16 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: hsl(0 0% 100%);
+    background: var(--bg-primary);
     padding: 1rem;
     display: flex;
     gap: 0.75rem;
-    border-top: 1px solid hsl(210 40% 92%);
+    border-top: 1px solid var(--border);
   }
   
   button {
-    background: hsl(210 10% 23%);
-    color: hsl(0 0% 100%);
+    background: var(--accent-color);
+    color: var(--accent-foreground);
     border: none;
     padding: 10px 16px;
     border-radius: 8px;
@@ -242,7 +242,7 @@
   }
   
   button:hover {
-    background: hsl(210 10% 15%);
+    background: var(--accent-hover);
     box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
     transform: translateY(-1px);
   }
@@ -251,8 +251,8 @@
     margin: 0;
     padding: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: hsl(0 0% 100%);
-    color: hsl(210 10% 23%);
+    background: var(--bg-primary);
+    color: var(--text-primary);
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -263,9 +263,5 @@
     height: 100%;
     border: none;
   }
-  
-  :global(.dark-theme) .nav-switches {
-    background: hsl(217.2 32.6% 17.5%);
-    border-color: hsl(217.2 32.6% 25%);
   }
 </style>
