@@ -1,9 +1,10 @@
 <!-- src/routes/+page.svelte -->
 <script>
   import { windows, openWindow, closeWindow } from '$lib/stores/windows';
-  import { currentView, switchToDesktop, switchToDashboard } from '$lib/stores/view';
+  import { currentView, switchToDesktop, switchToDashboard, switchToKanban } from '$lib/stores/view';
   import Window from '$lib/components/Window.svelte';
   import Dashboard from '$lib/components/Dashboard.svelte';
+  import KanbanBoard from '$lib/components/KanbanBoard.svelte';
 
   function openExample() {
     openWindow({
@@ -38,6 +39,13 @@
       >
         📊 Dashboard
       </button>
+      <button 
+        class="nav-switch" 
+        class:active={$currentView === 'kanban'}
+        on:click={switchToKanban}
+      >
+        📋 Kanban
+      </button>
     </div>
   </div>
 
@@ -49,6 +57,8 @@
       </div>
     {:else}
       <Dashboard />
+    {:else if $currentView === 'kanban'}
+      <KanbanBoard />
     {/if}
   </div>
   
