@@ -5,27 +5,68 @@ export const kanbanBoards = writable([
   {
     id: 'board-1',
     title: 'Projekt Management',
+    viewMode: 'kanban', // 'kanban', 'list', 'gantt'
     columns: [
       {
         id: 'col-1',
         title: 'To Do',
         cards: [
-          { id: 'card-1', title: 'Website Design', description: 'Neues Layout erstellen' },
-          { id: 'card-2', title: 'API Integration', description: 'Backend anbinden' }
+          { 
+            id: 'card-1', 
+            title: 'Website Design', 
+            description: 'Neues Layout erstellen',
+            priority: 'high',
+            assignee: 'Max Mustermann',
+            dueDate: '2025-01-20',
+            startDate: '2025-01-15',
+            status: 'To Do',
+            tags: ['Design', 'Frontend']
+          },
+          { 
+            id: 'card-2', 
+            title: 'API Integration', 
+            description: 'Backend anbinden',
+            priority: 'medium',
+            assignee: 'Anna Schmidt',
+            dueDate: '2025-01-25',
+            startDate: '2025-01-18',
+            status: 'To Do',
+            tags: ['Backend', 'API']
+          }
         ]
       },
       {
         id: 'col-2',
         title: 'In Progress',
         cards: [
-          { id: 'card-3', title: 'Dashboard entwickeln', description: 'Kanban Board implementieren' }
+          { 
+            id: 'card-3', 
+            title: 'Dashboard entwickeln', 
+            description: 'Kanban Board implementieren',
+            priority: 'high',
+            assignee: 'Tom Weber',
+            dueDate: '2025-01-22',
+            startDate: '2025-01-16',
+            status: 'In Progress',
+            tags: ['Frontend', 'Dashboard']
+          }
         ]
       },
       {
         id: 'col-3',
         title: 'Done',
         cards: [
-          { id: 'card-4', title: 'Setup Projekt', description: 'Grundstruktur erstellt' }
+          { 
+            id: 'card-4', 
+            title: 'Setup Projekt', 
+            description: 'Grundstruktur erstellt',
+            priority: 'low',
+            assignee: 'Lisa Müller',
+            dueDate: '2025-01-14',
+            startDate: '2025-01-10',
+            status: 'Done',
+            tags: ['Setup', 'Infrastructure']
+          }
         ]
       }
     ]
@@ -33,6 +74,16 @@ export const kanbanBoards = writable([
 ]);
 
 export const activeBoard = writable('board-1');
+
+export function setBoardViewMode(boardId, viewMode) {
+  kanbanBoards.update(boards => 
+    boards.map(board => 
+      board.id === boardId 
+        ? { ...board, viewMode }
+        : board
+    )
+  );
+}
 
 export function addCard(boardId, columnId, card) {
   kanbanBoards.update(boards => 
@@ -42,7 +93,19 @@ export function addCard(boardId, columnId, card) {
             ...board,
             columns: board.columns.map(col => 
               col.id === columnId 
-                ? { ...col, cards: [...col.cards, { ...card, id: crypto.randomUUID() }] }
+                ? { 
+                    ...col, 
+                    cards: [...col.cards, { 
+                      ...card, 
+                      id: crypto.randomUUID(),
+                      status: col.title,
+                      priority: card.priority || 'medium',
+                      assignee: card.assignee || '',
+                      dueDate: card.dueDate || '',
+                      startDate: card.startDate || '',
+                      tags: card.tags || []
+                    }] 
+                  }
                 : col
             )
           }
