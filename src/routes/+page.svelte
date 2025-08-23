@@ -251,7 +251,7 @@
     background: hsl(210 40% 98%);
     color: hsl(222.2 84% 4.9%);
     font-feature-settings: 'cv11', 'ss01';
-    font-variation-settings: 'opsz\' 32;
+    font-variation-settings: 'opsz' 32;
   }
   
   :global(iframe) {
