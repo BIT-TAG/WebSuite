@@ -107,28 +107,28 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: hsl(210 40% 98%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: hsl(0 0% 100%);
   }
   
   .nav-header {
     background: hsl(0 0% 100%);
-    border-bottom: 1px solid hsl(214.3 31.8% 91.4%);
-    padding: 0.75rem 1.5rem;
+    border-bottom: 1px solid hsl(210 40% 92%);
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     z-index: 1000;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    backdrop-filter: blur(8px);
   }
   
   .nav-switches {
     display: flex;
-    gap: 0.125rem;
-    background: hsl(210 40% 98%);
-    border-radius: 0.5rem;
-    padding: 0.25rem;
-    border: 1px solid hsl(214.3 31.8% 91.4%);
+    gap: 0.25rem;
+    background: hsl(210 40% 96%);
+    border-radius: 8px;
+    padding: 4px;
+    border: 1px solid hsl(210 40% 90%);
   }
   
   .nav-right {
@@ -139,26 +139,26 @@
   
   .nav-switch {
     background: transparent;
-    color: hsl(215.4 16.3% 56.9%);
+    color: hsl(215 20% 65%);
     border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: calc(0.5rem - 2px);
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 150ms ease;
-    font-size: 0.8125rem;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 13px;
     font-weight: 500;
     white-space: nowrap;
     position: relative;
   }
   
   .nav-switch:hover {
-    background: hsl(210 40% 94%);
-    color: hsl(222.2 84% 4.9%);
+    background: hsl(210 40% 92%);
+    color: hsl(210 10% 23%);
   }
   
   .nav-switch.active {
     background: hsl(0 0% 100%);
-    color: hsl(222.2 84% 4.9%);
+    color: hsl(210 10% 23%);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     font-weight: 500;
   }
@@ -166,23 +166,23 @@
   .settings-btn {
     background: hsl(210 40% 98%);
     border: 1px solid hsl(214.3 31.8% 91.4%);
-    color: hsl(215.4 16.3% 56.9%);
-    padding: 0.5rem;
-    border-radius: 0.5rem;
+    color: hsl(215 20% 65%);
+    padding: 8px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.125rem;
-    transition: all 150ms ease;
+    font-size: 16px;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
   
   .settings-btn:hover {
-    background: hsl(210 40% 94%);
-    color: hsl(222.2 84% 4.9%);
-    border-color: hsl(217.2 32.6% 25%);
+    background: hsl(210 40% 92%);
+    color: hsl(210 10% 23%);
+    border-color: hsl(210 40% 85%);
   }
   
   .content-area {
@@ -196,22 +196,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 2rem;
   }
   
   h1 {
-    color: hsl(222.2 84% 4.9%);
+    color: hsl(210 10% 23%);
     text-align: center;
     margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 2.5rem;
+    font-weight: 700;
     letter-spacing: -0.025em;
+    line-height: 1.2;
   }
   
   p {
-    color: hsl(215.4 16.3% 46.9%);
+    color: hsl(215 20% 65%);
     margin: 0;
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 400;
   }
   
   .taskbar {
@@ -220,38 +222,40 @@
     left: 0;
     right: 0;
     background: hsl(0 0% 100%);
-    padding: 0.5rem;
+    padding: 1rem;
     display: flex;
-    gap: 0.5rem;
-    border-top: 1px solid hsl(214.3 31.8% 91.4%);
+    gap: 0.75rem;
+    border-top: 1px solid hsl(210 40% 92%);
   }
   
   button {
-    background: hsl(221.2 83.2% 53.3%);
-    color: hsl(210 40% 98%);
+    background: hsl(210 10% 23%);
+    color: hsl(0 0% 100%);
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 10px 16px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
-    font-size: 0.875rem;
-    transition: all 150ms ease;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   }
   
   button:hover {
-    background: hsl(221.2 83.2% 48%);
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    background: hsl(210 10% 15%);
+    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
+    transform: translateY(-1px);
   }
   
   :global(body) {
     margin: 0;
     padding: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: hsl(210 40% 98%);
-    color: hsl(222.2 84% 4.9%);
-    font-feature-settings: 'cv11', 'ss01';
-    font-variation-settings: 'opsz' 32;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: hsl(0 0% 100%);
+    color: hsl(210 10% 23%);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   :global(iframe) {
@@ -261,6 +265,6 @@
   }
   
   :global(.dark-theme) .nav-switches {
-    background: hsl(215 27.9% 16.9%);
+    background: hsl(210 10% 10%);
   }
 </style>
