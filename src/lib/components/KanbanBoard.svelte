@@ -1,5 +1,3 @@
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
-<!-- Geändert: Click-Events auf semantisch korrekte button-Elemente -->
 <script>
   import { kanbanBoards, activeBoard, addCard, deleteCard, setBoardViewMode } from '$lib/stores/kanban';
   import { startPomodoro } from '$lib/stores/pomodoro';
@@ -7,7 +5,8 @@
   import { dndzone } from 'svelte-dnd-action';
   import ListView from './ListView.svelte';
   import GanttView from './GanttView.svelte';
-  import { Button, Card, Input, Textarea, Badge, Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
+  import { Button, Card, Input, Textarea, Badge } from '$lib/components/ui';
+  import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
   import { Plus, Timer, X } from 'lucide-svelte';
   
   let showAddCard = {};
@@ -103,8 +102,8 @@
       📋 {currentBoard?.title || 'Kanban Board'}
     </h2>
     
-    <Tabs value={viewMode}>
-      <TabsList class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
+    <Tabs value={viewMode} class="w-auto">
+      <TabsList>
         <TabsTrigger value="kanban" on:click={() => switchView('kanban')}>
           📋 Kanban
         </TabsTrigger>
@@ -127,7 +126,7 @@
               <Card class="flex-1 p-4">
                 <div class="mb-4 flex items-center justify-between">
                   <h3 class="font-medium text-foreground">{column.title}</h3>
-                  <Badge variant="secondary">
+                  <Badge variant="secondary" class="text-xs">
                     {column.cards.length}
                   </Badge>
                 </div>
@@ -153,7 +152,7 @@
                             class="h-6 w-6"
                             on:click={() => startPomodoroWithTask(card)}
                           >
-                            <Timer class="h-3 w-3"></Timer>
+                            <Timer class="h-3 w-3" />
                           </Button>
                           <Button 
                             variant="ghost" 
@@ -161,26 +160,24 @@
                             class="h-6 w-6 text-destructive hover:text-destructive"
                             on:click={() => deleteCard($activeBoard, column.id, card.id)}
                           >
-                            <X class="h-3 w-3"></X>
+                            <X class="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
                       
                       {#if card.description}
-                        <p class="mb-3 text-sm text-muted-foreground">
-                          {card.description}
-                        </p>
+                        <p class="mb-3 text-sm text-muted-foreground">{card.description}</p>
                       {/if}
                       
                       {#if card.priority || card.assignee}
                         <div class="flex flex-wrap gap-2">
                           {#if card.priority}
-                            <Badge variant={getPriorityVariant(card.priority)}>
+                            <Badge variant={getPriorityVariant(card.priority)} class="text-xs">
                               {getPriorityLabel(card.priority)}
                             </Badge>
                           {/if}
                           {#if card.assignee}
-                            <Badge variant="outline">
+                            <Badge variant="outline" class="text-xs">
                               👤 {card.assignee}
                             </Badge>
                           {/if}
@@ -202,7 +199,7 @@
                         bind:value={newCardDescription}
                         placeholder="Beschreibung (optional)..."
                         rows={2}
-                      ></Textarea>
+                      />
                       <div class="flex gap-2">
                         <Button size="sm" on:click={() => handleAddCard(column.id)}>
                           Speichern
@@ -220,10 +217,10 @@
                 {:else}
                   <Button 
                     variant="ghost" 
-                    class="w-full justify-center border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50"
+                    class="w-full border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50"
                     on:click={() => showAddCard[column.id] = true}
                   >
-                    <Plus class="mr-2 h-4 w-4"></Plus>
+                    <Plus class="mr-2 h-4 w-4" />
                     Karte hinzufügen
                   </Button>
                 {/if}

@@ -1,6 +1,4 @@
 <!-- src/lib/components/Window.svelte -->
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
-<!-- Geändert: Click-Events auf semantisch korrekte button-Elemente -->
 <script>
   import { moveWindow, bringToFront } from '$lib/stores/windows';
   import { onMount, onDestroy } from 'svelte';
@@ -10,8 +8,6 @@
   export let position;
   export let zIndex;
   export let onClose;
-  
-  // Entfernt: Ungenutzte export properties
 
   let offset = { x: 0, y: 0 };
   let dragging = false;
@@ -38,13 +34,6 @@
   function handleMouseUp() {
     dragging = false;
   }
-  
-  function handleKeyDown(event) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      onClose(id);
-    }
-  }
 
   onMount(() => {
     document.addEventListener('mousemove', handleMouseMove);
@@ -65,14 +54,7 @@
 >
   <div class="titlebar" on:mousedown={handleMouseDown} role="none">
     <span id="title-{id}">{title}</span>
-    <button 
-      type="button" 
-      on:click={() => onClose(id)} 
-      on:keydown={handleKeyDown}
-      aria-label="Fenster schließen"
-    >
-      ✖
-    </button>
+    <button on:click={() => onClose(id)} aria-label="Fenster schließen">✖</button>
   </div>
   <div class="content">
     <slot />

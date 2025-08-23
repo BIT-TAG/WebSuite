@@ -1,6 +1,4 @@
 <!-- src/lib/components/ListView.svelte -->
-<!-- Geändert: Click-Events auf semantisch korrekte button-Elemente -->
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { kanbanBoards, activeBoard, deleteCard } from '$lib/stores/kanban';
   import { startPomodoro } from '$lib/stores/pomodoro';
@@ -56,13 +54,6 @@
     return column?.id;
   }
   
-  function handleGroupKeyDown(event, groupName) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleGroup(groupName);
-    }
-  }
-  
   // Initialisiere alle Gruppen als erweitert
   $: if (currentBoard) {
     currentBoard.columns.forEach(col => {
@@ -89,18 +80,13 @@
   <div class="list-content">
     {#each Object.entries(groupedCards) as [groupName, cards]}
       <div class="group">
-        <button 
-          type="button"
-          class="group-header" 
-          on:click={() => toggleGroup(groupName)}
-          on:keydown={(e) => handleGroupKeyDown(e, groupName)}
-        >
+        <div class="group-header" on:click={() => toggleGroup(groupName)}>
           <div class="group-toggle">
             {expandedGroups[groupName] ? '▼' : '▶'}
           </div>
           <div class="group-title">{groupName}</div>
           <div class="group-count">{cards.length}</div>
-        </button>
+        </div>
         
         {#if expandedGroups[groupName]}
           <div class="group-content">
@@ -163,7 +149,6 @@
                 <div class="list-cell actions-col">
                   <div class="action-buttons">
                     <button 
-                      type="button"
                       class="action-btn pomodoro-btn"
                       on:click={() => startPomodoroWithTask(card)}
                       title="Pomodoro starten"
@@ -171,7 +156,6 @@
                       🍅
                     </button>
                     <button 
-                      type="button"
                       class="action-btn delete-btn"
                       on:click={() => deleteCard($activeBoard, getColumnIdByTitle(groupName), card.id)}
                       title="Löschen"
@@ -237,9 +221,6 @@
   .group-header {
     display: flex;
     align-items: center;
-    width: 100%;
-    text-align: left;
-    border: none;
     padding: 1rem 1.5rem;
     background: var(--bg-tertiary);
     cursor: pointer;

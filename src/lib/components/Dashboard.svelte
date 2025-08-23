@@ -1,4 +1,3 @@
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { windows, openWindow } from '$lib/stores/windows';
   import { switchToDesktop } from '$lib/stores/view';
@@ -68,7 +67,7 @@
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild let:builder>
                 <Button builders={[builder]} variant="ghost" size="icon" class="h-8 w-8">
-                  <MoreVertical class="h-4 w-4"></MoreVertical>
+                  <MoreVertical class="h-4 w-4" />
                 </Button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Content class="w-48 rounded-md border bg-popover p-1 shadow-md">
@@ -76,21 +75,21 @@
                   class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
                   on:click={() => handleAppAction(app, 'window')}
                 >
-                  <Monitor class="h-4 w-4"></Monitor>
+                  <Monitor class="h-4 w-4" />
                   Im Fenster öffnen
                 </DropdownMenu.Item>
                 <DropdownMenu.Item 
                   class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
                   on:click={() => handleAppAction(app, 'tab')}
                 >
-                  <ExternalLink class="h-4 w-4"></ExternalLink>
+                  <ExternalLink class="h-4 w-4" />
                   In neuem Tab öffnen
                 </DropdownMenu.Item>
                 <DropdownMenu.Item 
                   class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
                   on:click={() => handleAppAction(app, 'info')}
                 >
-                  <Info class="h-4 w-4"></Info>
+                  <Info class="h-4 w-4" />
                   App-Info
                 </DropdownMenu.Item>
               </DropdownMenu.Content>

@@ -1,5 +1,4 @@
 <!-- src/lib/components/GanttView.svelte -->
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { kanbanBoards, activeBoard } from '$lib/stores/kanban';
   import { startPomodoro } from '$lib/stores/pomodoro';
@@ -134,7 +133,6 @@
           </div>
           <div class="task-actions">
             <button 
-              type="button"
               class="action-btn pomodoro-btn"
               on:click={() => startPomodoroWithTask(card)}
               title="Pomodoro starten"
@@ -151,14 +149,11 @@
               class="task-bar"
               style="left: {position.left}%; width: {position.width}%; background-color: {getPriorityColor(card.priority)}"
             >
-              <div class="task-progress" style="width: {getProgress(card)}%">
-              </div>
+              <div class="task-progress" style="width: {getProgress(card)}%"></div>
               <div class="task-bar-label">{card.title}</div>
             </div>
           {:else}
-            <div class="no-dates">
-              Keine Daten verfügbar
-            </div>
+            <div class="no-dates">Keine Daten verfügbar</div>
           {/if}
         </div>
       </div>

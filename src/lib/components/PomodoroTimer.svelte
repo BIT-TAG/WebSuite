@@ -1,4 +1,3 @@
-<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { 
     pomodoroState, 
@@ -16,7 +15,8 @@
   } from '$lib/stores/pomodoro';
   import { kanbanBoards, activeBoard, completeTask } from '$lib/stores/kanban';
   import { Button, Card } from '$lib/components/ui';
-  import { Tabs, TabsList, TabsTrigger, Dialog, DialogContent, DialogHeader, DialogTitle } from '$lib/components/ui';
+  import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
+  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '$lib/components/ui';
   import { Play, Pause, Square, CheckCircle, List } from 'lucide-svelte';
   
   let showTaskSelector = false;
@@ -149,36 +149,36 @@
   <div class="mb-4 flex justify-center gap-2">
     {#if !$pomodoroState.isRunning && !$pomodoroState.isPaused}
       <Button on:click={handleStart}>
-        <Play class="mr-2 h-4 w-4"></Play>
+        <Play class="mr-2 h-4 w-4" />
         Start
       </Button>
     {:else if $pomodoroState.isRunning && !$pomodoroState.isPaused}
       <Button variant="outline" on:click={pausePomodoro}>
-        <Pause class="mr-2 h-4 w-4"></Pause>
+        <Pause class="mr-2 h-4 w-4" />
         Pause
       </Button>
     {:else if $pomodoroState.isPaused}
       <Button on:click={resumePomodoro}>
-        <Play class="mr-2 h-4 w-4"></Play>
+        <Play class="mr-2 h-4 w-4" />
         Weiter
       </Button>
     {/if}
     
     {#if $pomodoroState.isRunning || $pomodoroState.isPaused}
       <Button variant="destructive" on:click={stopPomodoro}>
-        <Square class="mr-2 h-4 w-4"></Square>
+        <Square class="mr-2 h-4 w-4" />
         Stop
       </Button>
     {/if}
   </div>
   
-  <Tabs value={$pomodoroState.session}>
-    <TabsList class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full">
+  <Tabs value={$pomodoroState.session} class="w-full">
+    <TabsList class="grid w-full grid-cols-3">
       <TabsTrigger 
         value="work" 
         on:click={setWorkSession}
         disabled={$pomodoroState.isRunning}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1"
+        class="text-xs"
       >
         Arbeit (25min)
       </TabsTrigger>
@@ -186,7 +186,7 @@
         value="shortBreak" 
         on:click={setShortBreak}
         disabled={$pomodoroState.isRunning}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1"
+        class="text-xs"
       >
         Pause (5min)
       </TabsTrigger>
@@ -194,7 +194,7 @@
         value="longBreak" 
         on:click={setLongBreak}
         disabled={$pomodoroState.isRunning}
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1"
+        class="text-xs"
       >
         Lange (15min)
       </TabsTrigger>
@@ -203,31 +203,26 @@
 </Card>
 
 <Dialog bind:open={showTaskSelector}>
-  <DialogContent class="fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-w-md">
+  <DialogContent class="max-w-md">
     <DialogHeader>
-      <DialogTitle class="text-lg font-semibold leading-none tracking-tight">
-        Task auswählen
-      </DialogTitle>
+      <DialogTitle>Task auswählen</DialogTitle>
     </DialogHeader>
     
     <div class="max-h-80 space-y-2 overflow-y-auto">
       {#each availableTasks as task}
-        <button
-          type="button"
+        <Card 
           class="cursor-pointer p-3 transition-colors hover:bg-muted/50"
           on:click={() => selectTask(task)}
         >
-          <Card class="text-left">
-            <h4 class="font-medium text-foreground">{task.title}</h4>
-            <div class="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-              <span>{task.columnTitle}</span>
-              {#if task.description}
-                <span>•</span>
-                <span class="truncate">{task.description}</span>
-              {/if}
-            </div>
-          </Card>
-        </button>
+          <h4 class="font-medium text-foreground">{task.title}</h4>
+          <div class="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+            <span>{task.columnTitle}</span>
+            {#if task.description}
+              <span>•</span>
+              <span class="truncate">{task.description}</span>
+            {/if}
+          </div>
+        </Card>
       {/each}
       
       {#if availableTasks.length === 0}
