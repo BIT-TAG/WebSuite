@@ -12,4 +12,5 @@ export { default as TabsContent } from "./tabs/TabsContent.svelte";
 
 // Dialog exports
 import { 
+}
 export * from "./dialog.svelte";
