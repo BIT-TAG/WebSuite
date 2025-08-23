@@ -5,8 +5,7 @@
   import { dndzone } from 'svelte-dnd-action';
   import ListView from './ListView.svelte';
   import GanttView from './GanttView.svelte';
-  import { Button, Card, Input, Textarea, Badge } from '$lib/components/ui';
-  import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
+  import { Button, Card, Input, Textarea, Badge, Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
   import { Plus, Timer, X } from 'lucide-svelte';
   
   let showAddCard = {};

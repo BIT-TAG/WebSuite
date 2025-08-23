@@ -1,7 +1,6 @@
 <script>
   import { settings, setTheme, setAccentColor } from '$lib/stores/settings';
-  import { Dialog, DialogContent, DialogHeader, DialogTitle } from '$lib/components/ui';
-  import { Button, Card } from '$lib/components/ui';
+  import { Dialog, DialogContent, DialogHeader, DialogTitle, Button, Card } from '$lib/components/ui';
   import { Sun, Moon, Palette } from 'lucide-svelte';
   
   export let isOpen = false;

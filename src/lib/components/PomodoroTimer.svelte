@@ -15,8 +15,7 @@
   } from '$lib/stores/pomodoro';
   import { kanbanBoards, activeBoard, completeTask } from '$lib/stores/kanban';
   import { Button, Card } from '$lib/components/ui';
-  import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
-  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '$lib/components/ui';
+  import { Tabs, TabsList, TabsTrigger, Dialog, DialogContent, DialogHeader, DialogTitle } from '$lib/components/ui';
   import { Play, Pause, Square, CheckCircle, List } from 'lucide-svelte';
   
   let showTaskSelector = false;

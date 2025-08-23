@@ -8,8 +8,7 @@
   import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
   import PomodoroMenuBar from '$lib/components/PomodoroMenuBar.svelte';
   import SettingsPopup from '$lib/components/SettingsPopup.svelte';
-  import { Button } from '$lib/components/ui';
-  import { Tabs, TabsList, TabsTrigger, TabsContent } from '$lib/components/ui';
+  import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '$lib/components/ui';
   import { Settings } from 'lucide-svelte';
   
   let showSettings = false;
