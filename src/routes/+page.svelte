@@ -250,7 +250,7 @@
     background: var(--bg-secondary);
     color: var(--text-primary);
     font-feature-settings: 'cv11', 'ss01';
-    font-variation-settings: 'opsz' 32;
+    font-variation-settings: 'opsz\' 32;
   }
   
   :global(iframe) {
