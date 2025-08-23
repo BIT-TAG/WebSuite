@@ -121,7 +121,7 @@
         content: newWidgetContent.trim(),
         color: newWidgetColor
       });
-      resetForm();
+      resetWidgetForm();
       showAddModal = false;
     }
   }
