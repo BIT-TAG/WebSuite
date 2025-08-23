@@ -125,35 +125,29 @@
 <div class="dashboard">
   <div class="dashboard-header">
     <div class="header-content">
-      <div class="header-text">
-        <h1>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect width="7" height="9" x="3" y="3" rx="1"/>
-            <rect width="7" height="5" x="14" y="3" rx="1"/>
-            <rect width="7" height="9" x="14" y="12" rx="1"/>
-            <rect width="7" height="5" x="3" y="16" rx="1"/>
-          </svg>
-          Dashboard
-        </h1>
-        <p>Ihre persönliche Arbeitsumgebung mit {totalItems} Elementen</p>
-      </div>
-      
-      <div class="header-actions">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-number">{visibleWidgets.length}</span>
-            <span class="stat-label">Widgets</span>
+      <div class="header-left">
+        <div class="logo-section">
+          <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="7" height="9" x="3" y="3" rx="1"/>
+              <rect width="7" height="5" x="14" y="3" rx="1"/>
+              <rect width="7" height="9" x="14" y="12" rx="1"/>
+              <rect width="7" height="5" x="3" y="16" rx="1"/>
+            </svg>
           </div>
-          <div class="stat-item">
-            <span class="stat-number">{quickApps.length}</span>
-            <span class="stat-label">Apps</span>
+          <div class="header-text">
+            <h1>Dashboard</h1>
+            <p>{totalItems} Apps verfügbar</p>
           </div>
         </div>
-        <button class="add-widget-btn" on:click={() => showAddWidget = true}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      </div>
+      
+      <div class="header-right">
+        <button class="add-app-btn" on:click={() => showAddWidget = true}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
-          Widget hinzufügen
+          App hinzufügen
         </button>
       </div>
     </div>
@@ -163,56 +157,78 @@
     {#if totalItems === 0}
       <div class="empty-state">
         <div class="empty-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
             <rect width="7" height="9" x="3" y="3" rx="1"/>
             <rect width="7" height="5" x="14" y="3" rx="1"/>
             <rect width="7" height="9" x="14" y="12" rx="1"/>
             <rect width="7" height="5" x="3" y="16" rx="1"/>
           </svg>
         </div>
-        <h3>Dashboard ist leer</h3>
-        <p>Erstellen Sie Ihr erstes Widget oder nutzen Sie die Quick Apps.</p>
-        <button class="empty-action-btn" on:click={() => showAddWidget = true}>
+        <h3>Keine Apps installiert</h3>
+        <p>Fügen Sie Ihre erste App hinzu, um loszulegen.</p>
+        <button class="install-btn" on:click={() => showAddWidget = true}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
-          Erstes Widget erstellen
+          Erste App installieren
         </button>
       </div>
     {:else}
-      <div class="dashboard-grid">
+      <div class="apps-grid">
         <!-- Quick Apps -->
         {#each quickApps as app}
-          <div class="grid-item app-item">
-            <button 
-              class="app-card" 
-              on:click={() => launchApp(app)}
-              style="--app-color: {app.color}"
-            >
-              <div class="app-icon">{app.icon}</div>
-              <div class="app-name">{app.name}</div>
-              <div class="app-type">Quick App</div>
-            </button>
-          </div>
-        {/each}
-        
-        <!-- Widgets -->
-        {#each visibleWidgets as widget (widget.id)}
-          <div class="grid-item widget-item" class:large={widget.size === 'large'}>
-            <Widget {widget} gridMode={true} />
-          </div>
-        {/each}
-        
-        <!-- Add Widget Button -->
-        <div class="grid-item add-item">
-          <button class="add-widget-card" on:click={() => showAddWidget = true}>
-            <div class="add-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M5 12h14"/>
-              </svg>
+          <div class="app-card" on:click={() => launchApp(app)}>
+            <div class="app-icon" style="background: {app.color}">
+              <span class="icon-emoji">{app.icon}</span>
             </div>
-            <div class="add-text">Widget hinzufügen</div>
-          </button>
+            <div class="app-info">
+              <h3 class="app-name">{app.name}</h3>
+              <p class="app-status">Installiert</p>
+            </div>
+            <div class="app-actions">
+              <button class="action-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="5,3 19,12 5,21"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        {/each}
+        
+        <!-- Widgets als Apps -->
+        {#each visibleWidgets as widget (widget.id)}
+          <div class="app-card widget-app">
+            <div class="app-icon widget-icon" style="background: {colorOptions.find(c => c.value === widget.color)?.color || '#3b82f6'}">
+              <span class="icon-emoji">
+                {#if widget.type === 'markdown'}📝{:else}🔧{/if}
+              </span>
+            </div>
+            <div class="app-info">
+              <h3 class="app-name">{widget.title}</h3>
+              <p class="app-status">Widget</p>
+            </div>
+            <div class="app-actions">
+              <button class="action-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        {/each}
+        
+        <!-- Add App Card -->
+        <div class="app-card add-app-card" on:click={() => showAddWidget = true}>
+          <div class="add-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </div>
+          <div class="add-text">
+            <h3>App hinzufügen</h3>
+            <p>Neue App installieren</p>
+          </div>
         </div>
       </div>
     {/if}
@@ -220,19 +236,18 @@
 
   {#if showAddWidget}
     <div class="modal-overlay" on:click={closeModal}>
-      <div class="add-widget-modal" on:click|stopPropagation>
+      <div class="install-modal" on:click|stopPropagation>
         <div class="modal-header">
           <div class="modal-title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect width="7" height="9" x="3" y="3" rx="1"/>
-              <rect width="7" height="5" x="14" y="3" rx="1"/>
-              <rect width="7" height="9" x="14" y="12" rx="1"/>
-              <rect width="7" height="5" x="3" y="16" rx="1"/>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            Neues Widget erstellen
+            App installieren
           </div>
           <button class="close-btn" on:click={closeModal}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
@@ -241,7 +256,7 @@
         
         <div class="modal-content">
           <div class="templates-section">
-            <h4>Vorlagen</h4>
+            <h4>App-Vorlagen</h4>
             <div class="templates-grid">
               {#each widgetTemplates as template}
                 <button 
@@ -260,19 +275,19 @@
           <div class="form-section">
             <div class="form-row">
               <div class="form-group">
-                <label for="widget-title">Titel</label>
+                <label for="app-name">App Name</label>
                 <input 
-                  id="widget-title"
+                  id="app-name"
                   type="text" 
                   bind:value={newWidgetTitle}
-                  placeholder="Widget Titel..."
+                  placeholder="Meine App..."
                   class="form-input"
                 />
               </div>
               
               <div class="form-group">
-                <label for="widget-type">Typ</label>
-                <select id="widget-type" bind:value={newWidgetType} class="form-select">
+                <label for="app-type">App Typ</label>
+                <select id="app-type" bind:value={newWidgetType} class="form-select">
                   <option value="markdown">Markdown</option>
                   <option value="html">HTML</option>
                 </select>
@@ -280,7 +295,7 @@
             </div>
             
             <div class="form-group">
-              <label>Farbe</label>
+              <label>App Farbe</label>
               <div class="color-picker">
                 {#each colorOptions as color}
                   <button
@@ -301,13 +316,13 @@
             </div>
             
             <div class="form-group">
-              <label for="widget-content">Inhalt</label>
+              <label for="app-content">App Inhalt</label>
               <textarea 
-                id="widget-content"
+                id="app-content"
                 bind:value={newWidgetContent}
                 placeholder={newWidgetType === 'html' ? 'HTML Code eingeben...' : 'Markdown Text eingeben...'}
                 class="form-textarea"
-                rows="10"
+                rows="8"
               ></textarea>
             </div>
           </div>
@@ -323,9 +338,11 @@
             disabled={!newWidgetTitle.trim() || !newWidgetContent.trim()}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14M5 12h14"/>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            Widget erstellen
+            App installieren
           </button>
         </div>
       </div>
@@ -336,18 +353,20 @@
 <style>
   .dashboard {
     height: 100%;
-    background: var(--bg-primary);
+    background: #0d1117;
+    color: #f0f6fc;
     overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
   }
 
   .dashboard-header {
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
+    padding: 2rem 2.5rem;
     position: sticky;
     top: 0;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border);
-    padding: 2rem 2rem 1.5rem;
     z-index: 100;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
   }
   
   .header-content {
@@ -356,216 +375,225 @@
     align-items: center;
     max-width: 1400px;
     margin: 0 auto;
-    gap: 2rem;
   }
   
-  .header-text {
-    flex: 1;
-  }
-
-  .header-text h1 {
+  .header-left {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
-
-  .header-text p {
-    color: var(--text-secondary);
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
   }
   
-  .header-actions {
+  .logo-section {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-  }
-  
-  .stats-grid {
-    display: flex;
     gap: 1rem;
   }
   
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.75rem 1rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
+  .logo {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #7c3aed, #3b82f6);
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
   }
   
-  .stat-number {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--accent-color);
-    line-height: 1;
+  .header-text h1 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #f0f6fc;
+    letter-spacing: -0.025em;
   }
   
-  .stat-label {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+  .header-text p {
+    margin: 0;
+    color: #8b949e;
+    font-size: 0.875rem;
+    font-weight: 400;
   }
-
-  .add-widget-btn {
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .add-app-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--accent-color);
-    color: var(--accent-foreground);
+    background: #238636;
+    color: white;
     border: none;
-    padding: 0.875rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
   
-  .add-widget-btn:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  .add-app-btn:hover {
+    background: #2ea043;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
   }
   
   .dashboard-content {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2.5rem;
   }
   
-  .dashboard-grid {
+  .apps-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
-    align-items: start;
   }
   
-  .grid-item {
-    min-height: 200px;
-  }
-  
-  .grid-item.large {
-    grid-column: span 2;
-  }
-  
-  .grid-item.widget-item {
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
-  }
-  
-  .grid-item.widget-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1);
-  }
-
   .app-card {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 1.5rem;
     cursor: pointer;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 80px;
     position: relative;
     overflow: hidden;
   }
-
+  
   .app-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: var(--app-color);
-  }
-
-  .app-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1);
-    border-color: var(--app-color);
-    background: var(--bg-secondary);
-  }
-
-  .app-icon {
-    font-size: 2.5rem;
-    line-height: 1;
-  }
-
-  .app-name {
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 1rem;
-    text-align: center;
-    line-height: 1.2;
+    height: 2px;
+    background: linear-gradient(90deg, #7c3aed, #3b82f6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
   
-  .app-type {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    background: var(--bg-tertiary);
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-weight: 500;
+  .app-card:hover {
+    background: #262c36;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   }
-
-  .add-widget-card {
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
+  
+  .app-card:hover::before {
+    opacity: 1;
+  }
+  
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    background: var(--bg-primary);
-    border: 2px dashed var(--border);
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--text-secondary);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
-
-  .add-widget-card:hover {
-    border-color: var(--accent-color);
-    background: var(--bg-secondary);
-    color: var(--accent-color);
-    transform: translateY(-2px);
+  
+  .icon-emoji {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   }
-
-  .add-icon {
-    opacity: 0.7;
+  
+  .app-info {
+    flex: 1;
+    min-width: 0;
   }
-
-  .add-text {
+  
+  .app-name {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
     font-weight: 600;
-    font-size: 0.875rem;
+    color: #f0f6fc;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-
+  
+  .app-status {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #8b949e;
+    font-weight: 400;
+  }
+  
+  .app-actions {
+    flex-shrink: 0;
+  }
+  
+  .action-btn {
+    background: #30363d;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .action-btn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: scale(1.05);
+  }
+  
+  .add-app-card {
+    border: 2px dashed #30363d;
+    background: transparent;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 120px;
+  }
+  
+  .add-app-card:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+  }
+  
+  .add-icon {
+    color: #8b949e;
+    transition: color 0.2s ease;
+  }
+  
+  .add-app-card:hover .add-icon {
+    color: #3b82f6;
+  }
+  
+  .add-text h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f0f6fc;
+  }
+  
+  .add-text p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #8b949e;
+  }
+  
   .empty-state {
     display: flex;
     flex-direction: column;
@@ -576,47 +604,46 @@
     max-width: 500px;
     margin: 0 auto;
   }
-
+  
   .empty-icon {
-    margin-bottom: 1.5rem;
-    color: var(--text-muted);
-    opacity: 0.5;
+    margin-bottom: 2rem;
+    color: #30363d;
   }
   
   .empty-state h3 {
     margin: 0 0 0.75rem 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #f0f6fc;
   }
   
   .empty-state p {
     margin: 0 0 2rem 0;
-    color: var(--text-secondary);
+    color: #8b949e;
     font-size: 1rem;
     line-height: 1.5;
   }
   
-  .empty-action-btn {
+  .install-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background: var(--accent-color);
-    color: var(--accent-foreground);
+    background: #238636;
+    color: white;
     border: none;
     padding: 0.875rem 1.5rem;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(35, 134, 54, 0.3);
   }
-
-  .empty-action-btn:hover {
-    background: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  .install-btn:hover {
+    background: #2ea043;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 134, 54, 0.4);
   }
 
   /* Modal Styles */
@@ -626,7 +653,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
@@ -640,15 +667,15 @@
     to { opacity: 1; }
   }
   
-  .add-widget-modal {
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 20px;
+  .install-modal {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
     width: 90%;
     max-width: 700px;
     max-height: 90vh;
     overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -664,12 +691,12 @@
   }
 
   .modal-header {
-    padding: 2rem 2rem 1rem;
-    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #30363d;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--bg-secondary);
+    background: #21262d;
   }
 
   .modal-title {
@@ -677,18 +704,18 @@
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-    color: var(--text-primary);
-    font-size: 1.5rem;
+    color: #f0f6fc;
+    font-size: 1.25rem;
     font-weight: 600;
   }
   
   .close-btn {
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    background: #30363d;
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: all 150ms ease;
     display: flex;
     align-items: center;
@@ -698,9 +725,8 @@
   }
   
   .close-btn:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--accent-color);
+    background: #3b82f6;
+    color: white;
   }
   
   .modal-content {
@@ -717,7 +743,7 @@
     margin: 0 0 1rem 0;
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #f0f6fc;
   }
   
   .templates-grid {
@@ -731,17 +757,18 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 8px;
     padding: 1rem;
     cursor: pointer;
     transition: all 150ms ease;
+    color: #f0f6fc;
   }
   
   .template-card:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent-color);
+    background: #262c36;
+    border-color: #3b82f6;
     transform: translateY(-1px);
   }
   
@@ -752,12 +779,11 @@
   .template-name {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--text-primary);
     text-align: center;
   }
   
   .form-section {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid #30363d;
     padding-top: 2rem;
   }
   
@@ -775,19 +801,19 @@
   }
   
   .form-group label {
-    color: var(--text-primary);
+    color: #f0f6fc;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
   }
   
   .form-input,
   .form-select,
   .form-textarea {
-    padding: 0.875rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    padding: 0.75rem;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: #0d1117;
+    color: #f0f6fc;
     font-size: 0.875rem;
     transition: all 200ms ease;
     font-family: inherit;
@@ -797,15 +823,14 @@
   .form-textarea {
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     resize: vertical;
-    min-height: 200px;
     line-height: 1.5;
   }
   
   .form-input:focus,
   .form-select:focus,
   .form-textarea:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.15);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
   
   .color-picker {
@@ -818,7 +843,7 @@
     width: 36px;
     height: 36px;
     border: 2px solid transparent;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 150ms ease;
     display: flex;
@@ -828,59 +853,56 @@
   
   .color-option:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
   
   .color-option.active {
-    border-color: var(--bg-primary);
+    border-color: #f0f6fc;
     transform: scale(1.1);
-    box-shadow: 0 0 0 2px var(--accent-color);
+    box-shadow: 0 0 0 2px #3b82f6;
   }
   
   .modal-actions {
-    padding: 1.5rem 2rem 2rem;
-    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #30363d;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    background: var(--bg-secondary);
+    background: #21262d;
   }
   
   .btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.875rem 1.5rem;
-    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 200ms ease;
     border: none;
-    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
   }
   
   .btn-secondary {
-    background: var(--bg-primary);
-    color: var(--text-secondary);
-    border: 1px solid var(--border);
+    background: #30363d;
+    color: #f0f6fc;
+    border: 1px solid #3b82f6;
   }
   
   .btn-secondary:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    border-color: var(--accent-color);
+    background: #262c36;
+    border-color: #58a6ff;
   }
   
   .btn-primary {
-    background: var(--accent-color);
-    color: var(--accent-foreground);
+    background: #238636;
+    color: white;
   }
   
   .btn-primary:hover:not(:disabled) {
-    background: var(--accent-hover);
+    background: #2ea043;
     transform: translateY(-1px);
-    box-shadow: 0 4px 8px -1px rgb(0 0 0 / 0.15);
   }
   
   .btn-primary:disabled {
@@ -891,7 +913,7 @@
   /* Responsive Design */
   @media (max-width: 768px) {
     .dashboard-header {
-      padding: 1.5rem 1rem 1rem;
+      padding: 1.5rem 1rem;
     }
     
     .header-content {
@@ -904,16 +926,12 @@
       padding: 1.5rem 1rem;
     }
     
-    .dashboard-grid {
+    .apps-grid {
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 1rem;
     }
     
-    .grid-item.large {
-      grid-column: span 1;
-    }
-    
-    .add-widget-modal {
+    .install-modal {
       width: 95%;
       max-height: 95vh;
     }
