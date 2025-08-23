@@ -7,6 +7,9 @@
   import KanbanBoard from '$lib/components/KanbanBoard.svelte';
   import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
   import PomodoroMenuBar from '$lib/components/PomodoroMenuBar.svelte';
+  import SettingsPopup from '$lib/components/SettingsPopup.svelte';
+  
+  let showSettings = false;
 
   function openExample() {
     openWindow({
@@ -52,6 +55,9 @@
     
     <div class="nav-right">
       <PomodoroMenuBar />
+      <button class="settings-btn" on:click={() => showSettings = true} title="Einstellungen">
+        ⚙️
+      </button>
     </div>
   </div>
 
@@ -88,6 +94,8 @@
       </Window>
     {/each}
   {/if}
+  
+  <SettingsPopup bind:isOpen={showSettings} onClose={() => showSettings = false} />
 </div>
 
 <style>
@@ -98,13 +106,13 @@
     position: relative;
     overflow: hidden;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #fafafa;
+    background: var(--bg-secondary);
   }
   
   .nav-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--border-light);
     padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
@@ -115,7 +123,7 @@
   .nav-switches {
     display: flex;
     gap: 0.25rem;
-    background: #f1f5f9;
+    background: var(--bg-tertiary);
     border-radius: 12px;
     padding: 0.375rem;
   }
@@ -123,11 +131,12 @@
   .nav-right {
     display: flex;
     align-items: center;
+    gap: 1rem;
   }
   
   .nav-switch {
     background: transparent;
-    color: #64748b;
+    color: var(--text-secondary);
     border: none;
     padding: 0.625rem 1.25rem;
     border-radius: 8px;
@@ -140,14 +149,36 @@
   
   .nav-switch:hover {
     background: rgba(255, 255, 255, 0.7);
-    color: #334155;
+    color: var(--text-primary);
   }
   
   .nav-switch.active {
-    background: white;
-    color: #0f172a;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     font-weight: 500;
+  }
+  
+  .settings-btn {
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.625rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.125rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .settings-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    transform: rotate(90deg);
   }
   
   .content-area {
@@ -190,7 +221,7 @@
   }
   
   button {
-    background: #3b82f6;
+    background: var(--accent-color);
     color: white;
     border: none;
     padding: 0.625rem 1.25rem;
@@ -201,19 +232,29 @@
   }
   
   button:hover {
-    background: #2563eb;
+    background: var(--accent-hover);
   }
   
   :global(body) {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #fafafa;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
   }
   
   :global(iframe) {
     width: 100%;
     height: 100%;
     border: none;
+  }
+  
+  /* Dark theme support for nav header */
+  :global(.dark-theme) .nav-header {
+    background: rgba(15, 23, 42, 0.95);
+  }
+  
+  :global(.dark-theme) .nav-switch:hover {
+    background: rgba(51, 65, 85, 0.7);
   }
 </style>

@@ -116,7 +116,7 @@
   .dashboard {
     height: 100%;
     padding: 3rem 2rem;
-    background: #fafafa;
+    background: var(--bg-secondary);
     overflow-y: auto;
   }
 
@@ -126,7 +126,7 @@
   }
 
   .dashboard-header h2 {
-    color: #0f172a;
+    color: var(--text-primary);
     margin: 0 0 0.5rem 0;
     font-size: 2.25rem;
     font-weight: 300;
@@ -134,7 +134,7 @@
   }
 
   .dashboard-header p {
-    color: #64748b;
+    color: var(--text-secondary);
     margin: 0;
     font-size: 1.125rem;
     font-weight: 400;
@@ -150,7 +150,7 @@
   }
 
   .app-card {
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 2rem 1.5rem;
     text-align: center;
@@ -164,7 +164,7 @@
   .app-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    border-color: #e2e8f0;
+    border-color: var(--border-medium);
   }
 
   .app-icon {
@@ -174,7 +174,7 @@
 
   .app-name {
     font-weight: 500;
-    color: #1e293b;
+    color: var(--text-primary);
     font-size: 0.875rem;
     display: flex;
     align-items: center;
@@ -187,7 +187,7 @@
   }
 
   .app-menu {
-    background: #f1f5f9;
+    background: var(--bg-tertiary);
     border: none;
     border-radius: 50%;
     width: 24px;
@@ -197,21 +197,21 @@
     justify-content: center;
     cursor: pointer;
     font-size: 0.75rem;
-    color: #64748b;
+    color: var(--text-secondary);
     transition: all 0.2s ease;
   }
 
   .app-menu:hover {
-    background: #e2e8f0;
-    color: #334155;
+    background: var(--bg-hover);
+    color: var(--text-primary);
   }
 
   .context-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    background: white;
-    border: 1px solid #e2e8f0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -224,20 +224,20 @@
     width: 100%;
     padding: 0.875rem 1.25rem;
     border: none;
-    background: white;
+    background: var(--bg-primary);
     text-align: left;
     cursor: pointer;
     font-size: 0.875rem;
-    color: #374151;
+    color: var(--text-primary);
     transition: background-color 0.2s ease;
     font-weight: 400;
   }
 
   .context-menu button:hover {
-    background: #f8fafc;
+    background: var(--bg-hover);
   }
 
   .context-menu button:not(:last-child) {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--border-light);
   }
 </style>

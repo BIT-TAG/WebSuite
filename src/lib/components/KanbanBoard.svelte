@@ -163,7 +163,7 @@
   .kanban-container {
     height: 100%;
     padding: 3rem 2rem;
-    background: #fafafa;
+    background: var(--bg-secondary);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -175,7 +175,7 @@
   }
 
   .kanban-header h2 {
-    color: #0f172a;
+    color: var(--text-primary);
     margin: 0;
     font-size: 2.25rem;
     font-weight: 300;
@@ -192,13 +192,13 @@
 
   .kanban-column {
     min-width: 320px;
-    background: white;
+    background: var(--bg-primary);
     border-radius: 16px;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--border-light);
   }
 
   .column-header {
@@ -212,13 +212,13 @@
 
   .column-header h3 {
     margin: 0;
-    color: #1e293b;
+    color: var(--text-primary);
     font-size: 1.125rem;
     font-weight: 500;
   }
 
   .card-count {
-    background: #3b82f6;
+    background: var(--accent-color);
     color: white;
     padding: 0.375rem 0.75rem;
     border-radius: 20px;
@@ -236,11 +236,11 @@
   }
 
   .kanban-card {
-    background: white;
+    background: var(--bg-primary);
     border-radius: 12px;
     padding: 1.25rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--border-light);
     cursor: grab;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -248,7 +248,7 @@
   .kanban-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
-    border-color: #e2e8f0;
+    border-color: var(--border-medium);
   }
 
   .kanban-card:active {
@@ -264,7 +264,7 @@
 
   .card-header h4 {
     margin: 0;
-    color: #1e293b;
+    color: var(--text-primary);
     font-size: 0.875rem;
     font-weight: 500;
     flex: 1;
@@ -309,21 +309,21 @@
 
   .card-description {
     margin: 0;
-    color: #64748b;
+    color: var(--text-secondary);
     font-size: 0.8125rem;
     line-height: 1.5;
   }
 
   .add-card-form {
-    background: #f8fafc;
+    background: var(--bg-hover);
     border-radius: 12px;
     padding: 1.25rem;
-    border: 2px dashed #cbd5e1;
+    border: 2px dashed var(--border-medium);
   }
 
   .card-input, .card-textarea {
     width: 100%;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-light);
     border-radius: 8px;
     padding: 0.75rem;
     margin-bottom: 0.75rem;
@@ -334,8 +334,8 @@
 
   .card-input:focus, .card-textarea:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-light);
   }
 
   .form-buttons {
@@ -374,10 +374,10 @@
   .add-card-btn {
     width: 100%;
     padding: 1rem;
-    background: #f8fafc;
-    border: 2px dashed #3b82f6;
+    background: var(--bg-hover);
+    border: 2px dashed var(--accent-color);
     border-radius: 12px;
-    color: #3b82f6;
+    color: var(--accent-color);
     cursor: pointer;
     font-size: 0.875rem;
     font-weight: 500;
@@ -385,7 +385,7 @@
   }
 
   .add-card-btn:hover {
-    background: #eff6ff;
+    background: var(--accent-light);
     border-style: solid;
   }
 </style>

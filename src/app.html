@@ -5,6 +5,67 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			:root {
+				/* Light theme variables */
+				--bg-primary: #ffffff;
+				--bg-secondary: #fafafa;
+				--bg-tertiary: #f1f5f9;
+				--bg-hover: #f8fafc;
+				--text-primary: #0f172a;
+				--text-secondary: #64748b;
+				--border-light: #e2e8f0;
+				--border-medium: #cbd5e1;
+				
+				/* Default accent color (blue) */
+				--accent-color: #3b82f6;
+				--accent-hover: #2563eb;
+				--accent-light: #eff6ff;
+			}
+			
+			/* Dark theme */
+			.dark-theme {
+				--bg-primary: #0f172a;
+				--bg-secondary: #1e293b;
+				--bg-tertiary: #334155;
+				--bg-hover: #475569;
+				--text-primary: #f8fafc;
+				--text-secondary: #cbd5e1;
+				--border-light: #334155;
+				--border-medium: #475569;
+			}
+			
+			/* Accent color variations */
+			[data-accent="blue"] {
+				--accent-color: #3b82f6;
+				--accent-hover: #2563eb;
+				--accent-light: #eff6ff;
+			}
+			
+			[data-accent="green"] {
+				--accent-color: #10b981;
+				--accent-hover: #059669;
+				--accent-light: #ecfdf5;
+			}
+			
+			[data-accent="purple"] {
+				--accent-color: #8b5cf6;
+				--accent-hover: #7c3aed;
+				--accent-light: #f3e8ff;
+			}
+			
+			[data-accent="orange"] {
+				--accent-color: #f59e0b;
+				--accent-hover: #d97706;
+				--accent-light: #fffbeb;
+			}
+			
+			[data-accent="red"] {
+				--accent-color: #ef4444;
+				--accent-hover: #dc2626;
+				--accent-light: #fef2f2;
+			}
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
