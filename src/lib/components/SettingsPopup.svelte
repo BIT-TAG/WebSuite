@@ -1,3 +1,5 @@
+<!-- Geändert: Form Labels korrekt mit Inputs verbunden -->
+<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { settings, setTheme, setAccentColor } from '$lib/stores/settings';
   import { Dialog, DialogContent, DialogHeader, DialogTitle, Button, Card } from '$lib/components/ui';
@@ -19,7 +21,7 @@
   <DialogContent class="max-w-md">
     <DialogHeader>
       <DialogTitle class="flex items-center gap-2">
-        <Palette class="h-5 w-5" />
+        <Palette class="h-5 w-5"></Palette>
         Einstellungen
       </DialogTitle>
     </DialogHeader>
@@ -31,7 +33,9 @@
         
         <div class="space-y-3">
           <div>
-            <label class="text-sm text-muted-foreground">Theme</label>
+            <label for="theme-selection" class="text-sm text-muted-foreground">
+              Theme
+            </label>
             <div class="mt-2 flex gap-2">
               <Button 
                 variant={$settings.theme === 'light' ? 'default' : 'outline'}
@@ -39,7 +43,7 @@
                 on:click={() => setTheme('light')}
                 class="flex-1"
               >
-                <Sun class="mr-2 h-4 w-4" />
+                <Sun class="mr-2 h-4 w-4"></Sun>
                 Hell
               </Button>
               <Button 
@@ -48,17 +52,20 @@
                 on:click={() => setTheme('dark')}
                 class="flex-1"
               >
-                <Moon class="mr-2 h-4 w-4" />
+                <Moon class="mr-2 h-4 w-4"></Moon>
                 Dunkel
               </Button>
             </div>
           </div>
           
           <div>
-            <label class="text-sm text-muted-foreground">Akzentfarbe</label>
+            <label for="accent-selection" class="text-sm text-muted-foreground">
+              Akzentfarbe
+            </label>
             <div class="mt-2 flex gap-2">
               {#each accentColors as color}
                 <button 
+                  type="button"
                   class="h-10 w-10 rounded-md border-2 transition-all hover:scale-105"
                   class:border-primary={$settings.accentColor === color.value}
                   class:border-border={$settings.accentColor !== color.value}

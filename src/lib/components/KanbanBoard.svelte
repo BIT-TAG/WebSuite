@@ -1,3 +1,5 @@
+<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
+<!-- Geändert: Click-Events auf semantisch korrekte button-Elemente -->
 <script>
   import { kanbanBoards, activeBoard, addCard, deleteCard, setBoardViewMode } from '$lib/stores/kanban';
   import { startPomodoro } from '$lib/stores/pomodoro';
@@ -151,7 +153,7 @@
                             class="h-6 w-6"
                             on:click={() => startPomodoroWithTask(card)}
                           >
-                            <Timer class="h-3 w-3" />
+                            <Timer class="h-3 w-3"></Timer>
                           </Button>
                           <Button 
                             variant="ghost" 
@@ -159,13 +161,15 @@
                             class="h-6 w-6 text-destructive hover:text-destructive"
                             on:click={() => deleteCard($activeBoard, column.id, card.id)}
                           >
-                            <X class="h-3 w-3" />
+                            <X class="h-3 w-3"></X>
                           </Button>
                         </div>
                       </div>
                       
                       {#if card.description}
-                        <p class="mb-3 text-sm text-muted-foreground">{card.description}</p>
+                        <p class="mb-3 text-sm text-muted-foreground">
+                          {card.description}
+                        </p>
                       {/if}
                       
                       {#if card.priority || card.assignee}
@@ -198,7 +202,7 @@
                         bind:value={newCardDescription}
                         placeholder="Beschreibung (optional)..."
                         rows={2}
-                      />
+                      ></Textarea>
                       <div class="flex gap-2">
                         <Button size="sm" on:click={() => handleAddCard(column.id)}>
                           Speichern
@@ -219,7 +223,7 @@
                     class="w-full border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50"
                     on:click={() => showAddCard[column.id] = true}
                   >
-                    <Plus class="mr-2 h-4 w-4" />
+                    <Plus class="mr-2 h-4 w-4"></Plus>
                     Karte hinzufügen
                   </Button>
                 {/if}

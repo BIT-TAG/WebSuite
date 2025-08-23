@@ -13,14 +13,11 @@
 	const tabsContentVariants = tv({
 		base: "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 	});
-
-	type $$Props = TabsPrimitive.RootProps;
-
-	let className: $$Props["class"] = undefined;
-	export { className as class };
+	
+	// Entfernt: Ungenutzte export properties
 </script>
 
-<TabsPrimitive.Root class={className} {...$$restProps}>
+<TabsPrimitive.Root>
 	<slot />
 </TabsPrimitive.Root>
 

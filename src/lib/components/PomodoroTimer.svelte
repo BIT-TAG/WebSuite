@@ -1,3 +1,4 @@
+<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { 
     pomodoroState, 
@@ -148,24 +149,24 @@
   <div class="mb-4 flex justify-center gap-2">
     {#if !$pomodoroState.isRunning && !$pomodoroState.isPaused}
       <Button on:click={handleStart}>
-        <Play class="mr-2 h-4 w-4" />
+        <Play class="mr-2 h-4 w-4"></Play>
         Start
       </Button>
     {:else if $pomodoroState.isRunning && !$pomodoroState.isPaused}
       <Button variant="outline" on:click={pausePomodoro}>
-        <Pause class="mr-2 h-4 w-4" />
+        <Pause class="mr-2 h-4 w-4"></Pause>
         Pause
       </Button>
     {:else if $pomodoroState.isPaused}
       <Button on:click={resumePomodoro}>
-        <Play class="mr-2 h-4 w-4" />
+        <Play class="mr-2 h-4 w-4"></Play>
         Weiter
       </Button>
     {/if}
     
     {#if $pomodoroState.isRunning || $pomodoroState.isPaused}
       <Button variant="destructive" on:click={stopPomodoro}>
-        <Square class="mr-2 h-4 w-4" />
+        <Square class="mr-2 h-4 w-4"></Square>
         Stop
       </Button>
     {/if}
@@ -204,24 +205,29 @@
 <Dialog bind:open={showTaskSelector}>
   <DialogContent class="max-w-md">
     <DialogHeader>
-      <DialogTitle>Task auswählen</DialogTitle>
+      <DialogTitle>
+        Task auswählen
+      </DialogTitle>
     </DialogHeader>
     
     <div class="max-h-80 space-y-2 overflow-y-auto">
       {#each availableTasks as task}
-        <Card 
+        <button
+          type="button"
           class="cursor-pointer p-3 transition-colors hover:bg-muted/50"
           on:click={() => selectTask(task)}
         >
-          <h4 class="font-medium text-foreground">{task.title}</h4>
-          <div class="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{task.columnTitle}</span>
-            {#if task.description}
-              <span>•</span>
-              <span class="truncate">{task.description}</span>
-            {/if}
-          </div>
-        </Card>
+          <Card class="text-left">
+            <h4 class="font-medium text-foreground">{task.title}</h4>
+            <div class="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+              <span>{task.columnTitle}</span>
+              {#if task.description}
+                <span>•</span>
+                <span class="truncate">{task.description}</span>
+              {/if}
+            </div>
+          </Card>
+        </button>
       {/each}
       
       {#if availableTasks.length === 0}

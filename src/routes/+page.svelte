@@ -1,3 +1,4 @@
+<!-- Geändert: Self-closing tags zu korrekten öffnenden/schließenden Tags -->
 <script>
   import { windows, openWindow, closeWindow } from '$lib/stores/windows';
   import { currentView, switchToDesktop, switchToDashboard, switchToKanban } from '$lib/stores/view';
@@ -77,7 +78,7 @@
           on:click={() => showSettings = true}
           class="h-8 w-8"
         >
-          <Settings class="h-4 w-4" />
+          <Settings class="h-4 w-4"></Settings>
         </Button>
       </div>
     </div>
@@ -111,13 +112,16 @@
     {#each $windows as win (win.id)}
       <Window {...win} onClose={closeWindow}>
         {#if win.iframeSrc}
-          <iframe src={win.iframeSrc} title={win.title} class="h-full w-full border-0" />
+          <iframe src={win.iframeSrc} title={win.title} class="h-full w-full border-0">
+          </iframe>
         {:else}
-          <p class="text-muted-foreground">{win.content}</p>
+          <p class="text-muted-foreground">
+            {win.content}
+          </p>
         {/if}
       </Window>
     {/each}
   {/if}
   
-  <SettingsPopup bind:isOpen={showSettings} onClose={() => showSettings = false} />
+  <SettingsPopup bind:isOpen={showSettings} onClose={() => showSettings = false}></SettingsPopup>
 </div>
