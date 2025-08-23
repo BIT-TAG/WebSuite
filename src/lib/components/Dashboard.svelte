@@ -6,33 +6,86 @@
   import { switchToDesktop } from '$lib/stores/view';
   import { onMount } from 'svelte';
 
-  const dashboardApps = [
-    { name: 'Wikipedia', icon: '📚', url: 'https://de.wikipedia.org' },
-    { name: 'Calculator', icon: '🧮', url: 'https://www.calculator.net' },
-    { name: 'Notes', icon: '📝', url: 'https://keep.google.com' },
-    { name: 'Weather', icon: '🌤️', url: 'https://weather.com' },
-    { name: 'Calendar', icon: '📅', url: 'https://calendar.google.com' },
-    { name: 'Music', icon: '🎵', url: 'https://open.spotify.com' },
-    { name: 'YouTube', icon: '📺', url: 'https://youtube.com' },
-    { name: 'GitHub', icon: '💻', url: 'https://github.com' },
-    { name: 'Maps', icon: '🗺️', url: 'https://maps.google.com' }
+  const quickApps = [
+    { name: 'Wikipedia', icon: '📚', url: 'https://de.wikipedia.org', color: '#3b82f6' },
+    { name: 'Calculator', icon: '🧮', url: 'https://www.calculator.net', color: '#10b981' },
+    { name: 'Notes', icon: '📝', url: 'https://keep.google.com', color: '#f59e0b' },
+    { name: 'Weather', icon: '🌤️', url: 'https://weather.com', color: '#8b5cf6' },
+    { name: 'Calendar', icon: '📅', url: 'https://calendar.google.com', color: '#ef4444' },
+    { name: 'GitHub', icon: '💻', url: 'https://github.com', color: '#6b7280' }
   ];
 
   let showAddWidget = false;
   let newWidgetTitle = '';
   let newWidgetType = 'markdown';
   let newWidgetContent = '';
+  let newWidgetColor = 'blue';
 
-  let openMenuId = null;
+  const colorOptions = [
+    { name: 'Blau', value: 'blue', color: '#3b82f6' },
+    { name: 'Grün', value: 'green', color: '#10b981' },
+    { name: 'Lila', value: 'purple', color: '#8b5cf6' },
+    { name: 'Orange', value: 'orange', color: '#f59e0b' },
+    { name: 'Rot', value: 'red', color: '#ef4444' },
+    { name: 'Grau', value: 'gray', color: '#6b7280' }
+  ];
+
+  const widgetTemplates = [
+    {
+      name: 'Notizen',
+      type: 'markdown',
+      content: `## 📝 Meine Notizen
+
+### Wichtige Aufgaben
+- [ ] Aufgabe 1
+- [ ] Aufgabe 2
+- [x] Erledigte Aufgabe
+
+### Ideen
+- Neue Feature-Idee
+- Verbesserungsvorschlag
+
+---
+*Letzte Aktualisierung: ${new Date().toLocaleDateString('de-DE')}*`
+    },
+    {
+      name: 'Statistiken',
+      type: 'html',
+      content: `<div style="padding: 1.5rem; font-family: Inter, sans-serif;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+      <div style="font-size: 2rem; font-weight: bold; color: var(--accent-color);">42</div>
+      <div style="font-size: 0.875rem; color: var(--text-secondary);">Wert 1</div>
+    </div>
+    <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+      <div style="font-size: 2rem; font-weight: bold; color: #10b981;">28</div>
+      <div style="font-size: 0.875rem; color: var(--text-secondary);">Wert 2</div>
+    </div>
+  </div>
+</div>`
+    },
+    {
+      name: 'Links',
+      type: 'markdown',
+      content: `## 🔗 Wichtige Links
+
+### Arbeit
+- [Projekt Dashboard](https://example.com)
+- [Team Chat](https://example.com)
+- [Dokumentation](https://example.com)
+
+### Tools
+- [GitHub](https://github.com)
+- [Stack Overflow](https://stackoverflow.com)
+- [MDN Docs](https://developer.mozilla.org)`
+    }
+  ];
 
   function launchApp(app) {
-    // Fenster öffnen
     openWindow({
       title: app.name,
       iframeSrc: app.url
     });
-    
-    // Automatisch zum Desktop wechseln
     switchToDesktop();
   }
 
@@ -42,162 +95,227 @@
         title: newWidgetTitle.trim(),
         type: newWidgetType,
         content: newWidgetContent.trim(),
+        color: newWidgetColor,
         position: { x: 50 + $widgets.length * 20, y: 50 + $widgets.length * 20 },
-        size: { width: 300, height: 200 },
-        visible: true
+        size: { width: 350, height: 250 }
       });
-      
-      // Reset form
       newWidgetTitle = '';
       newWidgetContent = '';
       newWidgetType = 'markdown';
+      newWidgetColor = 'blue';
       showAddWidget = false;
     }
   }
 
-  function toggleMenu(appName, event) {
-    event.stopPropagation();
-    openMenuId = openMenuId === appName ? null : appName;
+  function useTemplate(template) {
+    newWidgetTitle = template.name;
+    newWidgetType = template.type;
+    newWidgetContent = template.content;
   }
 
-  function closeMenu() {
-    openMenuId = null;
+  function resetForm() {
+    newWidgetTitle = '';
+    newWidgetContent = '';
+    newWidgetType = 'markdown';
+    newWidgetColor = 'blue';
   }
 
-  function handleAppAction(app, action, event) {
-    event.stopPropagation();
-    closeMenu();
-    
-    switch(action) {
-      case 'window':
-        launchApp(app);
-        break;
-      case 'tab':
-        window.open(app.url, '_blank');
-        break;
-      case 'info':
-        openWindow({
-          title: `Info: ${app.name}`,
-          content: `App: ${app.name}\nURL: ${app.url}\nIcon: ${app.icon}`
-        });
-        switchToDesktop();
-        break;
-    }
+  function closeModal() {
+    showAddWidget = false;
+    resetForm();
   }
 
-  onMount(() => {
-    function handleClickOutside(event) {
-      if (!event.target.closest('.app-menu-container')) {
-        closeMenu();
-      }
-    }
-    
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  });
+  $: visibleWidgets = $widgets.filter(w => w.visible);
 </script>
 
 <div class="dashboard">
-  <!-- Widgets -->
-  {#each $widgets.filter(w => w.visible) as widget (widget.id)}
+  {#each visibleWidgets as widget (widget.id)}
     <Widget {widget} />
   {/each}
   
   <div class="dashboard-header">
     <div class="header-content">
       <div class="header-text">
-        <h2>Dashboard</h2>
-        <p>Widgets und Apps verwalten</p>
+        <h1>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="7" height="9" x="3" y="3" rx="1"/>
+            <rect width="7" height="5" x="14" y="3" rx="1"/>
+            <rect width="7" height="9" x="14" y="12" rx="1"/>
+            <rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          Dashboard
+        </h1>
+        <p>Verwalten Sie Ihre Widgets und Quick-Apps</p>
       </div>
-      <button class="add-widget-btn" on:click={() => showAddWidget = true}>
-        ➕ Widget hinzufügen
-      </button>
+      
+      <div class="header-actions">
+        <div class="widget-stats">
+          <span class="stats-number">{visibleWidgets.length}</span>
+          <span class="stats-label">Widgets</span>
+        </div>
+        <button class="add-widget-btn" on:click={() => showAddWidget = true}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Widget hinzufügen
+        </button>
+      </div>
     </div>
   </div>
   
-  <div class="app-grid">
-    {#each dashboardApps as app}
-      <div class="app-card" on:click={() => launchApp(app)} role="button" tabindex="0" on:keydown>
-        <div class="app-icon">{app.icon}</div>
-        <div class="app-name">
-          {app.name}
-          <div class="app-menu-container">
-            <button 
-              class="app-menu" 
-              on:click={(e) => toggleMenu(app.name, e)}
-              aria-label="App-Menü öffnen"
-            >
-              ⋮
-            </button>
-            {#if openMenuId === app.name}
-              <div class="context-menu">
-                <button on:click={(e) => handleAppAction(app, 'window', e)}>
-                  🖥️ Im Fenster öffnen
-                </button>
-                <button on:click={(e) => handleAppAction(app, 'tab', e)}>
-                  🔗 In neuem Tab öffnen
-                </button>
-                <button on:click={(e) => handleAppAction(app, 'info', e)}>
-                  ℹ️ App-Info
-                </button>
-              </div>
-            {/if}
-          </div>
-        </div>
-      </div>
-    {/each}
+  <div class="quick-apps-section">
+    <div class="section-header">
+      <h3>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect width="18" height="18" x="3" y="3" rx="2"/>
+          <path d="M9 9h6v6H9z"/>
+        </svg>
+        Quick Apps
+      </h3>
+    </div>
+    
+    <div class="apps-grid">
+      {#each quickApps as app}
+        <button 
+          class="app-card" 
+          on:click={() => launchApp(app)}
+          style="--app-color: {app.color}"
+        >
+          <div class="app-icon">{app.icon}</div>
+          <div class="app-name">{app.name}</div>
+        </button>
+      {/each}
+    </div>
   </div>
 
-  <!-- Add Widget Modal -->
+  {#if visibleWidgets.length === 0}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect width="7" height="9" x="3" y="3" rx="1"/>
+          <rect width="7" height="5" x="14" y="3" rx="1"/>
+          <rect width="7" height="9" x="14" y="12" rx="1"/>
+          <rect width="7" height="5" x="3" y="16" rx="1"/>
+        </svg>
+      </div>
+      <h3>Noch keine Widgets</h3>
+      <p>Erstellen Sie Ihr erstes Widget, um Ihr Dashboard zu personalisieren.</p>
+      <button class="empty-action-btn" on:click={() => showAddWidget = true}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Erstes Widget erstellen
+      </button>
+    </div>
+  {/if}
+
   {#if showAddWidget}
-    <div class="modal-overlay" on:click={() => showAddWidget = false}>
+    <div class="modal-overlay" on:click={closeModal}>
       <div class="add-widget-modal" on:click|stopPropagation>
         <div class="modal-header">
-          <h3>Neues Widget erstellen</h3>
-          <button class="close-btn" on:click={() => showAddWidget = false}>✖</button>
+          <div class="modal-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="7" height="9" x="3" y="3" rx="1"/>
+              <rect width="7" height="5" x="14" y="3" rx="1"/>
+              <rect width="7" height="9" x="14" y="12" rx="1"/>
+              <rect width="7" height="5" x="3" y="16" rx="1"/>
+            </svg>
+            Neues Widget erstellen
+          </div>
+          <button class="close-btn" on:click={closeModal}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
         
         <div class="modal-content">
-          <div class="form-group">
-            <label for="widget-title">Titel</label>
-            <input 
-              id="widget-title"
-              type="text" 
-              bind:value={newWidgetTitle}
-              placeholder="Widget Titel..."
-              class="form-input"
-            />
+          <div class="templates-section">
+            <h4>Vorlagen</h4>
+            <div class="templates-grid">
+              {#each widgetTemplates as template}
+                <button 
+                  class="template-card"
+                  on:click={() => useTemplate(template)}
+                >
+                  <div class="template-icon">
+                    {#if template.type === 'markdown'}📝{:else}🔧{/if}
+                  </div>
+                  <div class="template-name">{template.name}</div>
+                </button>
+              {/each}
+            </div>
           </div>
           
-          <div class="form-group">
-            <label for="widget-type">Typ</label>
-            <select id="widget-type" bind:value={newWidgetType} class="form-select">
-              <option value="markdown">Markdown</option>
-              <option value="html">HTML</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="widget-content">Inhalt</label>
-            <textarea 
-              id="widget-content"
-              bind:value={newWidgetContent}
-              placeholder={newWidgetType === 'html' ? 'HTML Code eingeben...' : 'Markdown Text eingeben...'}
-              class="form-textarea"
-              rows="8"
-            ></textarea>
+          <div class="form-section">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="widget-title">Titel</label>
+                <input 
+                  id="widget-title"
+                  type="text" 
+                  bind:value={newWidgetTitle}
+                  placeholder="Widget Titel..."
+                  class="form-input"
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="widget-type">Typ</label>
+                <select id="widget-type" bind:value={newWidgetType} class="form-select">
+                  <option value="markdown">Markdown</option>
+                  <option value="html">HTML</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Farbe</label>
+              <div class="color-picker">
+                {#each colorOptions as color}
+                  <button
+                    class="color-option"
+                    class:active={newWidgetColor === color.value}
+                    style="background-color: {color.color}"
+                    on:click={() => newWidgetColor = color.value}
+                    title={color.name}
+                  >
+                    {#if newWidgetColor === color.value}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <polyline points="20,6 9,17 4,12"/>
+                      </svg>
+                    {/if}
+                  </button>
+                {/each}
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="widget-content">Inhalt</label>
+              <textarea 
+                id="widget-content"
+                bind:value={newWidgetContent}
+                placeholder={newWidgetType === 'html' ? 'HTML Code eingeben...' : 'Markdown Text eingeben...'}
+                class="form-textarea"
+                rows="10"
+              ></textarea>
+            </div>
           </div>
         </div>
         
         <div class="modal-actions">
-          <button class="cancel-btn" on:click={() => showAddWidget = false}>
+          <button class="btn btn-secondary" on:click={closeModal}>
             Abbrechen
           </button>
           <button 
-            class="create-btn" 
+            class="btn btn-primary" 
             on:click={addNewWidget}
             disabled={!newWidgetTitle.trim() || !newWidgetContent.trim()}
           >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
             Widget erstellen
           </button>
         </div>
@@ -210,161 +328,215 @@
   .dashboard {
     height: 100%;
     position: relative;
-    background: var(--bg-secondary);
+    background: var(--bg-primary);
     overflow-y: auto;
   }
 
   .dashboard-header {
     position: sticky;
     top: 0;
-    background: var(--bg-secondary);
+    background: var(--bg-primary);
     border-bottom: 1px solid var(--border);
-    padding: 2rem;
+    padding: 2rem 2rem 1.5rem;
     z-index: 100;
+    backdrop-filter: blur(8px);
   }
   
   .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
+    gap: 2rem;
   }
   
   .header-text {
-    text-align: center;
     flex: 1;
   }
 
-  .header-text h2 {
+  .header-text h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     color: var(--text-primary);
     margin: 0 0 0.5rem 0;
-    font-size: 2.25rem;
-    font-weight: 300;
+    font-size: 2rem;
+    font-weight: 600;
     letter-spacing: -0.025em;
+    line-height: 1.2;
   }
 
   .header-text p {
     color: var(--text-secondary);
     margin: 0;
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .widget-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .stats-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    line-height: 1;
+  }
+  
+  .stats-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
   }
 
   .add-widget-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     background: var(--accent-color);
     color: var(--accent-foreground);
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 150ms ease;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
   
   .add-widget-btn:hover {
     background: var(--accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   }
-  .app-grid {
+  
+  .quick-apps-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .apps-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1.25rem;
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    max-width: 600px;
   }
 
   .app-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
     background: var(--bg-primary);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem 1rem;
-    text-align: center;
+    border-radius: 16px;
+    padding: 1.25rem 1rem;
     cursor: pointer;
-    transition: all 150ms ease;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
     position: relative;
+    min-height: 100px;
   }
 
   .app-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 12px -2px rgb(0 0 0 / 0.1);
+    border-color: var(--app-color);
+    background: var(--bg-secondary);
   }
 
   .app-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+    line-height: 1;
   }
 
   .app-name {
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-primary);
-    font-size: 0.8125rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    font-size: 0.875rem;
+    text-align: center;
+    line-height: 1.2;
   }
 
-  .app-menu-container {
-    position: relative;
-  }
-
-  .app-menu {
-    background: var(--bg-secondary);
-    border: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    width: 20px;
-    height: 20px;
+  .empty-state {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    font-size: 0.625rem;
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .empty-icon {
+    margin-bottom: 1.5rem;
     color: var(--text-muted);
-    transition: all 150ms ease;
+    opacity: 0.5;
   }
-
-  .app-menu:hover {
-    background: var(--bg-hover);
+  
+  .empty-state h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--text-primary);
   }
-
-  .context-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    z-index: 1000;
-    min-width: 180px;
-    overflow: hidden;
+  
+  .empty-state p {
+    margin: 0 0 2rem 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
   }
-
-  .context-menu button {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 1rem;
+  
+  .empty-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-color);
+    color: var(--accent-foreground);
     border: none;
-    background: var(--bg-primary);
-    text-align: left;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 0.8125rem;
-    color: var(--text-primary);
-    transition: all 150ms ease;
-    font-weight: 500;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
 
-  .context-menu button:hover {
-    background: var(--bg-hover);
+  .empty-action-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
   }
 
   /* Modal Styles */
@@ -374,145 +546,303 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
+    animation: fadeIn 200ms ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   .add-widget-modal {
     background: var(--bg-primary);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 20px;
     width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
+    max-width: 700px;
+    max-height: 90vh;
     overflow: hidden;
     box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
-  
+
+  @keyframes slideUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(20px) scale(0.95); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+  }
+
   .modal-header {
-    padding: 1.5rem;
+    padding: 2rem 2rem 1rem;
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--bg-secondary);
   }
-  
-  .modal-header h3 {
+
+  .modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     margin: 0;
     color: var(--text-primary);
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 600;
   }
   
   .close-btn {
-    background: none;
-    border: none;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
     color: var(--text-secondary);
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 4px;
-    font-size: 1rem;
+    border-radius: 8px;
     transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
   }
   
   .close-btn:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
+    border-color: var(--accent-color);
   }
   
   .modal-content {
-    padding: 1.5rem;
+    padding: 2rem;
     max-height: 60vh;
     overflow-y: auto;
   }
   
-  .form-group {
+  .templates-section {
+    margin-bottom: 2rem;
+  }
+  
+  .templates-section h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+  
+  .template-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+  
+  .template-card:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
+    transform: translateY(-1px);
+  }
+  
+  .template-icon {
+    font-size: 1.5rem;
+  }
+  
+  .template-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-align: center;
+  }
+  
+  .form-section {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
     margin-bottom: 1.5rem;
   }
   
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
   .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
     color: var(--text-primary);
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
   }
   
   .form-input,
   .form-select,
   .form-textarea {
-    width: 100%;
-    padding: 0.75rem;
+    padding: 0.875rem 1rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 12px;
     background: var(--bg-primary);
     color: var(--text-primary);
     font-size: 0.875rem;
-    transition: all 150ms ease;
+    transition: all 200ms ease;
     font-family: inherit;
+    outline: none;
   }
   
   .form-textarea {
-    font-family: 'Courier New', monospace;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     resize: vertical;
-    min-height: 120px;
+    min-height: 200px;
+    line-height: 1.5;
   }
   
   .form-input:focus,
   .form-select:focus,
   .form-textarea:focus {
-    outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.15);
+  }
+  
+  .color-picker {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .color-option {
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .color-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
+  }
+  
+  .color-option.active {
+    border-color: var(--bg-primary);
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px var(--accent-color);
   }
   
   .modal-actions {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem 2rem;
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: flex-end;
-    gap: 0.75rem;
+    gap: 1rem;
     background: var(--bg-secondary);
   }
   
-  .cancel-btn,
-  .create-btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 150ms ease;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
   }
   
-  .cancel-btn {
+  .btn-secondary {
     background: var(--bg-primary);
     color: var(--text-secondary);
     border: 1px solid var(--border);
   }
   
-  .cancel-btn:hover {
+  .btn-secondary:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
+    border-color: var(--accent-color);
   }
   
-  .create-btn {
+  .btn-primary {
     background: var(--accent-color);
     color: var(--accent-foreground);
   }
   
-  .create-btn:hover:not(:disabled) {
+  .btn-primary:hover:not(:disabled) {
     background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px -1px rgb(0 0 0 / 0.15);
   }
   
-  .create-btn:disabled {
+  .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-header {
+      padding: 1.5rem 1rem 1rem;
+    }
+    
+    .header-content {
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    
+    .quick-apps-section {
+      padding: 1.5rem 1rem;
+    }
+    
+    .apps-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+    
+    .add-widget-modal {
+      width: 95%;
+      max-height: 95vh;
+    }
+    
+    .modal-content {
+      padding: 1.5rem;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .templates-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
   }
 </style>
