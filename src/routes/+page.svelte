@@ -1,13 +1,16 @@
-<!-- src/routes/+page.svelte -->
 <script>
   import { windows, openWindow, closeWindow } from '$lib/stores/windows';
   import { currentView, switchToDesktop, switchToDashboard, switchToKanban } from '$lib/stores/view';
+  import { settings } from '$lib/stores/settings';
   import Window from '$lib/components/Window.svelte';
   import Dashboard from '$lib/components/Dashboard.svelte';
   import KanbanBoard from '$lib/components/KanbanBoard.svelte';
   import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
   import PomodoroMenuBar from '$lib/components/PomodoroMenuBar.svelte';
   import SettingsPopup from '$lib/components/SettingsPopup.svelte';
+  import { Button } from '$lib/components/ui';
+  import { Tabs, TabsList, TabsTrigger, TabsContent } from '$lib/components/ui';
+  import { Settings } from 'lucide-svelte';
   
   let showSettings = false;
 
@@ -24,72 +27,94 @@
       iframeSrc: 'https://de.wikipedia.org'
     });
   }
+
+  // Apply theme classes
+  $: if (typeof document !== 'undefined') {
+    document.documentElement.classList.toggle('dark', $settings.theme === 'dark');
+    document.documentElement.setAttribute('data-accent', $settings.accentColor);
+  }
 </script>
 
-<div class="desktop">
+<div class="flex h-screen flex-col bg-background">
   <!-- Navigation Header -->
-  <div class="nav-header">
-    <div class="nav-switches">
-      <button 
-        class="nav-switch" 
-        class:active={$currentView === 'desktop'}
-        on:click={switchToDesktop}
-      >
-        🖥️ Desktop {$windows.length}
-      </button>
-      <button 
-        class="nav-switch" 
-        class:active={$currentView === 'dashboard'}
-        on:click={switchToDashboard}
-      >
-        📊 Dashboard
-      </button>
-      <button 
-        class="nav-switch" 
-        class:active={$currentView === 'kanban'}
-        on:click={switchToKanban}
-      >
-        📋 Kanban
-      </button>
+  <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div class="flex h-14 items-center justify-between px-6">
+      <Tabs value={$currentView} class="w-auto">
+        <TabsList class="grid w-full grid-cols-3">
+          <TabsTrigger 
+            value="desktop" 
+            on:click={switchToDesktop}
+            class="flex items-center gap-2"
+          >
+            🖥️ Desktop
+            {#if $windows.length > 0}
+              <span class="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+                {$windows.length}
+              </span>
+            {/if}
+          </TabsTrigger>
+          <TabsTrigger 
+            value="dashboard" 
+            on:click={switchToDashboard}
+            class="flex items-center gap-2"
+          >
+            📊 Dashboard
+          </TabsTrigger>
+          <TabsTrigger 
+            value="kanban" 
+            on:click={switchToKanban}
+            class="flex items-center gap-2"
+          >
+            📋 Kanban
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+      
+      <div class="flex items-center gap-4">
+        <PomodoroMenuBar />
+        <Button 
+          variant="ghost" 
+          size="icon"
+          on:click={() => showSettings = true}
+          class="h-8 w-8"
+        >
+          <Settings class="h-4 w-4" />
+        </Button>
+      </div>
     </div>
-    
-    <div class="nav-right">
-      <PomodoroMenuBar />
-      <button class="settings-btn" on:click={() => showSettings = true} title="Einstellungen">
-        ⚙️
-      </button>
-    </div>
-  </div>
+  </header>
 
   <!-- Content Area -->
-  <div class="content-area">
+  <main class="flex-1 overflow-hidden">
     {#if $currentView === 'desktop'}
-      <div class="desktop-content">
-        <h1>Web Desktop</h1>
+      <div class="flex h-full items-center justify-center bg-gradient-to-br from-background to-muted/20">
+        <div class="text-center">
+          <h1 class="mb-8 text-4xl font-light tracking-tight text-foreground">Web Desktop</h1>
+          <div class="flex gap-4">
+            <Button on:click={openExample} variant="default">
+              Fenster öffnen
+            </Button>
+            <Button on:click={openIframeApp} variant="outline">
+              Wikipedia öffnen
+            </Button>
+          </div>
+        </div>
       </div>
     {:else if $currentView === 'dashboard'}
       <Dashboard />
     {:else if $currentView === 'kanban'}
       <KanbanBoard />
     {/if}
-  </div>
-  
-  <!-- Taskbar (nur im Desktop-Modus) -->
-  {#if $currentView === 'desktop'}
-    <div class="taskbar">
-      <button on:click={openExample}>Fenster öffnen</button>
-      <button on:click={openIframeApp}>Wikipedia öffnen</button>
-    </div>
-  {/if}
+  </main>
 
-  <!-- Fenster nur im Desktop-Modus anzeigen -->
+  <!-- Windows (nur im Desktop-Modus) -->
   {#if $currentView === 'desktop'}
     {#each $windows as win (win.id)}
       <Window {...win} onClose={closeWindow}>
         {#if win.iframeSrc}
-          <iframe src={win.iframeSrc} title={win.title} />
+          <iframe src={win.iframeSrc} title={win.title} class="h-full w-full border-0" />
         {:else}
-          <p>{win.content}</p>
+          <p class="text-muted-foreground">{win.content}</p>
         {/if}
       </Window>
     {/each}
@@ -97,164 +122,3 @@
   
   <SettingsPopup bind:isOpen={showSettings} onClose={() => showSettings = false} />
 </div>
-
-<style>
-  .desktop {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-secondary);
-  }
-  
-  .nav-header {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-light);
-    padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .nav-switches {
-    display: flex;
-    gap: 0.25rem;
-    background: var(--bg-tertiary);
-    border-radius: 12px;
-    padding: 0.375rem;
-  }
-  
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .nav-switch {
-    background: transparent;
-    color: var(--text-secondary);
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 0.875rem;
-    font-weight: 400;
-    white-space: nowrap;
-  }
-  
-  .nav-switch:hover {
-    background: rgba(255, 255, 255, 0.7);
-    color: var(--text-primary);
-  }
-  
-  .nav-switch.active {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-weight: 500;
-  }
-  
-  .settings-btn {
-    background: var(--bg-tertiary);
-    border: none;
-    color: var(--text-secondary);
-    padding: 0.625rem;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 1.125rem;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .settings-btn:hover {
-    background: var(--bg-hover);
-    color: var(--text-primary);
-    transform: rotate(90deg);
-  }
-  
-  .content-area {
-    flex: 1;
-    position: relative;
-  }
-  
-  .desktop-content {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .pomodoro-content {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-  
-  h1 {
-    color: white;
-    text-align: center;
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 300;
-  }
-  
-  .taskbar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 0.5rem;
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  button {
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  button:hover {
-    background: var(--accent-hover);
-  }
-  
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-  }
-  
-  :global(iframe) {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  
-  /* Dark theme support for nav header */
-  :global(.dark-theme) .nav-header {
-    background: rgba(15, 23, 42, 0.95);
-  }
-  
-  :global(.dark-theme) .nav-switch:hover {
-    background: rgba(51, 65, 85, 0.7);
-  }
-</style>

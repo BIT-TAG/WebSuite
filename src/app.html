@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="%sveltekit.theme%">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
@@ -7,68 +7,79 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<style>
 			:root {
-				/* Light theme variables */
-				--bg-primary: #ffffff;
-				--bg-secondary: #fafafa;
-				--bg-tertiary: #f1f5f9;
-				--bg-hover: #f8fafc;
-				--text-primary: #0f172a;
-				--text-secondary: #64748b;
-				--border-light: #e2e8f0;
-				--border-medium: #cbd5e1;
-				
-				/* Default accent color (blue) */
-				--accent-color: #3b82f6;
-				--accent-hover: #2563eb;
-				--accent-light: #eff6ff;
+				--background: 0 0% 100%;
+				--foreground: 222.2 84% 4.9%;
+				--card: 0 0% 100%;
+				--card-foreground: 222.2 84% 4.9%;
+				--popover: 0 0% 100%;
+				--popover-foreground: 222.2 84% 4.9%;
+				--primary: 221.2 83.2% 53.3%;
+				--primary-foreground: 210 40% 98%;
+				--secondary: 210 40% 96%;
+				--secondary-foreground: 222.2 84% 4.9%;
+				--muted: 210 40% 96%;
+				--muted-foreground: 215.4 16.3% 46.9%;
+				--accent: 210 40% 96%;
+				--accent-foreground: 222.2 84% 4.9%;
+				--destructive: 0 84.2% 60.2%;
+				--destructive-foreground: 210 40% 98%;
+				--border: 214.3 31.8% 91.4%;
+				--input: 214.3 31.8% 91.4%;
+				--ring: 221.2 83.2% 53.3%;
+				--radius: 0.75rem;
 			}
 			
-			/* Dark theme */
-			.dark-theme {
-				--bg-primary: #0f172a;
-				--bg-secondary: #1e293b;
-				--bg-tertiary: #334155;
-				--bg-hover: #475569;
-				--text-primary: #f8fafc;
-				--text-secondary: #cbd5e1;
-				--border-light: #334155;
-				--border-medium: #475569;
+			.dark {
+				--background: 222.2 84% 4.9%;
+				--foreground: 210 40% 98%;
+				--card: 222.2 84% 4.9%;
+				--card-foreground: 210 40% 98%;
+				--popover: 222.2 84% 4.9%;
+				--popover-foreground: 210 40% 98%;
+				--primary: 217.2 91.2% 59.8%;
+				--primary-foreground: 222.2 84% 4.9%;
+				--secondary: 217.2 32.6% 17.5%;
+				--secondary-foreground: 210 40% 98%;
+				--muted: 217.2 32.6% 17.5%;
+				--muted-foreground: 215 20.2% 65.1%;
+				--accent: 217.2 32.6% 17.5%;
+				--accent-foreground: 210 40% 98%;
+				--destructive: 0 62.8% 30.6%;
+				--destructive-foreground: 210 40% 98%;
+				--border: 217.2 32.6% 17.5%;
+				--input: 217.2 32.6% 17.5%;
+				--ring: 224.3 76.3% 94.1%;
 			}
 			
 			/* Accent color variations */
 			[data-accent="blue"] {
-				--accent-color: #3b82f6;
-				--accent-hover: #2563eb;
-				--accent-light: #eff6ff;
+				--primary: 221.2 83.2% 53.3%;
+				--ring: 221.2 83.2% 53.3%;
 			}
 			
 			[data-accent="green"] {
-				--accent-color: #10b981;
-				--accent-hover: #059669;
-				--accent-light: #ecfdf5;
+				--primary: 142.1 76.2% 36.3%;
+				--ring: 142.1 76.2% 36.3%;
 			}
 			
 			[data-accent="purple"] {
-				--accent-color: #8b5cf6;
-				--accent-hover: #7c3aed;
-				--accent-light: #f3e8ff;
+				--primary: 262.1 83.3% 57.8%;
+				--ring: 262.1 83.3% 57.8%;
 			}
 			
 			[data-accent="orange"] {
-				--accent-color: #f59e0b;
-				--accent-hover: #d97706;
-				--accent-light: #fffbeb;
+				--primary: 24.6 95% 53.1%;
+				--ring: 24.6 95% 53.1%;
 			}
 			
 			[data-accent="red"] {
-				--accent-color: #ef4444;
-				--accent-hover: #dc2626;
-				--accent-light: #fef2f2;
+				--primary: 0 84.2% 60.2%;
+				--ring: 0 84.2% 60.2%;
 			}
 		</style>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="hover" class="min-h-screen bg-background font-sans antialiased">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

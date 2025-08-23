@@ -19,7 +19,11 @@
 		"vite": "^5.0.3"
 	},
 	"dependencies": {
-		"bits-ui": "^2.8.9",
-		"svelte-dnd-action": "^0.9.64"
+		"@tailwindcss/typography": "^0.5.16",
+		"bits-ui": "^2.9.4",
+		"clsx": "^2.1.1",
+		"lucide-svelte": "^0.541.0",
+		"svelte-dnd-action": "^0.9.64",
+		"tailwind-variants": "^2.1.0"
 	}
 }

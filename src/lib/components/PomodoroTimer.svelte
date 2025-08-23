@@ -1,4 +1,3 @@
-<!-- src/lib/components/PomodoroTimer.svelte -->
 <script>
   import { 
     pomodoroState, 
@@ -15,12 +14,15 @@
     setLongBreak
   } from '$lib/stores/pomodoro';
   import { kanbanBoards, activeBoard, completeTask } from '$lib/stores/kanban';
+  import { Button, Card } from '$lib/components/ui';
+  import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui';
+  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '$lib/components/ui';
+  import { Play, Pause, Square, CheckCircle, List } from 'lucide-svelte';
   
   let showTaskSelector = false;
   let availableTasks = [];
   
   $: {
-    // Alle verfügbaren Tasks aus dem aktiven Kanban Board sammeln
     const board = $kanbanBoards.find(b => b.id === $activeBoard);
     if (board) {
       availableTasks = board.columns.flatMap(col => 
@@ -47,9 +49,7 @@
   
   function handleCompleteTask() {
     if ($selectedTask) {
-      // Task im Kanban Board als erledigt markieren
       completeTask($activeBoard, $selectedTask.id);
-      // Task aus dem Pomodoro Timer entfernen
       completeCurrentTask();
     }
   }
@@ -63,508 +63,182 @@
     }
   }
   
-  function getSessionColor(session) {
+  function getSessionEmoji(session) {
     switch(session) {
-      case 'work': return '#4caf50';
-      case 'shortBreak': return '#ff9800';
-      case 'longBreak': return '#2196f3';
-      default: return '#4caf50';
+      case 'work': return '🍅';
+      case 'shortBreak': return '☕';
+      case 'longBreak': return '🛋️';
+      default: return '🍅';
     }
   }
 </script>
 
-<div class="pomodoro-container">
-  <div class="pomodoro-header">
-    <h3>🍅 Pomodoro Timer</h3>
-    <div class="session-info">
-      <span class="session-label" style="color: {getSessionColor($pomodoroState.session)}">
+<Card class="mx-auto w-full max-w-md p-6">
+  <div class="mb-6 text-center">
+    <h3 class="mb-2 text-xl font-light text-foreground">
+      {getSessionEmoji($pomodoroState.session)} Pomodoro Timer
+    </h3>
+    <div class="flex items-center justify-between text-sm">
+      <span class="text-primary font-medium">
         {getSessionLabel($pomodoroState.session)}
       </span>
-      <span class="completed-sessions">
+      <span class="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
         Session {$pomodoroState.completedSessions + 1}
       </span>
     </div>
   </div>
   
-  <div class="timer-display">
-    <div class="time-circle" style="--progress: {$progressPercentage}%; --color: {getSessionColor($pomodoroState.session)}">
-      <div class="time-text">{$formattedTime}</div>
+  <div class="mb-6 flex justify-center">
+    <div class="relative h-48 w-48">
+      <svg class="h-full w-full -rotate-90 transform" viewBox="0 0 100 100">
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          class="text-muted"
+        />
+        <circle
+          cx="50"
+          cy="50"
+          r="45"
+          stroke="currentColor"
+          stroke-width="2"
+          fill="none"
+          stroke-dasharray="283"
+          stroke-dashoffset={283 - (283 * $progressPercentage) / 100}
+          class="text-primary transition-all duration-1000 ease-in-out"
+          stroke-linecap="round"
+        />
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-3xl font-light text-foreground">{$formattedTime}</span>
+      </div>
     </div>
   </div>
   
   {#if $selectedTask}
-    <div class="current-task">
-      <div class="task-info">
-        <strong>{$selectedTask.title}</strong>
-        <span class="task-column">({$selectedTask.columnTitle})</span>
+    <Card class="mb-4 p-4">
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <h4 class="font-medium text-foreground">{$selectedTask.title}</h4>
+          <p class="text-sm text-muted-foreground">({$selectedTask.columnTitle})</p>
+        </div>
+        <div class="flex gap-2">
+          <Button size="sm" on:click={handleCompleteTask}>
+            <CheckCircle class="mr-1 h-3 w-3" />
+            Erledigt
+          </Button>
+          <Button variant="outline" size="sm" on:click={() => showTaskSelector = true}>
+            Ändern
+          </Button>
+        </div>
       </div>
-      <div class="task-actions">
-        <button class="complete-task-btn" on:click={handleCompleteTask}>
-          ✅ Erledigt
-        </button>
-        <button class="change-task-btn" on:click={() => showTaskSelector = true}>
-          Ändern
-        </button>
-      </div>
-    </div>
+    </Card>
   {:else}
-    <div class="no-task">
-      <button class="select-task-btn" on:click={() => showTaskSelector = true}>
-        📋 Task auswählen
-      </button>
+    <div class="mb-4 text-center">
+      <Button variant="outline" on:click={() => showTaskSelector = true}>
+        <List class="mr-2 h-4 w-4" />
+        Task auswählen
+      </Button>
     </div>
   {/if}
   
-  <div class="timer-controls">
+  <div class="mb-4 flex justify-center gap-2">
     {#if !$pomodoroState.isRunning && !$pomodoroState.isPaused}
-      <button class="control-btn start-btn" on:click={handleStart}>
-        ▶️ Start
-      </button>
+      <Button on:click={handleStart}>
+        <Play class="mr-2 h-4 w-4" />
+        Start
+      </Button>
     {:else if $pomodoroState.isRunning && !$pomodoroState.isPaused}
-      <button class="control-btn pause-btn" on:click={pausePomodoro}>
-        ⏸️ Pause
-      </button>
+      <Button variant="outline" on:click={pausePomodoro}>
+        <Pause class="mr-2 h-4 w-4" />
+        Pause
+      </Button>
     {:else if $pomodoroState.isPaused}
-      <button class="control-btn resume-btn" on:click={resumePomodoro}>
-        ▶️ Weiter
-      </button>
+      <Button on:click={resumePomodoro}>
+        <Play class="mr-2 h-4 w-4" />
+        Weiter
+      </Button>
     {/if}
     
     {#if $pomodoroState.isRunning || $pomodoroState.isPaused}
-      <button class="control-btn stop-btn" on:click={stopPomodoro}>
-        ⏹️ Stop
-      </button>
+      <Button variant="destructive" on:click={stopPomodoro}>
+        <Square class="mr-2 h-4 w-4" />
+        Stop
+      </Button>
     {/if}
   </div>
   
-  <div class="session-controls">
-    <button 
-      class="session-btn" 
-      class:active={$pomodoroState.session === 'work'}
-      on:click={setWorkSession}
-      disabled={$pomodoroState.isRunning}
-    >
-      Arbeit (25min)
-    </button>
-    <button 
-      class="session-btn" 
-      class:active={$pomodoroState.session === 'shortBreak'}
-      on:click={setShortBreak}
-      disabled={$pomodoroState.isRunning}
-    >
-      Pause (5min)
-    </button>
-    <button 
-      class="session-btn" 
-      class:active={$pomodoroState.session === 'longBreak'}
-      on:click={setLongBreak}
-      disabled={$pomodoroState.isRunning}
-    >
-      Lange Pause (15min)
-    </button>
-  </div>
-</div>
+  <Tabs value={$pomodoroState.session} class="w-full">
+    <TabsList class="grid w-full grid-cols-3">
+      <TabsTrigger 
+        value="work" 
+        on:click={setWorkSession}
+        disabled={$pomodoroState.isRunning}
+        class="text-xs"
+      >
+        Arbeit (25min)
+      </TabsTrigger>
+      <TabsTrigger 
+        value="shortBreak" 
+        on:click={setShortBreak}
+        disabled={$pomodoroState.isRunning}
+        class="text-xs"
+      >
+        Pause (5min)
+      </TabsTrigger>
+      <TabsTrigger 
+        value="longBreak" 
+        on:click={setLongBreak}
+        disabled={$pomodoroState.isRunning}
+        class="text-xs"
+      >
+        Lange (15min)
+      </TabsTrigger>
+    </TabsList>
+  </Tabs>
+</Card>
 
-{#if showTaskSelector}
-  <div class="task-selector-overlay" on:click={() => showTaskSelector = false}>
-    <div class="task-selector" on:click|stopPropagation>
-      <div class="selector-header">
-        <h4>Task auswählen</h4>
-        <button class="close-btn" on:click={() => showTaskSelector = false}>✖</button>
-      </div>
-      
-      <div class="task-list">
-        {#each availableTasks as task}
-          <div class="task-item" on:click={() => selectTask(task)}>
-            <div class="task-title">{task.title}</div>
-            <div class="task-meta">
-              <span class="task-column">{task.columnTitle}</span>
-              {#if task.description}
-                <span class="task-description">{task.description}</span>
-              {/if}
-            </div>
+<Dialog bind:open={showTaskSelector}>
+  <DialogContent class="max-w-md">
+    <DialogHeader>
+      <DialogTitle>Task auswählen</DialogTitle>
+    </DialogHeader>
+    
+    <div class="max-h-80 space-y-2 overflow-y-auto">
+      {#each availableTasks as task}
+        <Card 
+          class="cursor-pointer p-3 transition-colors hover:bg-muted/50"
+          on:click={() => selectTask(task)}
+        >
+          <h4 class="font-medium text-foreground">{task.title}</h4>
+          <div class="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+            <span>{task.columnTitle}</span>
+            {#if task.description}
+              <span>•</span>
+              <span class="truncate">{task.description}</span>
+            {/if}
           </div>
-        {/each}
-        
-        {#if availableTasks.length === 0}
-          <div class="no-tasks">
-            Keine Tasks verfügbar. Erstellen Sie Tasks im Kanban Board.
-          </div>
-        {/if}
-      </div>
+        </Card>
+      {/each}
       
-      <div class="selector-footer">
-        <button class="clear-task-btn" on:click={() => { selectedTask.set(null); showTaskSelector = false; }}>
-          Ohne Task arbeiten
-        </button>
-      </div>
+      {#if availableTasks.length === 0}
+        <div class="py-8 text-center text-muted-foreground">
+          Keine Tasks verfügbar. Erstellen Sie Tasks im Kanban Board.
+        </div>
+      {/if}
     </div>
-  </div>
-{/if}
-
-<style>
-  .pomodoro-container {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
-    max-width: 420px;
-    margin: 0 auto;
-  }
-  
-  .pomodoro-header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .pomodoro-header h3 {
-    margin: 0 0 0.75rem 0;
-    color: #1e293b;
-    font-size: 1.5rem;
-    font-weight: 300;
-  }
-  
-  .session-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.875rem;
-  }
-  
-  .session-label {
-    font-weight: 500;
-  }
-  
-  .completed-sessions {
-    color: #64748b;
-    background: #f1f5f9;
-    padding: 0.375rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-  
-  .timer-display {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-  }
-  
-  .time-circle {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: conic-gradient(var(--color) var(--progress), #e0e0e0 var(--progress));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  
-  .time-circle::before {
-    content: '';
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    background: white;
-    border-radius: 50%;
-  }
-  
-  .time-text {
-    font-size: 2.25rem;
-    font-weight: 300;
-    color: #1e293b;
-    z-index: 1;
-    font-family: 'Courier New', monospace;
-  }
-  
-  .current-task {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #f1f5f9;
-  }
-  
-  .task-info {
-    flex: 1;
-  }
-  
-  .task-info strong {
-    display: block;
-    color: #1e293b;
-    margin-bottom: 0.375rem;
-    font-weight: 500;
-    font-size: 0.875rem;
-  }
-  
-  .task-column {
-    color: #64748b;
-    font-size: 0.8125rem;
-  }
-  
-  .task-actions {
-    display: flex;
-    gap: 0.75rem;
-  }
-  
-  .complete-task-btn {
-    background: #10b981;
-    color: white;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .complete-task-btn:hover {
-    background: #059669;
-  }
-  
-  .change-task-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .change-task-btn:hover {
-    background: #2563eb;
-  }
-  
-  .no-task {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .select-task-btn {
-    background: #f59e0b;
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .select-task-btn:hover {
-    background: #d97706;
-  }
-  
-  .timer-controls {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .control-btn {
-    padding: 0.875rem 1.75rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .start-btn, .resume-btn {
-    background: #10b981;
-    color: white;
-  }
-  
-  .start-btn:hover, .resume-btn:hover {
-    background: #059669;
-  }
-  
-  .pause-btn {
-    background: #f59e0b;
-    color: white;
-  }
-  
-  .pause-btn:hover {
-    background: #d97706;
-  }
-  
-  .stop-btn {
-    background: #ef4444;
-    color: white;
-  }
-  
-  .stop-btn:hover {
-    background: #dc2626;
-  }
-  
-  .session-controls {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-  
-  .session-btn {
-    padding: 0.625rem 1rem;
-    border: 1px solid #e2e8f0;
-    background: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.8125rem;
-    font-weight: 400;
-    transition: all 0.2s ease;
-    color: #64748b;
-  }
-  
-  .session-btn:hover:not(:disabled) {
-    border-color: #3b82f6;
-    color: #3b82f6;
-    background: #f8fafc;
-  }
-  
-  .session-btn.active {
-    background: #3b82f6;
-    color: white;
-    border-color: #3b82f6;
-  }
-  
-  .session-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  
-  .task-selector-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-  }
-  
-  .task-selector {
-    background: white;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 520px;
-    max-height: 80vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-  }
-  
-  .selector-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid #f1f5f9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .selector-header h4 {
-    margin: 0;
-    color: #1e293b;
-    font-weight: 500;
-    font-size: 1.125rem;
-  }
-  
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 1.25rem;
-    cursor: pointer;
-    color: #64748b;
-    padding: 0.25rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-  
-  .close-btn:hover {
-    color: #1e293b;
-    background: #f1f5f9;
-  }
-  
-  .task-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1.5rem;
-  }
-  
-  .task-item {
-    padding: 1.25rem;
-    border: 1px solid #f1f5f9;
-    border-radius: 12px;
-    margin-bottom: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .task-item:hover {
-    background: #f8fafc;
-    border-color: #3b82f6;
-  }
-  
-  .task-title {
-    font-weight: 500;
-    color: #1e293b;
-    margin-bottom: 0.75rem;
-    font-size: 0.875rem;
-  }
-  
-  .task-meta {
-    display: flex;
-    gap: 1.25rem;
-    font-size: 0.8125rem;
-    color: #64748b;
-  }
-  
-  .task-description {
-    flex: 1;
-  }
-  
-  .no-tasks {
-    text-align: center;
-    color: #64748b;
-    padding: 3rem 2rem;
-    font-style: italic;
-  }
-  
-  .selector-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #f1f5f9;
-    text-align: center;
-  }
-  
-  .clear-task-btn {
-    background: #64748b;
-    color: white;
-    border: none;
-    padding: 0.625rem 1.25rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-  
-  .clear-task-btn:hover {
-    background: #475569;
-  }
-</style>
+    
+    <div class="flex justify-center pt-4">
+      <Button 
+        variant="outline" 
+        on:click={() => { selectedTask.set(null); showTaskSelector = false; }}
+      >
+        Ohne Task arbeiten
+      </Button>
+    </div>
+  </DialogContent>
+</Dialog>
