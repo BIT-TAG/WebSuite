@@ -263,4 +263,3 @@
   :global(.dark-theme) .nav-switches {
     background: var(--bg-tertiary);
   }
-</style>
