@@ -36,47 +36,49 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
+    color: #64748b;
+    font-size: 0.875rem;
     font-weight: 500;
   }
   
   .timer-info {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.375rem;
   }
   
   .session-emoji {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
   
   .timer-text {
     font-family: 'Courier New', monospace;
-    font-weight: 600;
+    font-weight: 500;
+    color: #1e293b;
   }
   
   .paused-indicator {
-    font-size: 0.8rem;
-    opacity: 0.8;
+    font-size: 0.75rem;
+    opacity: 0.7;
   }
   
   .current-task-info {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     max-width: 200px;
   }
   
   .task-separator {
-    opacity: 0.5;
+    opacity: 0.4;
+    color: #cbd5e1;
   }
   
   .task-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.85rem;
-    opacity: 0.9;
+    font-size: 0.8125rem;
+    color: #475569;
   }
 </style>

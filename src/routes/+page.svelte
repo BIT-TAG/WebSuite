@@ -97,24 +97,27 @@
     flex-direction: column;
     position: relative;
     overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fafafa;
   }
   
   .nav-header {
-    background: rgba(0, 0, 0, 0.9);
-    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 1rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
   }
   
   .nav-switches {
     display: flex;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 0.25rem;
+    gap: 0.25rem;
+    background: #f1f5f9;
+    border-radius: 12px;
+    padding: 0.375rem;
   }
   
   .nav-right {
@@ -124,30 +127,31 @@
   
   .nav-switch {
     background: transparent;
-    color: rgba(255, 255, 255, 0.7);
+    color: #64748b;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.875rem;
+    font-weight: 400;
+    white-space: nowrap;
   }
   
   .nav-switch:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(255, 255, 255, 0.7);
+    color: #334155;
   }
   
   .nav-switch.active {
     background: white;
-    color: #333;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
   }
   
   .content-area {
     flex: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     position: relative;
   }
   
@@ -156,7 +160,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
   
   .pomodoro-content {
     height: 100%;
@@ -170,8 +173,8 @@
     color: white;
     text-align: center;
     margin: 0;
-    font-size: 3rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2.5rem;
+    font-weight: 300;
   }
   
   .taskbar {
@@ -179,29 +182,32 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(255, 255, 255, 0.95);
     padding: 0.5rem;
     display: flex;
     gap: 0.5rem;
   }
   
   button {
-    background: #4CAF50;
+    background: #3b82f6;
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    padding: 0.625rem 1.25rem;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
   }
   
   button:hover {
-    background: #45a049;
+    background: #2563eb;
   }
   
   :global(body) {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    background: #fafafa;
   }
   
   :global(iframe) {

@@ -115,63 +115,67 @@
 <style>
   .dashboard {
     height: 100%;
-    padding: 2rem;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 3rem 2rem;
+    background: #fafafa;
     overflow-y: auto;
   }
 
   .dashboard-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .dashboard-header h2 {
-    color: #333;
+    color: #0f172a;
     margin: 0 0 0.5rem 0;
-    font-size: 2rem;
+    font-size: 2.25rem;
+    font-weight: 300;
+    letter-spacing: -0.025em;
   }
 
   .dashboard-header p {
-    color: #666;
+    color: #64748b;
     margin: 0;
+    font-size: 1.125rem;
+    font-weight: 400;
   }
 
   .app-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.25rem;
+    max-width: 900px;
     margin-left: auto;
     margin-right: auto;
   }
 
   .app-card {
     background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 2px solid transparent;
+    position: relative;
   }
 
   .app-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #e2e8f0;
   }
 
   .app-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .app-name {
-    font-weight: 600;
-    color: #333;
-    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+    font-size: 0.875rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -183,23 +187,23 @@
   }
 
   .app-menu {
-    background: rgba(0, 0, 0, 0.1);
+    background: #f1f5f9;
     border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.8rem;
-    color: #666;
+    font-size: 0.75rem;
+    color: #64748b;
     transition: all 0.2s ease;
   }
 
   .app-menu:hover {
-    background: rgba(0, 0, 0, 0.2);
-    color: #333;
+    background: #e2e8f0;
+    color: #334155;
   }
 
   .context-menu {
@@ -207,32 +211,33 @@
     top: 100%;
     right: 0;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    min-width: 180px;
+    min-width: 200px;
     overflow: hidden;
   }
 
   .context-menu button {
     display: block;
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.875rem 1.25rem;
     border: none;
     background: white;
     text-align: left;
     cursor: pointer;
-    font-size: 0.85rem;
-    color: #333;
+    font-size: 0.875rem;
+    color: #374151;
     transition: background-color 0.2s ease;
+    font-weight: 400;
   }
 
   .context-menu button:hover {
-    background: #f5f5f5;
+    background: #f8fafc;
   }
 
   .context-menu button:not(:last-child) {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f1f5f9;
   }
 </style>

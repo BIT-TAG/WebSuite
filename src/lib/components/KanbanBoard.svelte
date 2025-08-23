@@ -162,8 +162,8 @@
 <style>
   .kanban-container {
     height: 100%;
-    padding: 2rem;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 3rem 2rem;
+    background: #fafafa;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -171,81 +171,84 @@
 
   .kanban-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .kanban-header h2 {
-    color: #1565c0;
+    color: #0f172a;
     margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
+    font-size: 2.25rem;
+    font-weight: 300;
+    letter-spacing: -0.025em;
   }
 
   .kanban-board {
     display: flex;
-    gap: 1.5rem;
-    height: calc(100% - 6rem);
+    gap: 1.25rem;
+    height: calc(100% - 8rem);
     overflow-x: auto;
     padding-bottom: 1rem;
   }
 
   .kanban-column {
-    min-width: 300px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    padding: 1rem;
+    min-width: 320px;
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
   }
 
   .column-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e3f2fd;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
   }
 
   .column-header h3 {
     margin: 0;
-    color: #1565c0;
-    font-size: 1.2rem;
-    font-weight: 600;
+    color: #1e293b;
+    font-size: 1.125rem;
+    font-weight: 500;
   }
 
   .card-count {
-    background: #1565c0;
+    background: #3b82f6;
     color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 
   .cards-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     overflow-y: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .kanban-card {
     background: white;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
     cursor: grab;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .kanban-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: #e2e8f0;
   }
 
   .kanban-card:active {
@@ -256,129 +259,133 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .card-header h4 {
     margin: 0;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.875rem;
+    font-weight: 500;
     flex: 1;
+    line-height: 1.4;
   }
 
   .card-actions {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.375rem;
   }
   
   .pomodoro-btn {
-    background: rgba(76, 175, 80, 0.1);
+    background: #fef3c7;
     border: none;
-    color: #4caf50;
-    padding: 0.25rem;
-    border-radius: 4px;
+    color: #d97706;
+    padding: 0.375rem;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     transition: all 0.2s ease;
   }
   
   .pomodoro-btn:hover {
-    background: rgba(76, 175, 80, 0.2);
-    transform: scale(1.1);
+    background: #fde68a;
+    transform: scale(1.05);
   }
   
   .delete-btn {
-    background: rgba(244, 67, 54, 0.1);
+    background: #fef2f2;
     border: none;
-    color: #f44336;
-    padding: 0.25rem;
-    border-radius: 4px;
+    color: #dc2626;
+    padding: 0.375rem;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     transition: all 0.2s ease;
   }
 
   .delete-btn:hover {
-    background: rgba(244, 67, 54, 0.2);
+    background: #fecaca;
   }
 
   .card-description {
     margin: 0;
-    color: #666;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    color: #64748b;
+    font-size: 0.8125rem;
+    line-height: 1.5;
   }
 
   .add-card-form {
-    background: #f5f5f5;
-    border-radius: 8px;
-    padding: 1rem;
-    border: 2px dashed #ccc;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 2px dashed #cbd5e1;
   }
 
   .card-input, .card-textarea {
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
   }
 
   .card-input:focus, .card-textarea:focus {
     outline: none;
-    border-color: #1565c0;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 
   .form-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .save-btn, .cancel-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.625rem 1.25rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     transition: all 0.2s ease;
   }
 
   .save-btn {
-    background: #4caf50;
+    background: #10b981;
     color: white;
   }
 
   .save-btn:hover {
-    background: #45a049;
+    background: #059669;
   }
 
   .cancel-btn {
-    background: #f44336;
+    background: #ef4444;
     color: white;
   }
 
   .cancel-btn:hover {
-    background: #da190b;
+    background: #dc2626;
   }
 
   .add-card-btn {
     width: 100%;
-    padding: 0.75rem;
-    background: rgba(21, 101, 192, 0.1);
-    border: 2px dashed #1565c0;
-    border-radius: 8px;
-    color: #1565c0;
+    padding: 1rem;
+    background: #f8fafc;
+    border: 2px dashed #3b82f6;
+    border-radius: 12px;
+    color: #3b82f6;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 500;
     transition: all 0.2s ease;
   }
 
   .add-card-btn:hover {
-    background: rgba(21, 101, 192, 0.2);
+    background: #eff6ff;
     border-style: solid;
   }
 </style>
