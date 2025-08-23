@@ -6,6 +6,7 @@
 
   let showAddModal = false;
   let addType = 'app'; // 'app' or 'widget'
+  let showAddMenu = false;
   
   // App form data
   let newAppName = '';
@@ -150,8 +151,25 @@
 
   function closeModal() {
     showAddModal = false;
+    showAddMenu = false;
     resetAppForm();
     resetWidgetForm();
+  }
+  
+  function toggleAddMenu() {
+    showAddMenu = !showAddMenu;
+  }
+  
+  function openAddModal(type) {
+    addType = type;
+    showAddModal = true;
+    showAddMenu = false;
+  }
+  
+  function handleClickOutside(event) {
+    if (!event.target.closest('.add-menu-container')) {
+      showAddMenu = false;
+    }
   }
 
   $: visibleWidgets = $widgets.filter(w => w.visible);
@@ -161,7 +179,7 @@
   const appColors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#6b7280'];
 </script>
 
-<div class="dashboard">
+<div class="dashboard" on:click={handleClickOutside}>
   <div class="dashboard-header">
     <div class="header-content">
       <div class="header-left">
@@ -182,12 +200,34 @@
       </div>
       
       <div class="header-right">
-        <button class="add-app-btn" on:click={() => { addType = 'app'; showAddModal = true; }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 5v14M5 12h14"/>
-          </svg>
-          Hinzufügen
-        </button>
+        <div class="add-menu-container">
+          <button class="add-btn" on:click={toggleAddMenu} class:active={showAddMenu}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+          </button>
+          
+          {#if showAddMenu}
+            <div class="add-dropdown">
+              <button class="dropdown-item" on:click={() => openAddModal('app')}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="18" height="18" x="3" y="3" rx="2"/>
+                  <path d="M9 9h6v6H9z"/>
+                </svg>
+                App hinzufügen
+              </button>
+              <button class="dropdown-item" on:click={() => openAddModal('widget')}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect width="7" height="9" x="3" y="3" rx="1"/>
+                  <rect width="7" height="5" x="14" y="3" rx="1"/>
+                  <rect width="7" height="9" x="14" y="12" rx="1"/>
+                  <rect width="7" height="5" x="3" y="16" rx="1"/>
+                </svg>
+                Widget hinzufügen
+              </button>
+            </div>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
@@ -205,7 +245,7 @@
         </div>
         <h3>Keine Apps installiert</h3>
         <p>Fügen Sie Ihre erste App hinzu, um loszulegen.</p>
-        <button class="install-btn" on:click={() => { addType = 'app'; showAddModal = true; }}>
+        <button class="install-btn" on:click={() => openAddModal('app')}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 5v14M5 12h14"/>
           </svg>
@@ -257,34 +297,6 @@
           </div>
         {/each}
         
-        <!-- Add App Card -->
-        <div class="app-card add-app-card" on:click={() => { addType = 'app'; showAddModal = true; }}>
-          <div class="add-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
-          </div>
-          <div class="add-text">
-            <h3>App hinzufügen</h3>
-            <p>Neue App installieren</p>
-          </div>
-        </div>
-        
-        <!-- Add Widget Card -->
-        <div class="app-card add-widget-card" on:click={() => { addType = 'widget'; showAddModal = true; }}>
-          <div class="add-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect width="7" height="9" x="3" y="3" rx="1"/>
-              <rect width="7" height="5" x="14" y="3" rx="1"/>
-              <rect width="7" height="9" x="14" y="12" rx="1"/>
-              <rect width="7" height="5" x="3" y="16" rx="1"/>
-            </svg>
-          </div>
-          <div class="add-text">
-            <h3>Widget hinzufügen</h3>
-            <p>Neues Widget erstellen</p>
-          </div>
-        </div>
       </div>
     {/if}
   </div>
@@ -600,26 +612,90 @@
     gap: 1rem;
   }
   
-  .add-app-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: #238636;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  .add-menu-container {
+    position: relative;
   }
   
-  .add-app-btn:hover {
-    background: #2ea043;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(35, 134, 54, 0.3);
+  .add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #21262d;
+    color: #8b949e;
+    border: none;
+    border: 1px solid #30363d;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .add-btn:hover {
+    background: #262c36;
+    color: #f0f6fc;
+    border-color: #3b82f6;
+  }
+  
+  .add-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+  }
+  
+  .add-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    min-width: 180px;
+    overflow: hidden;
+    animation: slideDown 200ms ease;
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: none;
+    background: transparent;
+    color: #f0f6fc;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 150ms ease;
+  }
+  
+  .dropdown-item:hover {
+    background: #21262d;
+    color: #58a6ff;
+  }
+  
+  .dropdown-item:first-child:hover {
+    color: #238636;
+  }
+  
+  .dropdown-item:last-child:hover {
+    color: #8b5cf6;
   }
   
   .dashboard-content {
@@ -768,28 +844,6 @@
   
   .add-widget-card:hover .add-icon {
     color: #8b5cf6;
-  }
-  
-  .add-icon {
-    color: #8b949e;
-    transition: color 0.2s ease;
-  }
-  
-  .add-app-card:hover .add-icon {
-    color: #3b82f6;
-  }
-  
-  .add-text h3 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #f0f6fc;
-  }
-  
-  .add-text p {
-    margin: 0;
-    font-size: 0.8125rem;
-    color: #8b949e;
   }
   
   .empty-state {
