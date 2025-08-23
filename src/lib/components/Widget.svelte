@@ -4,12 +4,8 @@
   import { onMount, onDestroy } from 'svelte';
   
   export let widget;
+  export let gridMode = false;
   
-  let widgetElement;
-  let isDragging = false;
-  let isResizing = false;
-  let dragOffset = { x: 0, y: 0 };
-  let resizeStart = { x: 0, y: 0, width: 0, height: 0 };
   let showMenu = false;
   let isEditing = false;
   let editContent = '';
@@ -30,58 +26,6 @@
     { name: 'Rot', value: 'red', color: '#ef4444' },
     { name: 'Grau', value: 'gray', color: '#6b7280' }
   ];
-  
-  function handleMouseDown(event) {
-    if (event.target.closest('.widget-resize') || 
-        event.target.closest('.widget-menu') || 
-        event.target.closest('.widget-controls')) return;
-    
-    isDragging = true;
-    const rect = widgetElement.getBoundingClientRect();
-    dragOffset = {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    };
-    event.preventDefault();
-  }
-  
-  function handleMouseMove(event) {
-    if (isDragging) {
-      const newX = event.clientX - dragOffset.x;
-      const newY = event.clientY - dragOffset.y;
-      
-      updateWidget(widget.id, {
-        position: { x: Math.max(0, newX), y: Math.max(0, newY) }
-      });
-    } else if (isResizing) {
-      const deltaX = event.clientX - resizeStart.x;
-      const deltaY = event.clientY - resizeStart.y;
-      
-      const newWidth = Math.max(250, resizeStart.width + deltaX);
-      const newHeight = Math.max(180, resizeStart.height + deltaY);
-      
-      updateWidget(widget.id, {
-        size: { width: newWidth, height: newHeight }
-      });
-    }
-  }
-  
-  function handleMouseUp() {
-    isDragging = false;
-    isResizing = false;
-  }
-  
-  function handleResizeStart(event) {
-    isResizing = true;
-    resizeStart = {
-      x: event.clientX,
-      y: event.clientY,
-      width: widget.size.width,
-      height: widget.size.height
-    };
-    event.preventDefault();
-    event.stopPropagation();
-  }
   
   function toggleMenu(event) {
     event.stopPropagation();
@@ -151,32 +95,20 @@
   }
   
   onMount(() => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('click', handleClickOutside);
   });
   
   onDestroy(() => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
     document.removeEventListener('click', handleClickOutside);
   });
 </script>
 
 <div
-  bind:this={widgetElement}
   class="widget {getColorClass(widget.color)}"
-  class:dragging={isDragging}
-  class:resizing={isResizing}
   class:editing={isEditing}
-  style="
-    left: {widget.position.x}px;
-    top: {widget.position.y}px;
-    width: {widget.size.width}px;
-    height: {widget.size.height}px;
-  "
+  class:grid-mode={gridMode}
 >
-  <div class="widget-header" on:mousedown={handleMouseDown}>
+  <div class="widget-header">
     <div class="widget-title-section">
       <div class="widget-color-indicator"></div>
       <div class="widget-title">
@@ -185,7 +117,6 @@
             bind:value={editTitle}
             class="title-input"
             placeholder="Widget Titel..."
-            on:click|stopPropagation
           />
         {:else}
           {widget.title}
@@ -198,7 +129,6 @@
         <button 
           class="widget-control-btn" 
           on:click={toggleMenu}
-          on:mousedown|stopPropagation
           title="Widget-Menü"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -302,45 +232,20 @@
       </div>
     {/if}
   </div>
-  
-  <div 
-    class="widget-resize"
-    on:mousedown={handleResizeStart}
-    title="Größe ändern"
-  >
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15v4a2 2 0 0 1-2 2h-4m0-6 6 6m-11 0h-4a2 2 0 0 1-2-2v-4m6 0-6 6"/>
-    </svg>
-  </div>
 </div>
 
 <style>
   .widget {
-    position: absolute;
+    height: 100%;
     background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-radius: 0;
     overflow: hidden;
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 250px;
-    min-height: 180px;
-    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
   }
   
-  .widget:hover {
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    transform: translateY(-1px);
-  }
-  
-  .widget.dragging {
-    transform: rotate(2deg) scale(1.02);
-    z-index: 1000;
-    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  }
-  
-  .widget.resizing {
-    z-index: 1000;
+  .widget.grid-mode {
+    border-radius: 16px;
   }
   
   .widget.editing {
@@ -367,12 +272,11 @@
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
     padding: 1rem 1.25rem;
-    cursor: move;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
-    min-height: 60px;
+    flex-shrink: 0;
   }
   
   .widget-title-section {
@@ -498,6 +402,7 @@
   .widget-content {
     height: calc(100% - 60px);
     overflow: hidden;
+    flex: 1;
   }
   
   .widget-body {
@@ -637,34 +542,6 @@
     background: var(--accent-hover);
   }
   
-  .widget-resize {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
-    cursor: se-resize;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    transition: all 150ms ease;
-    opacity: 0;
-  }
-  
-  .widget:hover .widget-resize {
-    opacity: 1;
-  }
-  
-  .widget-resize:hover {
-    background: var(--accent-color);
-    color: var(--accent-foreground);
-    border-color: var(--accent-color);
-  }
-  
   /* Markdown Content Styling */
   .markdown-content {
     font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -793,22 +670,16 @@
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .widget {
-      min-width: 200px;
-      min-height: 150px;
-    }
-    
     .form-row {
       grid-template-columns: 1fr;
     }
     
     .widget-header {
       padding: 0.75rem 1rem;
-      min-height: 50px;
     }
     
     .widget-content {
-      height: calc(100% - 50px);
+      height: calc(100% - 56px);
     }
     
     .widget-body {
