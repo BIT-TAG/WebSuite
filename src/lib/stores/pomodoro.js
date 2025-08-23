@@ -68,6 +68,15 @@ export function stopPomodoro() {
   }
 }
 
+export function completeCurrentTask() {
+  pomodoroState.update(state => ({
+    ...state,
+    currentTask: null
+  }));
+  
+  selectedTask.set(null);
+}
+
 export function setWorkSession() {
   pomodoroState.update(state => ({
     ...state,

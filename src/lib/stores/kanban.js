@@ -97,3 +97,54 @@ export function deleteCard(boardId, columnId, cardId) {
     )
   );
 }
+
+export function completeTask(boardId, cardId) {
+  kanbanBoards.update(boards => {
+    const board = boards.find(b => b.id === boardId);
+    if (!board) return boards;
+    
+    // Finde die Karte und ihre aktuelle Spalte
+    let sourceColumn = null;
+    let taskCard = null;
+    
+    for (const column of board.columns) {
+      const card = column.cards.find(c => c.id === cardId);
+      if (card) {
+        sourceColumn = column;
+        taskCard = card;
+        break;
+      }
+    }
+    
+    if (!sourceColumn || !taskCard) return boards;
+    
+    // Finde die "Done" Spalte (oder die letzte Spalte)
+    const doneColumn = board.columns.find(col => 
+      col.title.toLowerCase().includes('done') || 
+      col.title.toLowerCase().includes('fertig') ||
+      col.title.toLowerCase().includes('erledigt')
+    ) || board.columns[board.columns.length - 1];
+    
+    // Wenn die Karte bereits in der Done-Spalte ist, nichts tun
+    if (sourceColumn.id === doneColumn.id) return boards;
+    
+    return boards.map(b => 
+      b.id === boardId 
+        ? {
+            ...b,
+            columns: b.columns.map(col => {
+              if (col.id === sourceColumn.id) {
+                // Karte aus der Quell-Spalte entfernen
+                return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
+              }
+              if (col.id === doneColumn.id) {
+                // Karte zur Done-Spalte hinzufügen
+                return { ...col, cards: [...col.cards, taskCard] };
+              }
+              return col;
+            })
+          }
+        : b
+    );
+  });
+}

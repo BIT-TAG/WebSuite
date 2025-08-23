@@ -9,11 +9,12 @@
     pausePomodoro, 
     resumePomodoro, 
     stopPomodoro,
+    completeCurrentTask,
     setWorkSession,
     setShortBreak,
     setLongBreak
   } from '$lib/stores/pomodoro';
-  import { kanbanBoards, activeBoard } from '$lib/stores/kanban';
+  import { kanbanBoards, activeBoard, completeTask } from '$lib/stores/kanban';
   
   let showTaskSelector = false;
   let availableTasks = [];
@@ -41,6 +42,15 @@
       startPomodoro($selectedTask);
     } else {
       startPomodoro();
+    }
+  }
+  
+  function handleCompleteTask() {
+    if ($selectedTask) {
+      // Task im Kanban Board als erledigt markieren
+      completeTask($activeBoard, $selectedTask.id);
+      // Task aus dem Pomodoro Timer entfernen
+      completeCurrentTask();
     }
   }
   
@@ -88,9 +98,14 @@
         <strong>{$selectedTask.title}</strong>
         <span class="task-column">({$selectedTask.columnTitle})</span>
       </div>
-      <button class="change-task-btn" on:click={() => showTaskSelector = true}>
-        Ändern
-      </button>
+      <div class="task-actions">
+        <button class="complete-task-btn" on:click={handleCompleteTask}>
+          ✅ Erledigt
+        </button>
+        <button class="change-task-btn" on:click={() => showTaskSelector = true}>
+          Ändern
+        </button>
+      </div>
     </div>
   {:else}
     <div class="no-task">
@@ -284,6 +299,28 @@
   .task-column {
     color: #666;
     font-size: 0.9rem;
+  }
+  
+  .task-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .complete-task-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .complete-task-btn:hover {
+    background: #45a049;
+    transform: translateY(-1px);
   }
   
   .change-task-btn {
