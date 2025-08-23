@@ -13,20 +13,12 @@
 	const tabsContentVariants = tv({
 		base: "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 	});
-	
-	// Entfernt: Ungenutzte export properties
 </script>
 
-<TabsPrimitive.Root>
-	<slot />
-</TabsPrimitive.Root>
-
-<!-- TabsList Component -->
 <script lang="ts" context="module">
 	import type { ComponentType } from "svelte";
 	
 	export const Tabs = TabsPrimitive.Root;
-	
 	export const TabsList: ComponentType<any> = TabsPrimitive.List;
 	export const TabsTrigger: ComponentType<any> = TabsPrimitive.Trigger;
 	export const TabsContent: ComponentType<any> = TabsPrimitive.Content;

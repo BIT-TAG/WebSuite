@@ -103,8 +103,8 @@
       📋 {currentBoard?.title || 'Kanban Board'}
     </h2>
     
-    <Tabs value={viewMode} class="w-auto">
-      <TabsList>
+    <Tabs value={viewMode}>
+      <TabsList class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
         <TabsTrigger value="kanban" on:click={() => switchView('kanban')}>
           📋 Kanban
         </TabsTrigger>
@@ -127,7 +127,7 @@
               <Card class="flex-1 p-4">
                 <div class="mb-4 flex items-center justify-between">
                   <h3 class="font-medium text-foreground">{column.title}</h3>
-                  <Badge variant="secondary" class="text-xs">
+                  <Badge variant="secondary">
                     {column.cards.length}
                   </Badge>
                 </div>
@@ -175,12 +175,12 @@
                       {#if card.priority || card.assignee}
                         <div class="flex flex-wrap gap-2">
                           {#if card.priority}
-                            <Badge variant={getPriorityVariant(card.priority)} class="text-xs">
+                            <Badge variant={getPriorityVariant(card.priority)}>
                               {getPriorityLabel(card.priority)}
                             </Badge>
                           {/if}
                           {#if card.assignee}
-                            <Badge variant="outline" class="text-xs">
+                            <Badge variant="outline">
                               👤 {card.assignee}
                             </Badge>
                           {/if}
@@ -220,7 +220,7 @@
                 {:else}
                   <Button 
                     variant="ghost" 
-                    class="w-full border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50"
+                    class="w-full justify-center border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50"
                     on:click={() => showAddCard[column.id] = true}
                   >
                     <Plus class="mr-2 h-4 w-4"></Plus>

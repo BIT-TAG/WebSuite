@@ -40,15 +40,15 @@
   <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <div class="flex h-14 items-center justify-between px-6">
       <Tabs value={$currentView} class="w-auto">
-        <TabsList class="grid w-full grid-cols-3">
+        <TabsList class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
           <TabsTrigger 
             value="desktop" 
             on:click={switchToDesktop}
-            class="flex items-center gap-2"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             🖥️ Desktop
             {#if $windows.length > 0}
-              <span class="ml-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+              <span class="ml-1 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors border-transparent bg-primary text-primary-foreground">
                 {$windows.length}
               </span>
             {/if}
@@ -56,14 +56,14 @@
           <TabsTrigger 
             value="dashboard" 
             on:click={switchToDashboard}
-            class="flex items-center gap-2"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             📊 Dashboard
           </TabsTrigger>
           <TabsTrigger 
             value="kanban" 
             on:click={switchToKanban}
-            class="flex items-center gap-2"
+            class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
           >
             📋 Kanban
           </TabsTrigger>
@@ -76,7 +76,7 @@
           variant="ghost" 
           size="icon"
           on:click={() => showSettings = true}
-          class="h-8 w-8"
+          class="h-10 w-10"
         >
           <Settings class="h-4 w-4"></Settings>
         </Button>
