@@ -7,6 +7,24 @@
   
   let activeTab = 'design';
   
+  // LibreWorkspace connection variables
+  let workspaceDomain = '';
+  let apiKey = '';
+  let showApiKey = false;
+  let connectionStatus = null; // null, 'connecting', 'success', 'error'
+  let connectionError = '';
+  
+  // Sync settings
+  let syncSettings = {
+    projects: true,
+    tasks: true,
+    settings: false
+  };
+  
+  // Local settings
+  let defaultView = 'kanban';
+  let pomodoroTime = 25;
+  
   const tabs = [
     { id: 'account', label: 'Account', icon: '👤' },
     { id: 'design', label: 'Design', icon: '🎨' },
@@ -30,6 +48,112 @@
   
   function selectTab(tabId) {
     activeTab = tabId;
+  }
+  
+  async function testConnection() {
+    if (!workspaceDomain || !apiKey) return;
+    
+    connectionStatus = 'connecting';
+    connectionError = '';
+    
+    try {
+      // Simulate API call
+      const response = await fetch(`${workspaceDomain}/api/v1/auth/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
+      
+      if (response.ok) {
+        connectionStatus = 'success';
+        // Save connection settings to localStorage
+        localStorage.setItem('libreworkspace-domain', workspaceDomain);
+        localStorage.setItem('libreworkspace-api-key', apiKey);
+      } else {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+    } catch (error) {
+      connectionStatus = 'error';
+      connectionError = error.message || 'Unbekannter Fehler';
+    }
+  }
+  
+  function disconnectWorkspace() {
+    workspaceDomain = '';
+    apiKey = '';
+    connectionStatus = null;
+    connectionError = '';
+    
+    // Remove from localStorage
+    localStorage.removeItem('libreworkspace-domain');
+    localStorage.removeItem('libreworkspace-api-key');
+  }
+  
+  function exportWorkspace() {
+    // Create export data
+    const exportData = {
+      timestamp: new Date().toISOString(),
+      settings: $settings,
+      syncSettings,
+      defaultView,
+      pomodoroTime
+    };
+    
+    // Download as JSON file
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `libreworkspace-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  
+  function importWorkspace() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const importData = JSON.parse(e.target.result);
+            // Apply imported settings
+            if (importData.settings) {
+              Object.entries(importData.settings).forEach(([key, value]) => {
+                settings.update(s => ({ ...s, [key]: value }));
+              });
+            }
+            if (importData.syncSettings) syncSettings = importData.syncSettings;
+            if (importData.defaultView) defaultView = importData.defaultView;
+            if (importData.pomodoroTime) pomodoroTime = importData.pomodoroTime;
+            
+            alert('Einstellungen erfolgreich importiert!');
+          } catch (error) {
+            alert('Fehler beim Importieren der Datei: ' + error.message);
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  }
+  
+  // Load saved connection on component mount
+  if (typeof localStorage !== 'undefined') {
+    const savedDomain = localStorage.getItem('libreworkspace-domain');
+    const savedApiKey = localStorage.getItem('libreworkspace-api-key');
+    
+    if (savedDomain) workspaceDomain = savedDomain;
+    if (savedApiKey) apiKey = savedApiKey;
+    
+    if (savedDomain && savedApiKey) {
+      connectionStatus = 'success';
+    }
   }
 </script>
 
@@ -173,46 +297,124 @@
             {:else if activeTab === 'workspace'}
               <div class="settings-section">
                 <div class="form-group">
-                  <label>Workspace Name</label>
-                  <input type="text" value="Mein Workspace" class="form-input" />
-                </div>
-                
-                <div class="form-group">
-                  <label>Standard-Ansicht</label>
-                  <select class="form-select">
-                    <option>Desktop</option>
-                    <option>Dashboard</option>
-                    <option selected>Kanban</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" checked />
-                    <span class="checkmark"></span>
-                    Auto-Save aktivieren
-                  </label>
-                </div>
-                
-                <div class="form-group">
-                  <label class="checkbox-label">
-                    <input type="checkbox" />
-                    <span class="checkmark"></span>
-                    Benachrichtigungen anzeigen
-                  </label>
-                </div>
-                
-                <div class="form-group">
-                  <label>Pomodoro Standard-Zeit</label>
-                  <div class="time-inputs">
-                    <input type="number" value="25" min="1" max="60" class="time-input" />
-                    <span>Minuten</span>
+                  <label>LibreWorkspace Domain</label>
+                  <input 
+                    type="url" 
+                    placeholder="https://portal.bit-tag.com" 
+                    class="form-input" 
+                    bind:value={workspaceDomain}
+                  />
+                  <div class="form-hint">
+                    Geben Sie die vollständige URL Ihres LibreWorkspace Servers ein
                   </div>
                 </div>
                 
                 <div class="form-group">
-                  <button class="secondary-btn">Workspace exportieren</button>
-                  <button class="secondary-btn">Workspace importieren</button>
+                  <label>API Schlüssel</label>
+                  <div class="api-key-input">
+                    <input 
+                      type={showApiKey ? 'text' : 'password'}
+                      placeholder="Ihr API Schlüssel..."
+                      class="form-input"
+                      bind:value={apiKey}
+                    />
+                    <button 
+                      type="button"
+                      class="toggle-visibility"
+                      on:click={() => showApiKey = !showApiKey}
+                    >
+                      {showApiKey ? '👁️' : '👁️‍🗨️'}
+                    </button>
+                  </div>
+                  <div class="form-hint">
+                    Den API Schlüssel finden Sie in Ihren LibreWorkspace Kontoeinstellungen
+                  </div>
+                </div>
+                
+                {#if connectionStatus}
+                  <div class="connection-status" class:success={connectionStatus === 'success'} class:error={connectionStatus === 'error'}>
+                    {#if connectionStatus === 'connecting'}
+                      <div class="status-icon">⏳</div>
+                      <span>Verbindung wird hergestellt...</span>
+                    {:else if connectionStatus === 'success'}
+                      <div class="status-icon">✅</div>
+                      <span>Erfolgreich verbunden mit {workspaceDomain}</span>
+                    {:else if connectionStatus === 'error'}
+                      <div class="status-icon">❌</div>
+                      <span>Verbindung fehlgeschlagen: {connectionError}</span>
+                    {/if}
+                  </div>
+                {/if}
+                
+                <div class="form-group">
+                  <button 
+                    class="primary-btn"
+                    on:click={testConnection}
+                    disabled={!workspaceDomain || !apiKey || connectionStatus === 'connecting'}
+                  >
+                    {connectionStatus === 'connecting' ? 'Verbinde...' : 'Verbindung testen'}
+                  </button>
+                  
+                  {#if connectionStatus === 'success'}
+                    <button class="secondary-btn" on:click={disconnectWorkspace}>
+                      Verbindung trennen
+                    </button>
+                  {/if}
+                </div>
+                
+                <div class="divider"></div>
+                
+                <div class="form-group">
+                  <label>Synchronisation</label>
+                  <div class="sync-options">
+                    <label class="checkbox-label">
+                      <input type="checkbox" bind:checked={syncSettings.projects} />
+                      <span class="checkmark"></span>
+                      Projekte synchronisieren
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" bind:checked={syncSettings.tasks} />
+                      <span class="checkmark"></span>
+                      Aufgaben synchronisieren
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" bind:checked={syncSettings.settings} />
+                      <span class="checkmark"></span>
+                      Einstellungen synchronisieren
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Lokale Einstellungen</label>
+                  <div class="local-settings">
+                    <div class="setting-row">
+                      <span>Standard-Ansicht</span>
+                      <select class="form-select compact" bind:value={defaultView}>
+                        <option value="desktop">Desktop</option>
+                        <option value="dashboard">Dashboard</option>
+                        <option value="kanban">Kanban</option>
+                      </select>
+                    </div>
+                    <div class="setting-row">
+                      <span>Pomodoro Zeit</span>
+                      <div class="time-inputs">
+                        <input type="number" bind:value={pomodoroTime} min="1" max="60" class="time-input" />
+                        <span>Min</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <div class="export-import">
+                    <button class="secondary-btn" on:click={exportWorkspace}>
+                      📤 Daten exportieren
+                    </button>
+                    <button class="secondary-btn" on:click={importWorkspace}>
+                      📥 Daten importieren
+                    </button>
+                  </div>
                 </div>
               </div>
               
@@ -772,6 +974,137 @@
     color: #ef4444;
     font-size: 16px;
     font-weight: 600;
+  }
+  
+  .form-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  
+  .api-key-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .api-key-input .form-input {
+    padding-right: 40px;
+  }
+  
+  .toggle-visibility {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: all 150ms ease;
+  }
+  
+  .toggle-visibility:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+  
+  .connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  
+  .connection-status.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+  
+  .connection-status.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+  
+  .status-icon {
+    font-size: 16px;
+  }
+  
+  .primary-btn {
+    background: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-foreground);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 150ms ease;
+    margin-right: 8px;
+  }
+  
+  .primary-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+  
+  .primary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+  
+  .sync-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .local-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  
+  .setting-row span {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  .form-select.compact {
+    width: auto;
+    min-width: 120px;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  
+  .export-import {
+    display: flex;
+    gap: 12px;
   }
   
   /* Responsive */
