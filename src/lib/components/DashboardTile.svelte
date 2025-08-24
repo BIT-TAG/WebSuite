@@ -155,8 +155,8 @@
   }
   
   .app-icon {
-    width: 32px;
-    height: 32px;
+    width: 64px;
+    height: 64px;
     border-radius: 8px;
     display: flex;
     align-items: center;
