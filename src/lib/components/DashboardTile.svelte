@@ -96,11 +96,6 @@
   {:else if item.kind === 'widget'}
     <!-- Widget Content -->
     <div class="widget-content">
-      <div class="widget-header">
-        <div class="widget-color-indicator" style="background: {item.color === 'blue' ? '#3b82f6' : item.color === 'green' ? '#10b981' : item.color === 'purple' ? '#8b5cf6' : item.color === 'orange' ? '#f59e0b' : item.color === 'red' ? '#ef4444' : '#6b7280'}"></div>
-        <h3 class="widget-title">{item.title}</h3>
-        <span class="widget-type-badge">{item.widgetType === 'markdown' ? 'MD' : 'HTML'}</span>
-      </div>
       <div class="widget-body">
         {#if item.widgetType === 'html'}
           {@html item.content}
@@ -209,47 +204,9 @@
     height: 100%;
   }
   
-  .widget-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border-bottom: 1px solid #30363d;
-    background: #161b22;
-    flex-shrink: 0;
-  }
-  
-  .widget-color-indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  
-  .widget-title {
-    flex: 1;
-    margin: 0;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #f0f6fc;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .widget-type-badge {
-    background: #30363d;
-    color: #8b949e;
-    padding: 0.125rem 0.375rem;
-    border-radius: 4px;
-    font-size: 0.625rem;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-  
   .widget-body {
     flex: 1;
-    padding: 0.75rem;
+    padding: 1rem;
     overflow: hidden;
     color: #f0f6fc;
     font-size: 0.75rem;
