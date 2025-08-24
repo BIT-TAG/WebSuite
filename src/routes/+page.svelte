@@ -1,6 +1,7 @@
 <script>
   import { windows, minimizedWindows, openWindow, closeWindow, restoreWindow } from '$lib/stores/windows';
   import { currentView, switchToDesktop, switchToDashboard, switchToKanban } from '$lib/stores/view';
+  import { settings } from '$lib/stores/settings';
   import Window from '$lib/components/Window.svelte';
   import Dashboard from '$lib/components/Dashboard.svelte';
   import KanbanBoard from '$lib/components/KanbanBoard.svelte';
@@ -45,6 +46,7 @@
       <button 
         class="nav-switch" 
         class:active={$currentView === 'kanban'}
+        class:hidden={!$settings.betaMode}
         on:click={switchToKanban}
       >
         📋 Kanban
@@ -66,7 +68,20 @@
     {:else if $currentView === 'dashboard'}
       <Dashboard />
     {:else if $currentView === 'kanban'}
-      <KanbanBoard />
+      {#if $settings.betaMode}
+        <KanbanBoard />
+      {:else}
+        <div class="beta-required">
+          <div class="beta-required-content">
+            <div class="beta-icon">🧪</div>
+            <h2>Kanban ist noch im Beta Mode</h2>
+            <p>Diese Funktion ist experimentell und muss erst in den Einstellungen aktiviert werden.</p>
+            <button class="beta-settings-btn" on:click={() => showSettings = true}>
+              Zu den Beta-Einstellungen
+            </button>
+          </div>
+        </div>
+      {/if}
     {/if}
   </div>
   
@@ -148,6 +163,10 @@
     color: var(--text-primary);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     font-weight: 500;
+  }
+  
+  .nav-switch.hidden {
+    display: none;
   }
   
   .settings-btn {
@@ -239,5 +258,59 @@
     width: 100%;
     height: 100%;
     border: none;
+  }
+  
+  .beta-required {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .beta-required-content {
+    text-align: center;
+    max-width: 500px;
+  }
+  
+  .beta-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+  
+  .beta-required h2 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+  
+  .beta-required p {
+    margin: 0 0 2rem 0;
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  
+  .beta-settings-btn {
+    background: var(--accent-color);
+    color: var(--accent-foreground);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .beta-settings-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
   }
 </style>

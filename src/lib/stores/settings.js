@@ -4,7 +4,8 @@ import { browser } from '$app/environment';
 // Default settings
 const defaultSettings = {
   theme: 'dark', // 'light' or 'dark'
-  accentColor: 'blue' // 'blue', 'green', 'purple', 'orange', 'red'
+  accentColor: 'blue', // 'blue', 'green', 'purple', 'orange', 'red'
+  betaMode: false // Beta features toggle
 };
 
 // Load settings from localStorage if available
@@ -38,6 +39,10 @@ export function setTheme(theme) {
 
 export function setAccentColor(color) {
   settings.update(s => ({ ...s, accentColor: color }));
+}
+
+export function setBetaMode(enabled) {
+  settings.update(s => ({ ...s, betaMode: enabled }));
 }
 
 function applyTheme(settings) {

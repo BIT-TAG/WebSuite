@@ -1,6 +1,7 @@
 <!-- src/lib/components/SettingsPopup.svelte -->
 <script>
   import { settings, setTheme, setAccentColor } from '$lib/stores/settings';
+  import { setBetaMode } from '$lib/stores/settings';
   
   export let isOpen = false;
   export let onClose;
@@ -28,6 +29,7 @@
   const tabs = [
     { id: 'account', label: 'Account', icon: '👤' },
     { id: 'design', label: 'Design', icon: '🎨' },
+    { id: 'beta', label: 'Beta', icon: '🧪' },
     { id: 'workspace', label: 'LibreWorkspace', icon: '💼' },
     { id: 'subscription', label: 'Abo', icon: '💳' }
   ];
@@ -291,6 +293,45 @@
                     <span class="checkmark"></span>
                     Animationen aktivieren
                   </label>
+                </div>
+              </div>
+              
+            {:else if activeTab === 'beta'}
+              <div class="settings-section">
+                <div class="beta-info">
+                  <h3>🧪 Beta Features</h3>
+                  <p>Aktiviere experimentelle Funktionen. Diese können sich ändern oder instabil sein.</p>
+                </div>
+                
+                <div class="form-group">
+                  <label class="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={$settings.betaMode}
+                      on:change={(e) => setBetaMode(e.target.checked)}
+                    />
+                    <span class="checkmark"></span>
+                    Beta Mode aktivieren
+                  </label>
+                  <div class="form-hint">
+                    Schaltet experimentelle Features frei, die noch in der Entwicklung sind.
+                  </div>
+                </div>
+                
+                <div class="beta-features">
+                  <h4>Verfügbare Beta Features:</h4>
+                  <div class="feature-list">
+                    <div class="feature-item">
+                      <div class="feature-icon">📋</div>
+                      <div class="feature-info">
+                        <div class="feature-name">Kanban-Ansicht</div>
+                        <div class="feature-description">Erweiterte Projektmanagement-Ansicht mit Drag & Drop</div>
+                      </div>
+                      <div class="feature-status" class:enabled={$settings.betaMode}>
+                        {$settings.betaMode ? 'Aktiv' : 'Inaktiv'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               
@@ -1105,6 +1146,96 @@
   .export-import {
     display: flex;
     gap: 12px;
+  }
+  
+  .beta-info {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  
+  .beta-info h3 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .beta-info p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .beta-features {
+    margin-top: 32px;
+  }
+  
+  .beta-features h4 {
+    margin: 0 0 16px 0;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  
+  .feature-icon {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+  }
+  
+  .feature-info {
+    flex: 1;
+  }
+  
+  .feature-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  
+  .feature-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  
+  .feature-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #6b7280;
+    color: white;
+  }
+  
+  .feature-status.enabled {
+    background: #10b981;
   }
   
   /* Responsive */

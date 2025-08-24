@@ -1,5 +1,7 @@
 // src/lib/stores/view.js
 import { writable } from 'svelte/store';
+import { settings } from './settings';
+import { get } from 'svelte/store';
 
 export const currentView = writable('dashboard'); // 'desktop', 'dashboard' oder 'kanban'
 
@@ -12,5 +14,11 @@ export function switchToDashboard() {
 }
 
 export function switchToKanban() {
-  currentView.set('kanban');
+  const currentSettings = get(settings);
+  if (currentSettings.betaMode) {
+    currentView.set('kanban');
+  } else {
+    // Fallback to dashboard if beta mode is not enabled
+    currentView.set('dashboard');
+  }
 }
