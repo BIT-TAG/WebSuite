@@ -149,15 +149,23 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding: 0.75rem;
+    padding: 1rem;
     text-align: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
   
+  .app-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
   
   .icon-emoji {
-    font-size: 1.25rem;
+    font-size: 2.5rem;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   }
   
@@ -168,20 +176,24 @@
   
   .app-name {
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #f0f6fc;
     line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: center;
   }
   
-  .app-status {
+  .app-description {
     margin: 0;
-    font-size: 0.625rem;
+    font-size: 0.6875rem;
     color: #8b949e;
     font-weight: 400;
+    line-height: 1.3;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   
   /* Widget Styles */
