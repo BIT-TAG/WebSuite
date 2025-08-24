@@ -53,8 +53,24 @@
   aria-labelledby="title-{id}"
 >
   <div class="titlebar" on:mousedown={handleMouseDown} role="none">
-    <span id="title-{id}">{title}</span>
-    <button on:click={() => onClose(id)} aria-label="Fenster schließen">✖</button>
+    <span id="title-{id}" class="window-title">{title}</span>
+    <div class="window-controls">
+      <button class="control-btn minimize-btn" aria-label="Minimieren">
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <path d="M0,5 L10,5" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </button>
+      <button class="control-btn maximize-btn" aria-label="Maximieren">
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <rect x="0" y="0" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </button>
+      <button class="control-btn close-btn" on:click={() => onClose(id)} aria-label="Schließen">
+        <svg width="10" height="10" viewBox="0 0 10 10">
+          <path d="M0,0 L10,10 M10,0 L0,10" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </button>
+    </div>
   </div>
   <div class="content">
     <slot />
@@ -64,48 +80,77 @@
 <style>
   .window {
     position: absolute;
-    width: 400px;
-    height: 300px;
+    width: 320px;
+    height: 240px;
     background: var(--bg-primary);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    border-radius: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     resize: both;
-    min-width: 200px;
-    min-height: 150px;
+    min-width: 280px;
+    min-height: 200px;
   }
   
   .titlebar {
-    background: var(--accent-color);
-    color: var(--accent-foreground);
-    padding: 0.75rem 1rem;
+    background: #000000;
+    color: #ffffff;
+    padding: 0;
+    height: 32px;
     cursor: move;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
-    font-weight: 500;
-    font-size: 0.875rem;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    border-bottom: 1px solid var(--border);
   }
   
-  .titlebar button {
-    background: rgba(255, 255, 255, 0.15);
+  .window-title {
+    padding-left: 12px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .window-controls {
+    display: flex;
+    height: 100%;
+  }
+  
+  .control-btn {
+    background: transparent;
     border: none;
-    color: var(--accent-foreground);
-    padding: 0.375rem 0.625rem;
-    border-radius: calc(var(--radius) - 2px);
+    color: #ffffff;
+    width: 46px;
+    height: 32px;
     cursor: pointer;
-    font-size: 0.75rem;
-    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 150ms ease;
   }
   
-  .titlebar button:hover {
-    background: rgba(255, 255, 255, 0.25);
+  .control-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .minimize-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .maximize-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .close-btn:hover {
+    background: #e81123;
   }
   
   .content {
-    height: calc(100% - 3rem);
+    height: calc(100% - 32px);
     padding: 1rem;
     overflow: auto;
     color: var(--text-primary);
