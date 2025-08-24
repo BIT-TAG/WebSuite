@@ -1,0 +1,997 @@
+/* ==========================================================================
+   Windows 11 Theme for WebSuite
+   ========================================================================== */
+
+/* ==========================================================================
+   CSS Custom Properties (Design Tokens)
+   ========================================================================== */
+
+:root {
+  /* Colors - Light Theme */
+  --ws-accent: #2563EB;
+  --ws-accent-hover: #1D4ED8;
+  --ws-accent-active: #1E40AF;
+  --ws-accent-subtle: #EFF6FF;
+  
+  --ws-bg: #F6F7FB;
+  --ws-surface: #FFFFFF;
+  --ws-subtle: #F1F2F6;
+  --ws-elevated: #FFFFFF;
+  
+  --ws-text: #0F172A;
+  --ws-text-muted: #55607A;
+  --ws-text-subtle: #94A3B8;
+  
+  --ws-border: #E5E7EF;
+  --ws-border-subtle: #F1F5F9;
+  --ws-border-strong: #CBD5E1;
+  
+  /* Mica & Acrylic */
+  --ws-tint: rgba(255, 255, 255, 0.6);
+  --ws-acrylic: rgba(255, 255, 255, 0.75);
+  --ws-acrylic-border: rgba(255, 255, 255, 0.18);
+  
+  /* Semantic Colors */
+  --ws-success: #059669;
+  --ws-success-bg: #ECFDF5;
+  --ws-warning: #D97706;
+  --ws-warning-bg: #FFFBEB;
+  --ws-error: #DC2626;
+  --ws-error-bg: #FEF2F2;
+  --ws-info: #0284C7;
+  --ws-info-bg: #F0F9FF;
+  
+  /* Typography */
+  --ws-font-sans: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, "Noto Color Emoji", "Segoe UI Emoji", sans-serif;
+  --ws-font-mono: "Cascadia Code", "Consolas", "Courier New", monospace;
+  
+  --ws-text-xs: 0.75rem;    /* 12px */
+  --ws-text-sm: 0.875rem;   /* 14px */
+  --ws-text-base: 1rem;     /* 16px */
+  --ws-text-lg: 1.125rem;   /* 18px */
+  --ws-text-xl: 1.25rem;    /* 20px */
+  --ws-text-2xl: 1.5rem;    /* 24px */
+  
+  --ws-leading-tight: 1.25;
+  --ws-leading-normal: 1.5;
+  --ws-leading-relaxed: 1.625;
+  
+  --ws-font-normal: 400;
+  --ws-font-medium: 500;
+  --ws-font-semibold: 600;
+  --ws-font-bold: 700;
+  
+  /* Spacing Scale */
+  --ws-space-1: 4px;
+  --ws-space-2: 8px;
+  --ws-space-3: 12px;
+  --ws-space-4: 16px;
+  --ws-space-5: 24px;
+  --ws-space-6: 32px;
+  --ws-space-8: 48px;
+  --ws-space-10: 64px;
+  
+  /* Border Radius */
+  --ws-radius-sm: 8px;
+  --ws-radius: 12px;
+  --ws-radius-lg: 16px;
+  --ws-radius-xl: 20px;
+  --ws-radius-full: 9999px;
+  
+  /* Shadows (Elevation) */
+  --ws-shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --ws-shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --ws-shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --ws-shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  
+  /* Focus Ring */
+  --ws-focus-ring: 0 0 0 2px var(--ws-accent), 0 0 0 4px rgba(37, 99, 235, 0.2);
+  --ws-focus-ring-inset: inset 0 0 0 2px #FFFFFF;
+  
+  /* Transitions */
+  --ws-transition: 160ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ws-transition-fast: 100ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --ws-accent: #5B8CFF;
+  --ws-accent-hover: #7BA7FF;
+  --ws-accent-active: #4F7FFF;
+  --ws-accent-subtle: #1E293B;
+  
+  --ws-bg: #0B0F19;
+  --ws-surface: #11162A;
+  --ws-subtle: #0E1424;
+  --ws-elevated: #161C31;
+  
+  --ws-text: #E6EAF2;
+  --ws-text-muted: #A3ADC2;
+  --ws-text-subtle: #64748B;
+  
+  --ws-border: #2A3144;
+  --ws-border-subtle: #1E293B;
+  --ws-border-strong: #475569;
+  
+  --ws-tint: rgba(17, 22, 42, 0.5);
+  --ws-acrylic: rgba(22, 28, 49, 0.65);
+  --ws-acrylic-border: rgba(255, 255, 255, 0.08);
+  
+  --ws-success: #10B981;
+  --ws-success-bg: #064E3B;
+  --ws-warning: #F59E0B;
+  --ws-warning-bg: #78350F;
+  --ws-error: #EF4444;
+  --ws-error-bg: #7F1D1D;
+  --ws-info: #06B6D4;
+  --ws-info-bg: #164E63;
+  
+  --ws-focus-ring: 0 0 0 2px var(--ws-accent), 0 0 0 4px rgba(91, 140, 255, 0.2);
+  --ws-focus-ring-inset: inset 0 0 0 2px #000000;
+  
+  --ws-shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --ws-shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --ws-shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --ws-shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   Global Styles & Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--ws-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ws-bg);
+  color: var(--ws-text);
+  font-size: var(--ws-text-base);
+  line-height: var(--ws-leading-normal);
+}
+
+/* ==========================================================================
+   App Container (Mica Background)
+   ========================================================================== */
+
+.ws-app {
+  min-height: 100vh;
+  background: 
+    radial-gradient(1200px 800px at 0% 0%, rgba(255, 255, 255, 0.35), transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    var(--ws-bg);
+  background-blend-mode: overlay, normal, normal;
+  position: relative;
+}
+
+[data-theme="dark"] .ws-app {
+  background: 
+    radial-gradient(1200px 800px at 0% 0%, rgba(91, 140, 255, 0.15), transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    var(--ws-bg);
+}
+
+/* Subtle noise texture */
+.ws-app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+[data-theme="dark"] .ws-app::before {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+  opacity: 0.2;
+}
+
+/* ==========================================================================
+   Acrylic Utility
+   ========================================================================== */
+
+.ws-acrylic {
+  background: var(--ws-acrylic);
+  backdrop-filter: saturate(160%) blur(20px);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+  border: 1px solid var(--ws-acrylic-border);
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(20px)) {
+  .ws-acrylic {
+    background: color-mix(in oklab, var(--ws-acrylic) 90%, transparent);
+  }
+}
+
+/* ==========================================================================
+   Elevation Utilities
+   ========================================================================== */
+
+.is-elev-1 { box-shadow: var(--ws-shadow-1); }
+.is-elev-2 { box-shadow: var(--ws-shadow-2); }
+.is-elev-3 { box-shadow: var(--ws-shadow-3); }
+.is-elev-4 { box-shadow: var(--ws-shadow-4); }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.ws-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ws-space-2);
+  padding: var(--ws-space-3) var(--ws-space-4);
+  border: 1px solid var(--ws-border);
+  border-radius: 10px;
+  background: var(--ws-surface);
+  color: var(--ws-text);
+  font-family: var(--ws-font-sans);
+  font-size: var(--ws-text-sm);
+  font-weight: var(--ws-font-medium);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--ws-transition);
+  min-height: 36px;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.ws-btn:hover {
+  background: var(--ws-subtle);
+  border-color: var(--ws-border-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--ws-shadow-2);
+}
+
+.ws-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--ws-shadow-1);
+}
+
+.ws-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ws-focus-ring);
+}
+
+.ws-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ws-btn:disabled:hover {
+  background: var(--ws-surface);
+  border-color: var(--ws-border);
+}
+
+/* Button Variants */
+.ws-btn--primary {
+  background: var(--ws-accent);
+  color: white;
+  border-color: var(--ws-accent);
+}
+
+.ws-btn--primary:hover {
+  background: var(--ws-accent-hover);
+  border-color: var(--ws-accent-hover);
+}
+
+.ws-btn--primary:active {
+  background: var(--ws-accent-active);
+  border-color: var(--ws-accent-active);
+}
+
+.ws-btn--primary:focus-visible {
+  box-shadow: var(--ws-focus-ring), var(--ws-focus-ring-inset);
+}
+
+.ws-btn--subtle {
+  background: var(--ws-subtle);
+  border-color: transparent;
+}
+
+.ws-btn--subtle:hover {
+  background: var(--ws-border);
+}
+
+.ws-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+}
+
+.ws-btn--ghost:hover {
+  background: var(--ws-subtle);
+}
+
+.ws-btn--danger {
+  background: var(--ws-error);
+  color: white;
+  border-color: var(--ws-error);
+}
+
+.ws-btn--danger:hover {
+  background: color-mix(in oklab, var(--ws-error) 90%, black);
+}
+
+.ws-btn--danger:focus-visible {
+  box-shadow: 0 0 0 2px var(--ws-error), 0 0 0 4px rgba(220, 38, 38, 0.2), var(--ws-focus-ring-inset);
+}
+
+/* Button Icon */
+.ws-btn__icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Form Controls
+   ========================================================================== */
+
+.ws-input,
+.ws-textarea {
+  display: block;
+  width: 100%;
+  padding: var(--ws-space-3);
+  border: 1px solid var(--ws-border);
+  border-radius: 10px;
+  background: var(--ws-surface);
+  color: var(--ws-text);
+  font-family: var(--ws-font-sans);
+  font-size: var(--ws-text-sm);
+  line-height: var(--ws-leading-normal);
+  transition: all var(--ws-transition);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ws-input:hover,
+.ws-textarea:hover {
+  border-color: var(--ws-border-strong);
+}
+
+.ws-input:focus,
+.ws-textarea:focus {
+  outline: none;
+  border-color: var(--ws-accent);
+  box-shadow: var(--ws-focus-ring), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ws-input::placeholder,
+.ws-textarea::placeholder {
+  color: var(--ws-text-subtle);
+}
+
+.ws-input:disabled,
+.ws-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--ws-subtle);
+}
+
+/* Input States */
+.ws-input--invalid,
+.ws-textarea--invalid {
+  border-color: var(--ws-error);
+}
+
+.ws-input--invalid:focus,
+.ws-textarea--invalid:focus {
+  box-shadow: 0 0 0 2px var(--ws-error), 0 0 0 4px rgba(220, 38, 38, 0.2);
+}
+
+.ws-input--success,
+.ws-textarea--success {
+  border-color: var(--ws-success);
+}
+
+.ws-input--success:focus,
+.ws-textarea--success:focus {
+  box-shadow: 0 0 0 2px var(--ws-success), 0 0 0 4px rgba(5, 150, 105, 0.2);
+}
+
+.ws-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.ws-card {
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-border);
+  border-radius: var(--ws-radius);
+  overflow: hidden;
+  transition: all var(--ws-transition);
+}
+
+.ws-card:hover {
+  border-color: var(--ws-border-strong);
+}
+
+.ws-card__header {
+  padding: var(--ws-space-5) var(--ws-space-5) var(--ws-space-4);
+  border-bottom: 1px solid var(--ws-border-subtle);
+  background: var(--ws-subtle);
+}
+
+.ws-card__title {
+  margin: 0;
+  font-size: var(--ws-text-lg);
+  font-weight: var(--ws-font-semibold);
+  color: var(--ws-text);
+  line-height: var(--ws-leading-tight);
+}
+
+.ws-card__content {
+  padding: var(--ws-space-5);
+}
+
+.ws-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-3);
+  margin-top: var(--ws-space-4);
+}
+
+.ws-card__footer {
+  padding: var(--ws-space-4) var(--ws-space-5);
+  border-top: 1px solid var(--ws-border-subtle);
+  background: var(--ws-subtle);
+}
+
+/* ==========================================================================
+   Navigation & Toolbar
+   ========================================================================== */
+
+.ws-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-4);
+  padding: var(--ws-space-3) var(--ws-space-5);
+  background: var(--ws-surface);
+  border-bottom: 1px solid var(--ws-border);
+}
+
+.ws-toolbar.ws-acrylic {
+  backdrop-filter: saturate(160%) blur(20px);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+}
+
+.ws-toolbar.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ws-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-2);
+}
+
+.ws-nav__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ws-space-2);
+  padding: var(--ws-space-2) var(--ws-space-3);
+  border-radius: var(--ws-radius-sm);
+  color: var(--ws-text-muted);
+  text-decoration: none;
+  font-size: var(--ws-text-sm);
+  font-weight: var(--ws-font-medium);
+  transition: all var(--ws-transition);
+}
+
+.ws-nav__item:hover {
+  background: var(--ws-subtle);
+  color: var(--ws-text);
+}
+
+.ws-nav__item.is-active {
+  background: var(--ws-accent-subtle);
+  color: var(--ws-accent);
+}
+
+.ws-nav__item:focus-visible {
+  outline: none;
+  box-shadow: var(--ws-focus-ring);
+}
+
+/* ==========================================================================
+   Modal & Dialog
+   ========================================================================== */
+
+.ws-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ws-space-5);
+}
+
+.ws-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ws-modal__content {
+  position: relative;
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-border);
+  border-radius: var(--ws-radius-lg);
+  box-shadow: var(--ws-shadow-4);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: modalSlideIn 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ws-modal__content.ws-acrylic {
+  backdrop-filter: saturate(160%) blur(20px);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.ws-modal__header {
+  padding: var(--ws-space-5);
+  border-bottom: 1px solid var(--ws-border-subtle);
+}
+
+.ws-modal__title {
+  margin: 0;
+  font-size: var(--ws-text-xl);
+  font-weight: var(--ws-font-semibold);
+  color: var(--ws-text);
+}
+
+.ws-modal__body {
+  padding: var(--ws-space-5);
+  overflow-y: auto;
+}
+
+.ws-modal__footer {
+  padding: var(--ws-space-4) var(--ws-space-5);
+  border-top: 1px solid var(--ws-border-subtle);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ws-space-3);
+}
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+
+.ws-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ws-space-3);
+  padding: var(--ws-space-4);
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-border);
+  border-radius: var(--ws-radius);
+  box-shadow: var(--ws-shadow-3);
+  max-width: 400px;
+  animation: toastSlideIn 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.ws-toast__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ws-toast__content {
+  flex: 1;
+}
+
+.ws-toast__title {
+  margin: 0 0 var(--ws-space-1) 0;
+  font-size: var(--ws-text-sm);
+  font-weight: var(--ws-font-semibold);
+  color: var(--ws-text);
+}
+
+.ws-toast__message {
+  margin: 0;
+  font-size: var(--ws-text-sm);
+  color: var(--ws-text-muted);
+  line-height: var(--ws-leading-normal);
+}
+
+/* Toast Variants */
+.ws-toast--success {
+  border-color: var(--ws-success);
+  background: var(--ws-success-bg);
+}
+
+.ws-toast--warning {
+  border-color: var(--ws-warning);
+  background: var(--ws-warning-bg);
+}
+
+.ws-toast--error {
+  border-color: var(--ws-error);
+  background: var(--ws-error-bg);
+}
+
+.ws-toast--info {
+  border-color: var(--ws-info);
+  background: var(--ws-info-bg);
+}
+
+/* ==========================================================================
+   Form Controls - Advanced
+   ========================================================================== */
+
+/* Switch */
+.ws-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.ws-switch__input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ws-switch__slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ws-border-strong);
+  border-radius: var(--ws-radius-full);
+  transition: all var(--ws-transition);
+}
+
+.ws-switch__slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: all var(--ws-transition);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.ws-switch__input:checked + .ws-switch__slider {
+  background: var(--ws-accent);
+}
+
+.ws-switch__input:checked + .ws-switch__slider::before {
+  transform: translateX(20px);
+}
+
+.ws-switch__input:focus-visible + .ws-switch__slider {
+  box-shadow: var(--ws-focus-ring);
+}
+
+.ws-switch__input:disabled + .ws-switch__slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Checkbox */
+.ws-checkbox {
+  position: relative;
+  display: inline-block;
+}
+
+.ws-checkbox__input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ws-checkbox__checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: var(--ws-surface);
+  border: 2px solid var(--ws-border-strong);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--ws-transition);
+}
+
+.ws-checkbox__checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.ws-checkbox__input:checked + .ws-checkbox__checkmark {
+  background: var(--ws-accent);
+  border-color: var(--ws-accent);
+}
+
+.ws-checkbox__input:checked + .ws-checkbox__checkmark::after {
+  display: block;
+}
+
+.ws-checkbox__input:focus-visible + .ws-checkbox__checkmark {
+  box-shadow: var(--ws-focus-ring);
+}
+
+.ws-checkbox__input:disabled + .ws-checkbox__checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Radio */
+.ws-radio {
+  position: relative;
+  display: inline-block;
+}
+
+.ws-radio__input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ws-radio__checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: var(--ws-surface);
+  border: 2px solid var(--ws-border-strong);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--ws-transition);
+}
+
+.ws-radio__checkmark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.ws-radio__input:checked + .ws-radio__checkmark {
+  background: var(--ws-accent);
+  border-color: var(--ws-accent);
+}
+
+.ws-radio__input:checked + .ws-radio__checkmark::after {
+  display: block;
+}
+
+.ws-radio__input:focus-visible + .ws-radio__checkmark {
+  box-shadow: var(--ws-focus-ring);
+}
+
+.ws-radio__input:disabled + .ws-radio__checkmark {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Accessibility & Motion
+   ========================================================================== */
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .ws-btn:hover,
+  .ws-btn:active {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ws-btn {
+    border-width: 2px;
+  }
+  
+  .ws-input,
+  .ws-textarea {
+    border-width: 2px;
+  }
+  
+  .ws-card {
+    border-width: 2px;
+  }
+}
+
+/* Focus-visible polyfill support */
+.js-focus-visible .ws-btn:focus:not(.focus-visible),
+.js-focus-visible .ws-input:focus:not(.focus-visible),
+.js-focus-visible .ws-textarea:focus:not(.focus-visible) {
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* Text utilities */
+.ws-text-xs { font-size: var(--ws-text-xs); }
+.ws-text-sm { font-size: var(--ws-text-sm); }
+.ws-text-base { font-size: var(--ws-text-base); }
+.ws-text-lg { font-size: var(--ws-text-lg); }
+.ws-text-xl { font-size: var(--ws-text-xl); }
+.ws-text-2xl { font-size: var(--ws-text-2xl); }
+
+.ws-font-normal { font-weight: var(--ws-font-normal); }
+.ws-font-medium { font-weight: var(--ws-font-medium); }
+.ws-font-semibold { font-weight: var(--ws-font-semibold); }
+.ws-font-bold { font-weight: var(--ws-font-bold); }
+
+.ws-text-muted { color: var(--ws-text-muted); }
+.ws-text-subtle { color: var(--ws-text-subtle); }
+
+/* Spacing utilities */
+.ws-p-0 { padding: 0; }
+.ws-p-1 { padding: var(--ws-space-1); }
+.ws-p-2 { padding: var(--ws-space-2); }
+.ws-p-3 { padding: var(--ws-space-3); }
+.ws-p-4 { padding: var(--ws-space-4); }
+.ws-p-5 { padding: var(--ws-space-5); }
+.ws-p-6 { padding: var(--ws-space-6); }
+
+.ws-m-0 { margin: 0; }
+.ws-m-1 { margin: var(--ws-space-1); }
+.ws-m-2 { margin: var(--ws-space-2); }
+.ws-m-3 { margin: var(--ws-space-3); }
+.ws-m-4 { margin: var(--ws-space-4); }
+.ws-m-5 { margin: var(--ws-space-5); }
+.ws-m-6 { margin: var(--ws-space-6); }
+
+/* Border radius utilities */
+.ws-rounded-sm { border-radius: var(--ws-radius-sm); }
+.ws-rounded { border-radius: var(--ws-radius); }
+.ws-rounded-lg { border-radius: var(--ws-radius-lg); }
+.ws-rounded-xl { border-radius: var(--ws-radius-xl); }
+.ws-rounded-full { border-radius: var(--ws-radius-full); }
+
+/* ==========================================================================
+   Example Usage (Commented)
+   ========================================================================== */
+
+/*
+
+<!-- Basic Layout Example -->
+<div class="ws-app">
+  <!-- Acrylic Toolbar -->
+  <header class="ws-toolbar ws-acrylic is-sticky">
+    <h1 class="ws-text-lg ws-font-semibold">WebSuite</h1>
+    <nav class="ws-nav">
+      <a href="#" class="ws-nav__item is-active">Dashboard</a>
+      <a href="#" class="ws-nav__item">Projects</a>
+      <a href="#" class="ws-nav__item">Settings</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="ws-p-6">
+    <!-- Card Example -->
+    <div class="ws-card is-elev-2">
+      <div class="ws-card__header">
+        <h2 class="ws-card__title">Welcome to WebSuite</h2>
+      </div>
+      <div class="ws-card__content">
+        <p class="ws-text-muted">This is a Windows 11 themed interface.</p>
+        
+        <!-- Form Example -->
+        <div class="ws-m-4">
+          <label class="ws-text-sm ws-font-medium">Email</label>
+          <input type="email" class="ws-input" placeholder="Enter your email">
+        </div>
+        
+        <!-- Switch Example -->
+        <label class="ws-switch">
+          <input type="checkbox" class="ws-switch__input">
+          <span class="ws-switch__slider"></span>
+        </label>
+      </div>
+      <div class="ws-card__actions">
+        <button class="ws-btn ws-btn--primary">Get Started</button>
+        <button class="ws-btn ws-btn--subtle">Learn More</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Dark Mode Toggle -->
+<script>
+// Toggle dark mode
+function toggleDarkMode() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+}
+</script>
+
+*/
