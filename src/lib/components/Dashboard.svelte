@@ -739,8 +739,8 @@
   }
   
   .dashboard-grid {
-    --cell: 128px;
-    --gap: 16px;
+    --cell: 160px;
+    --gap: 20px;
     display: grid;
     grid-template-columns: repeat(6, var(--cell));
     grid-auto-rows: var(--cell);
@@ -751,16 +751,16 @@
   
   @media (max-width: 768px) {
     .dashboard-grid {
-      --cell: 96px;
-      --gap: 12px;
+      --cell: 120px;
+      --gap: 16px;
       grid-template-columns: repeat(4, var(--cell));
     }
   }
   
   @media (max-width: 480px) {
     .dashboard-grid {
-      --cell: 80px;
-      --gap: 10px;
+      --cell: 100px;
+      --gap: 12px;
       grid-template-columns: repeat(3, var(--cell));
     }
   }
