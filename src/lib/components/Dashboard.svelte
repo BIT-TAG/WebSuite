@@ -540,9 +540,9 @@
 <style>
   .dashboard {
     height: 100%;
-    background: #0d1117;
+    background: var(--bg-primary);
     color: #f0f6fc;
-    overflow-y: auto;
+    overflow-y: visible;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
     position: relative;
   }

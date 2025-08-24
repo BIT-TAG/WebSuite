@@ -194,6 +194,7 @@
   .content-area {
     flex: 1;
     position: relative;
+    overflow-y: auto;
   }
   
   .desktop-content {
