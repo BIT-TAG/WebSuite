@@ -17,7 +17,7 @@
   let newAppDomain = '';
   let newAppAddon = '';
   let newAppIcon = '🔧';
-  let newAppColor = '#3b82f6';
+//  let newAppColor = '#3b82f6';
   
   // Widget form data
   let newWidgetTitle = '';
