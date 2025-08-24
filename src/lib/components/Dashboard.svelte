@@ -221,9 +221,6 @@
       <div class="header-right">
         <div class="add-menu-container">
           <button class="add-btn" on:click={toggleAddMenu} class:active={showAddMenu}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 5v14M5 12h14"/>
-            </svg>
           </button>
           
           {#if showAddMenu}
