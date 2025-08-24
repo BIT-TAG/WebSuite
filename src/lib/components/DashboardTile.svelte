@@ -154,16 +154,7 @@
     gap: 0.5rem;
   }
   
-  .app-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
+
   
   .icon-emoji {
     font-size: 1.25rem;
