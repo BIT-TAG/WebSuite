@@ -9,11 +9,6 @@
   import SettingsPopup from '$lib/components/SettingsPopup.svelte';
   
   let showSettings = false;
-  let count = 0;
-
-  function increment() {
-    count += 1;
-  }
 
   function openExample() {
     openWindow({
@@ -67,9 +62,6 @@
   <div class="content-area">
     {#if $currentView === 'desktop'}
       <div class="desktop-content">
-        <h1>Web Desktop</h1>
-        <p>Counter: {count}</p>
-        <button on:click={increment}>Increment</button>
       </div>
     {:else if $currentView === 'dashboard'}
       <Dashboard />
