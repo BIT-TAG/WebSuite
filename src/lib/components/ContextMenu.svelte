@@ -2,6 +2,7 @@
 <script>
   import { contextMenu, updateWidget, apps } from '$lib/stores/widgets';
   import { onMount, onDestroy } from 'svelte';
+  import { browser } from '$app/environment';
   
   let showEditModal = false;
   let editingItem = null;
@@ -100,13 +101,17 @@
   }
   
   onMount(() => {
-    document.addEventListener('click', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    if (browser) {
+      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
   });
   
   onDestroy(() => {
-    document.removeEventListener('click', handleClickOutside);
-    document.removeEventListener('keydown', handleKeyDown);
+    if (browser) {
+      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    }
   });
 </script>
 
