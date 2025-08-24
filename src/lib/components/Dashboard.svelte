@@ -199,52 +199,34 @@
 </script>
 
 <div class="dashboard" on:click={handleClickOutside}>
-  <div class="dashboard-header">
-    <div class="header-content">
-      <div class="header-left">
-        <div class="logo-section">
-          <div class="logo">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div class="floating-add-button">
+    <div class="add-menu-container">
+      <button class="add-btn" on:click={toggleAddMenu} class:active={showAddMenu}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </button>
+      
+      {#if showAddMenu}
+        <div class="add-dropdown">
+          <button class="dropdown-item" on:click={() => openAddModal('app')}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect width="18" height="18" x="3" y="3" rx="2"/>
+              <path d="M9 9h6v6H9z"/>
+            </svg>
+            App hinzufügen
+          </button>
+          <button class="dropdown-item" on:click={() => openAddModal('widget')}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect width="7" height="9" x="3" y="3" rx="1"/>
               <rect width="7" height="5" x="14" y="3" rx="1"/>
               <rect width="7" height="9" x="14" y="12" rx="1"/>
               <rect width="7" height="5" x="3" y="16" rx="1"/>
             </svg>
-          </div>
-          <div class="header-text">
-            <h1>Dashboard</h1>
-            <p>{totalItems} Apps verfügbar</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="header-right">
-        <div class="add-menu-container">
-          <button class="add-btn" on:click={toggleAddMenu} class:active={showAddMenu}>
+            Widget hinzufügen
           </button>
-          
-          {#if showAddMenu}
-            <div class="add-dropdown">
-              <button class="dropdown-item" on:click={() => openAddModal('app')}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="18" height="18" x="3" y="3" rx="2"/>
-                  <path d="M9 9h6v6H9z"/>
-                </svg>
-                App hinzufügen
-              </button>
-              <button class="dropdown-item" on:click={() => openAddModal('widget')}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect width="7" height="9" x="3" y="3" rx="1"/>
-                  <rect width="7" height="5" x="14" y="3" rx="1"/>
-                  <rect width="7" height="9" x="14" y="12" rx="1"/>
-                  <rect width="7" height="5" x="3" y="16" rx="1"/>
-                </svg>
-                Widget hinzufügen
-              </button>
-            </div>
-          {/if}
         </div>
-      </div>
+      {/if}
     </div>
   </div>
   
@@ -578,68 +560,14 @@
     color: #f0f6fc;
     overflow-y: auto;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    position: relative;
   }
 
-  .dashboard-header {
-    background: #161b22;
-    border-bottom: 1px solid #21262d;
-    padding: 2rem 2.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(12px);
-  }
-  
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  
-  .header-left {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .logo {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #7c3aed, #3b82f6);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-  }
-  
-  .header-text h1 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: #f0f6fc;
-    letter-spacing: -0.025em;
-  }
-  
-  .header-text p {
-    margin: 0;
-    color: #8b949e;
-    font-size: 0.875rem;
-    font-weight: 400;
-  }
-  
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  .floating-add-button {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1000;
   }
   
   .add-menu-container {
@@ -731,7 +659,7 @@
   .dashboard-content {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 2.5rem;
+    padding: 2rem;
   }
   
   .apps-grid {
