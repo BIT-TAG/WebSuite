@@ -564,10 +564,10 @@
   }
 
   .floating-add-button {
-    position: fixed;
+    position: absolute;
     top: 2rem;
     right: 2rem;
-    z-index: 1000;
+    z-index: 100;
   }
   
   .add-menu-container {
