@@ -85,7 +85,7 @@
   {#if item.kind === 'app'}
     <!-- App Content -->
     <div class="app-content">
-      <div class="app-icon" style="background: {item.color}">
+      <div class="app-icon">
         <span class="icon-emoji">{item.icon}</span>
       </div>
       <div class="app-info">
