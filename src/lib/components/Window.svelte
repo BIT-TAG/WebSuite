@@ -1,6 +1,7 @@
 <!-- src/lib/components/Window.svelte -->
 <script>
   import { moveWindow, bringToFront, minimizeWindow, maximizeWindow } from '$lib/stores/windows';
+  import { resizeWindow } from '$lib/stores/windows';
   import { onMount, onDestroy } from 'svelte';
   
   export let id;
@@ -14,6 +15,10 @@
 
   let offset = { x: 0, y: 0 };
   let dragging = false;
+  let resizing = false;
+  let resizeDirection = '';
+  let initialSize = { width: 0, height: 0 };
+  let initialMousePos = { x: 0, y: 0 };
 
   function handleMouseDown(event) {
     if (isMaximized) return; // Kein Drag wenn maximiert
@@ -26,17 +31,57 @@
     event.preventDefault();
   }
 
+  function handleResizeStart(event, direction) {
+    if (isMaximized) return;
+    event.stopPropagation();
+    bringToFront(id);
+    resizing = true;
+    resizeDirection = direction;
+    initialSize = { width, height };
+    initialMousePos = { x: event.clientX, y: event.clientY };
+    event.preventDefault();
+  }
   function handleMouseMove(event) {
     if (dragging && !isMaximized) {
       moveWindow(id, {
         x: event.clientX - offset.x,
         y: event.clientY - offset.y
       });
+    } else if (resizing && !isMaximized) {
+      const deltaX = event.clientX - initialMousePos.x;
+      const deltaY = event.clientY - initialMousePos.y;
+      
+      let newWidth = initialSize.width;
+      let newHeight = initialSize.height;
+      let newX = position.x;
+      let newY = position.y;
+      
+      if (resizeDirection.includes('right')) {
+        newWidth = Math.max(200, initialSize.width + deltaX);
+      }
+      if (resizeDirection.includes('left')) {
+        newWidth = Math.max(200, initialSize.width - deltaX);
+        newX = position.x + (initialSize.width - newWidth);
+      }
+      if (resizeDirection.includes('bottom')) {
+        newHeight = Math.max(150, initialSize.height + deltaY);
+      }
+      if (resizeDirection.includes('top')) {
+        newHeight = Math.max(150, initialSize.height - deltaY);
+        newY = position.y + (initialSize.height - newHeight);
+      }
+      
+      resizeWindow(id, newWidth, newHeight);
+      if (newX !== position.x || newY !== position.y) {
+        moveWindow(id, { x: newX, y: newY });
+      }
     }
   }
 
   function handleMouseUp() {
     dragging = false;
+    resizing = false;
+    resizeDirection = '';
   }
 
   function handleMinimize() {
@@ -65,6 +110,21 @@
   role="dialog"
   aria-labelledby="title-{id}"
 >
+  <!-- Resize Handles -->
+  {#if !isMaximized}
+    <!-- Ecken -->
+    <div class="resize-handle corner top-left" on:mousedown={(e) => handleResizeStart(e, 'top-left')}></div>
+    <div class="resize-handle corner top-right" on:mousedown={(e) => handleResizeStart(e, 'top-right')}></div>
+    <div class="resize-handle corner bottom-left" on:mousedown={(e) => handleResizeStart(e, 'bottom-left')}></div>
+    <div class="resize-handle corner bottom-right" on:mousedown={(e) => handleResizeStart(e, 'bottom-right')}></div>
+    
+    <!-- Kanten -->
+    <div class="resize-handle edge top" on:mousedown={(e) => handleResizeStart(e, 'top')}></div>
+    <div class="resize-handle edge bottom" on:mousedown={(e) => handleResizeStart(e, 'bottom')}></div>
+    <div class="resize-handle edge left" on:mousedown={(e) => handleResizeStart(e, 'left')}></div>
+    <div class="resize-handle edge right" on:mousedown={(e) => handleResizeStart(e, 'right')}></div>
+  {/if}
+  
   <div class="titlebar" on:mousedown={handleMouseDown} role="none">
     <span id="title-{id}" class="window-title">{title}</span>
     <div class="window-controls">
@@ -180,5 +240,76 @@
     padding: 1rem;
     overflow: auto;
     color: var(--text-primary);
+  }
+  
+  /* Resize Handles */
+  .resize-handle {
+    position: absolute;
+    z-index: 10;
+  }
+  
+  .resize-handle.corner {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .resize-handle.edge {
+    background: transparent;
+  }
+  
+  .resize-handle.top-left {
+    top: -5px;
+    left: -5px;
+    cursor: nw-resize;
+  }
+  
+  .resize-handle.top-right {
+    top: -5px;
+    right: -5px;
+    cursor: ne-resize;
+  }
+  
+  .resize-handle.bottom-left {
+    bottom: -5px;
+    left: -5px;
+    cursor: sw-resize;
+  }
+  
+  .resize-handle.bottom-right {
+    bottom: -5px;
+    right: -5px;
+    cursor: se-resize;
+  }
+  
+  .resize-handle.top {
+    top: -5px;
+    left: 10px;
+    right: 10px;
+    height: 10px;
+    cursor: n-resize;
+  }
+  
+  .resize-handle.bottom {
+    bottom: -5px;
+    left: 10px;
+    right: 10px;
+    height: 10px;
+    cursor: s-resize;
+  }
+  
+  .resize-handle.left {
+    left: -5px;
+    top: 10px;
+    bottom: 10px;
+    width: 10px;
+    cursor: w-resize;
+  }
+  
+  .resize-handle.right {
+    right: -5px;
+    top: 10px;
+    bottom: 10px;
+    width: 10px;
+    cursor: e-resize;
   }
 </style>

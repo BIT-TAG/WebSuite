@@ -75,3 +75,9 @@ export function moveWindow(id, position) {
     ws.map((w) => w.id === id ? { ...w, position } : w)
   );
 }
+
+export function resizeWindow(id, width, height) {
+  windows.update((ws) =>
+    ws.map((w) => w.id === id ? { ...w, width, height } : w)
+  );
+}
