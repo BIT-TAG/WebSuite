@@ -90,7 +90,7 @@
       </div>
       <div class="app-info">
         <h3 class="app-name">{item.name}</h3>
-        <p class="app-status">{item.status}</p>
+        <p class="app-description">{item.descriptionShort || 'Keine Beschreibung verfügbar'}</p>
       </div>
     </div>
   {:else if item.kind === 'widget'}

@@ -48,6 +48,24 @@ export const apps = writable([
     url: 'https://de.wikipedia.org',
     color: '#3b82f6',
     status: 'Installiert',
+    descriptionShort: 'Online-Enzyklopädie mit Millionen von Artikeln',
+    info: {
+      format: 'markdown',
+      content: `# Wikipedia
+
+**Die freie Enzyklopädie**
+
+Wikipedia ist ein freies, gemeinnütziges Projekt zur Erstellung einer Enzyklopädie in allen Sprachen der Welt.
+
+## Features
+- Über 6 Millionen Artikel in deutscher Sprache
+- Kostenlos und werbefrei
+- Von Freiwilligen erstellt und gepflegt
+- Verfügbar in über 300 Sprachen
+
+## Nutzung
+Suchen Sie nach beliebigen Themen und erhalten Sie fundierte, quellenbasierte Informationen.`
+    },
     pos: { x: 0, y: 0 },
     dim: { w: 1, h: 1 }
   },
@@ -59,6 +77,20 @@ export const apps = writable([
     url: 'https://www.calculator.net',
     color: '#10b981',
     status: 'Installiert',
+    descriptionShort: 'Wissenschaftlicher Taschenrechner für komplexe Berechnungen',
+    info: {
+      format: 'html',
+      content: `<h1>Calculator</h1>
+<p><strong>Professioneller Online-Rechner</strong></p>
+<p>Ein vollwertiger wissenschaftlicher Taschenrechner mit erweiterten Funktionen.</p>
+<h2>Funktionen</h2>
+<ul>
+<li>Grundrechenarten (+, -, ×, ÷)</li>
+<li>Wissenschaftliche Funktionen (sin, cos, tan, log)</li>
+<li>Statistik und Wahrscheinlichkeit</li>
+<li>Einheitenumrechnung</li>
+</ul>`
+    },
     pos: { x: 1, y: 0 },
     dim: { w: 1, h: 1 }
   },
@@ -70,6 +102,24 @@ export const apps = writable([
     url: 'https://keep.google.com',
     color: '#f59e0b',
     status: 'Installiert',
+    descriptionShort: 'Notizen und Erinnerungen organisieren',
+    info: {
+      format: 'markdown',
+      content: `# Google Keep Notes
+
+**Ihre Gedanken, überall verfügbar**
+
+Erfassen Sie Ideen, erstellen Sie Listen und setzen Sie Erinnerungen – alles an einem Ort.
+
+## Features
+- **Schnelle Notizen** - Gedanken sofort festhalten
+- **Listen** - To-Do-Listen und Einkaufslisten
+- **Erinnerungen** - Zeitbasierte und ortsbasierte Alerts
+- **Zusammenarbeit** - Notizen mit anderen teilen
+- **Suche** - Alle Notizen durchsuchbar
+
+Synchronisiert automatisch zwischen allen Ihren Geräten.`
+    },
     pos: { x: 2, y: 0 },
     dim: { w: 1, h: 1 }
   },
@@ -81,6 +131,24 @@ export const apps = writable([
     url: 'https://weather.com',
     color: '#8b5cf6',
     status: 'Installiert',
+    descriptionShort: 'Aktuelle Wettervorhersagen und Warnungen',
+    info: {
+      format: 'markdown',
+      content: `# Weather.com
+
+**Präzise Wettervorhersagen weltweit**
+
+Bleiben Sie über das Wetter in Ihrer Region und weltweit informiert.
+
+## Features
+- **Aktuelle Bedingungen** - Live-Wetterdaten
+- **10-Tage-Vorhersage** - Detaillierte Prognosen
+- **Radar & Karten** - Interaktive Wetterkarten
+- **Wetterwarnungen** - Unwetter-Alerts
+- **Stündliche Vorhersage** - Präzise Stundenprognosen
+
+Powered by The Weather Channel.`
+    },
     pos: { x: 3, y: 0 },
     dim: { w: 1, h: 1 }
   },
@@ -92,6 +160,22 @@ export const apps = writable([
     url: 'https://calendar.google.com',
     color: '#ef4444',
     status: 'Installiert',
+    descriptionShort: 'Termine und Events verwalten',
+    info: {
+      format: 'html',
+      content: `<h1>Google Calendar</h1>
+<p><strong>Ihr digitaler Terminplaner</strong></p>
+<p>Organisieren Sie Ihren Alltag mit dem weltweit führenden Kalenderdienst.</p>
+<h2>Hauptfunktionen</h2>
+<ul>
+<li><strong>Terminplanung</strong> - Events erstellen und verwalten</li>
+<li><strong>Erinnerungen</strong> - Nie wieder einen Termin vergessen</li>
+<li><strong>Freigabe</strong> - Kalender mit Familie und Kollegen teilen</li>
+<li><strong>Integration</strong> - Verbindung mit Gmail und anderen Google-Diensten</li>
+<li><strong>Mobile Sync</strong> - Zugriff von überall</li>
+</ul>
+<p>Verfügbar auf allen Plattformen und Geräten.</p>`
+    },
     pos: { x: 4, y: 0 },
     dim: { w: 1, h: 1 }
   },
@@ -103,6 +187,31 @@ export const apps = writable([
     url: 'https://github.com',
     color: '#6b7280',
     status: 'Installiert',
+    descriptionShort: 'Code-Repositories und Entwickler-Zusammenarbeit',
+    info: {
+      format: 'markdown',
+      content: `# GitHub
+
+**Die Entwicklerplattform**
+
+GitHub ist die weltweit führende Plattform für Softwareentwicklung und Versionskontrolle.
+
+## Was ist GitHub?
+- **Git-Repositories** - Versionskontrolle für Code
+- **Collaboration** - Teamarbeit an Projekten
+- **Issue Tracking** - Bug-Reports und Feature-Requests
+- **Pull Requests** - Code-Review-Prozess
+- **Actions** - CI/CD-Pipelines
+- **Packages** - Software-Pakete hosten
+
+## Für wen?
+- Einzelentwickler
+- Open-Source-Projekte  
+- Unternehmensteams
+- Studenten und Lernende
+
+Über 100 Millionen Entwickler nutzen GitHub weltweit.`
+    },
     pos: { x: 5, y: 0 },
     dim: { w: 1, h: 1 }
   }
