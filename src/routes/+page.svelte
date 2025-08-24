@@ -1,5 +1,5 @@
 <script>
-  import { windows, openWindow, closeWindow } from '$lib/stores/windows';
+  import { windows, minimizedWindows, openWindow, closeWindow, restoreWindow } from '$lib/stores/windows';
   import { currentView, switchToDesktop, switchToDashboard, switchToKanban } from '$lib/stores/view';
   import Window from '$lib/components/Window.svelte';
   import Dashboard from '$lib/components/Dashboard.svelte';
@@ -82,6 +82,16 @@
     <div class="taskbar">
       <button on:click={openExample}>Fenster öffnen</button>
       <button on:click={openIframeApp}>Wikipedia öffnen</button>
+      
+      {#if $minimizedWindows.length > 0}
+        <div class="minimized-windows">
+          {#each $minimizedWindows as win (win.id)}
+            <button class="taskbar-item" on:click={() => restoreWindow(win.id)}>
+              {win.title}
+            </button>
+          {/each}
+        </div>
+      {/if}
     </div>
   {/if}
 
@@ -224,8 +234,36 @@
     background: var(--bg-primary);
     padding: 1rem;
     display: flex;
+    align-items: center;
     gap: 0.75rem;
     border-top: 1px solid var(--border);
+  }
+
+  .minimized-windows {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  .taskbar-item {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 200ms ease;
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .taskbar-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-color);
   }
   
   button {

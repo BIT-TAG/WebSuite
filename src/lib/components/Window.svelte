@@ -1,11 +1,14 @@
 <!-- src/lib/components/Window.svelte -->
 <script>
-  import { moveWindow, bringToFront } from '$lib/stores/windows';
+  import { moveWindow, bringToFront, minimizeWindow, maximizeWindow } from '$lib/stores/windows';
   import { onMount, onDestroy } from 'svelte';
   
   export let id;
   export let title;
   export let position;
+  export let width = 320;
+  export let height = 240;
+  export let isMaximized = false;
   export let zIndex;
   export let onClose;
 
@@ -13,6 +16,7 @@
   let dragging = false;
 
   function handleMouseDown(event) {
+    if (isMaximized) return; // Kein Drag wenn maximiert
     bringToFront(id);
     dragging = true;
     offset = {
@@ -23,7 +27,7 @@
   }
 
   function handleMouseMove(event) {
-    if (dragging) {
+    if (dragging && !isMaximized) {
       moveWindow(id, {
         x: event.clientX - offset.x,
         y: event.clientY - offset.y
@@ -33,6 +37,14 @@
 
   function handleMouseUp() {
     dragging = false;
+  }
+
+  function handleMinimize() {
+    minimizeWindow(id);
+  }
+
+  function handleMaximize() {
+    maximizeWindow(id);
   }
 
   onMount(() => {
@@ -48,22 +60,30 @@
 
 <div
   class="window"
-  style="left: {position.x}px; top: {position.y}px; z-index: {zIndex};"
+  style="left: {position.x}px; top: {position.y}px; width: {width}px; height: {height}px; z-index: {zIndex};"
+  class:maximized={isMaximized}
   role="dialog"
   aria-labelledby="title-{id}"
 >
   <div class="titlebar" on:mousedown={handleMouseDown} role="none">
     <span id="title-{id}" class="window-title">{title}</span>
     <div class="window-controls">
-      <button class="control-btn minimize-btn" aria-label="Minimieren">
+      <button class="control-btn minimize-btn" on:click={handleMinimize} aria-label="Minimieren">
         <svg width="10" height="10" viewBox="0 0 10 10">
           <path d="M0,5 L10,5" stroke="currentColor" stroke-width="1"/>
         </svg>
       </button>
-      <button class="control-btn maximize-btn" aria-label="Maximieren">
-        <svg width="10" height="10" viewBox="0 0 10 10">
-          <rect x="0" y="0" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"/>
-        </svg>
+      <button class="control-btn maximize-btn" on:click={handleMaximize} aria-label={isMaximized ? 'Wiederherstellen' : 'Maximieren'}>
+        {#if isMaximized}
+          <svg width="10" height="10" viewBox="0 0 10 10">
+            <rect x="2" y="0" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/>
+            <rect x="0" y="2" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/>
+          </svg>
+        {:else}
+          <svg width="10" height="10" viewBox="0 0 10 10">
+            <rect x="0" y="0" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"/>
+          </svg>
+        {/if}
       </button>
       <button class="control-btn close-btn" on:click={() => onClose(id)} aria-label="Schließen">
         <svg width="10" height="10" viewBox="0 0 10 10">
@@ -80,16 +100,19 @@
 <style>
   .window {
     position: absolute;
-    width: 320px;
-    height: 240px;
     background: var(--bg-primary);
     border: 1px solid var(--border);
     border-radius: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    resize: both;
-    min-width: 280px;
-    min-height: 200px;
+    min-width: 200px;
+    min-height: 150px;
+    transition: all 0.2s ease;
+  }
+
+  .window.maximized {
+    border-radius: 0;
+    box-shadow: none;
   }
   
   .titlebar {
@@ -97,7 +120,6 @@
     color: #ffffff;
     padding: 0;
     height: 32px;
-    cursor: move;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -105,6 +127,10 @@
     font-weight: 400;
     font-size: 0.8125rem;
     border-bottom: 1px solid var(--border);
+  }
+  
+  .window:not(.maximized) .titlebar {
+    cursor: move;
   }
   
   .window-title {
