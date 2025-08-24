@@ -43,11 +43,13 @@
   }
   function handleMouseMove(event) {
     if (dragging && !isMaximized) {
+      event.preventDefault();
       moveWindow(id, {
         x: event.clientX - offset.x,
         y: event.clientY - offset.y
       });
     } else if (resizing && !isMaximized) {
+      event.preventDefault();
       const deltaX = event.clientX - initialMousePos.x;
       const deltaY = event.clientY - initialMousePos.y;
       
@@ -95,6 +97,9 @@
   onMount(() => {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('selectstart', (e) => {
+      if (dragging || resizing) e.preventDefault();
+    });
   });
   
   onDestroy(() => {
@@ -105,8 +110,10 @@
 
 <div
   class="window"
-  style="left: {position.x}px; top: {position.y}px; width: {width}px; height: {height}px; z-index: {zIndex};"
+  style="transform: translate({position.x}px, {position.y}px); width: {width}px; height: {height}px; z-index: {zIndex};"
   class:maximized={isMaximized}
+  class:dragging
+  class:resizing
   role="dialog"
   aria-labelledby="title-{id}"
 >
@@ -160,6 +167,8 @@
 <style>
   .window {
     position: absolute;
+    top: 0;
+    left: 0;
     background: var(--bg-primary);
     border: 1px solid var(--border);
     border-radius: 0;
@@ -167,7 +176,19 @@
     overflow: hidden;
     min-width: 200px;
     min-height: 150px;
-    transition: all 0.2s ease;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-origin: top left;
+  }
+  
+  .window:not(.dragging):not(.resizing) {
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .window.dragging,
+  .window.resizing {
+    transition: none;
+    pointer-events: auto;
   }
 
   .window.maximized {
@@ -187,6 +208,7 @@
     font-weight: 400;
     font-size: 0.8125rem;
     border-bottom: 1px solid var(--border);
+    will-change: auto;
   }
   
   .window:not(.maximized) .titlebar {
