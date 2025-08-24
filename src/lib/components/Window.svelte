@@ -169,46 +169,54 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: var(--bg-primary);
-    border: 1px solid var(--border);
-    border-radius: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--ws-surface, var(--bg-primary));
+    border: 1px solid var(--ws-border, var(--border));
+    border-radius: var(--ws-radius, 12px);
+    box-shadow: var(--ws-shadow-3, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1));
     overflow: hidden;
     min-width: 200px;
     min-height: 150px;
     will-change: transform;
     backface-visibility: hidden;
     transform-origin: top left;
+    transition: box-shadow var(--ws-transition, 160ms cubic-bezier(0.2, 0.7, 0.2, 1));
   }
   
   .window:not(.dragging):not(.resizing) {
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--ws-transition, 160ms cubic-bezier(0.2, 0.7, 0.2, 1)), 
+                box-shadow var(--ws-transition, 160ms cubic-bezier(0.2, 0.7, 0.2, 1));
   }
   
   .window.dragging,
   .window.resizing {
     transition: none;
     pointer-events: auto;
+    box-shadow: var(--ws-shadow-4, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1));
   }
 
   .window.maximized {
-    border-radius: 0;
+    border-radius: 0 !important;
     box-shadow: none;
   }
   
   .titlebar {
-    background: #000000;
-    color: #ffffff;
+    background: var(--ws-surface, #000000);
+    color: var(--ws-text, #ffffff);
     padding: 0;
-    height: 32px;
+    height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
-    font-weight: 400;
-    font-size: 0.8125rem;
-    border-bottom: 1px solid var(--border);
+    font-family: var(--ws-font-sans, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif);
+    font-weight: var(--ws-font-medium, 500);
+    font-size: var(--ws-text-sm, 0.875rem);
+    border-bottom: 1px solid var(--ws-border-subtle, var(--border));
     will-change: auto;
+    backdrop-filter: saturate(160%) blur(20px);
+    -webkit-backdrop-filter: saturate(160%) blur(20px);
+    border-top-left-radius: var(--ws-radius, 12px);
+    border-top-right-radius: var(--ws-radius, 12px);
   }
   
   .window:not(.maximized) .titlebar {
@@ -216,11 +224,12 @@
   }
   
   .window-title {
-    padding-left: 12px;
+    padding-left: var(--ws-space-4, 16px);
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: var(--ws-font-medium, 500);
   }
   
   .window-controls {
@@ -231,37 +240,60 @@
   .control-btn {
     background: transparent;
     border: none;
-    color: #ffffff;
-    width: 46px;
-    height: 32px;
+    color: var(--ws-text, #ffffff);
+    width: 48px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 150ms ease;
+    transition: background-color var(--ws-transition-fast, 100ms cubic-bezier(0.2, 0.7, 0.2, 1));
+    border-radius: 0;
+    position: relative;
+  }
+  
+  .control-btn:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ws-accent, #2563EB);
   }
   
   .control-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--ws-subtle, rgba(255, 255, 255, 0.1));
   }
   
   .minimize-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--ws-subtle, rgba(255, 255, 255, 0.1));
   }
   
   .maximize-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--ws-subtle, rgba(255, 255, 255, 0.1));
+  }
+  
+  .maximize-btn {
+    border-top-right-radius: var(--ws-radius, 12px);
   }
   
   .close-btn:hover {
-    background: #e81123;
+    background: var(--ws-error, #e81123);
+    color: white;
+  }
+  
+  .close-btn {
+    border-top-right-radius: var(--ws-radius, 12px);
+  }
+  
+  .window.maximized .control-btn {
+    border-radius: 0;
   }
   
   .content {
-    height: calc(100% - 32px);
-    padding: 1rem;
+    height: calc(100% - 40px);
+    padding: var(--ws-space-4, 1rem);
     overflow: auto;
-    color: var(--text-primary);
+    color: var(--ws-text, var(--text-primary));
+    background: var(--ws-surface, var(--bg-primary));
+    font-family: var(--ws-font-sans, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif);
+    line-height: var(--ws-leading-normal, 1.5);
   }
   
   /* Resize Handles */
