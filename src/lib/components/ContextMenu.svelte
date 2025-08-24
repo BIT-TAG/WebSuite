@@ -91,9 +91,6 @@
     if (!event.target.closest('.context-menu') && !event.target.closest('.edit-modal')) {
       closeMenu();
     }
-    if (!event.target.closest('.info-modal') && !event.target.closest('.widget-menu-container')) {
-      showInfoModal = false;
-    }
   }
   
   function handleKeyDown(event) {
@@ -609,5 +606,196 @@
     .form-row {
       grid-template-columns: 1fr;
     }
+  }
+  
+  /* Info Modal Styles */
+  .info-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 200ms ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .info-modal {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    animation: slideUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0; 
+      transform: translateY(20px) scale(0.95); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+  }
+  
+  .info-modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+  }
+  
+  .info-modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .info-icon {
+    font-size: 1.5rem;
+  }
+  
+  .info-close-btn {
+    background: var(--bg-hover);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .info-close-btn:hover {
+    background: var(--accent-color);
+    color: var(--accent-foreground);
+    border-color: var(--accent-color);
+  }
+  
+  .info-modal-content {
+    padding: 1.5rem;
+    max-height: 50vh;
+    overflow-y: auto;
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+  
+  .info-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg-secondary);
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Info Modal Content Styling */
+  :global(.info-modal-content h1) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+  }
+  
+  :global(.info-modal-content h2) {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 1.5rem 0 0.75rem 0;
+    line-height: 1.3;
+  }
+  
+  :global(.info-modal-content h3) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 1.25rem 0 0.5rem 0;
+    line-height: 1.4;
+  }
+  
+  :global(.info-modal-content p) {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+  
+  :global(.info-modal-content strong) {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  :global(.info-modal-content em) {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  
+  :global(.info-modal-content a) {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  :global(.info-modal-content a:hover) {
+    text-decoration: underline;
+  }
+  
+  :global(.info-modal-content ul) {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+  
+  :global(.info-modal-content li) {
+    margin: 0.5rem 0;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+  
+  :global(.info-modal-content blockquote) {
+    border-left: 4px solid var(--accent-color);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  :global(.info-modal-content code) {
+    background: var(--bg-secondary);
+    color: var(--accent-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: 0.875em;
+  }
+  
+  :global(.info-modal-content hr) {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 1.5rem 0;
   }
 </style>
