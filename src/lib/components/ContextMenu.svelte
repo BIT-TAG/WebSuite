@@ -91,6 +91,9 @@
     if (!event.target.closest('.context-menu') && !event.target.closest('.edit-modal')) {
       closeMenu();
     }
+    if (!event.target.closest('.info-modal') && !event.target.closest('.widget-menu-container')) {
+      showInfoModal = false;
+    }
   }
   
   function handleKeyDown(event) {
