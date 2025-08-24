@@ -58,7 +58,7 @@ export function maximizeWindow(id) {
       originalSize: w.isMaximized ? w.originalSize : { width: w.width || 320, height: w.height || 240 },
       position: w.isMaximized ? w.originalPosition : { x: 0, y: 0 },
       width: w.isMaximized ? w.originalSize?.width : window.innerWidth,
-      height: w.isMaximized ? w.originalSize?.height : window.innerHeight - 100
+      height: w.isMaximized ? w.originalSize?.height : window.innerHeight - 80
     } : w)
   );
 }

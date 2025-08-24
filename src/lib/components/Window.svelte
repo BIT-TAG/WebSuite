@@ -197,6 +197,10 @@
   .window.maximized {
     border-radius: 0 !important;
     box-shadow: none;
+    top: 80px !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: calc(100vh - 80px) !important;
   }
   
   .titlebar {
