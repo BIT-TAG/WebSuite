@@ -1,61 +1,110 @@
 // src/lib/stores/widgets.js
 import { writable } from 'svelte/store';
 
+// Grid-Typen und Validierung
+export function clampSize(n) {
+  return Math.max(1, Math.min(6, Math.round(n)));
+}
+
+export function normalizeDim(item) {
+  if (item.kind === 'app') return { w: 1, h: 1 };
+  return { 
+    w: clampSize(item.dim?.w || 1), 
+    h: clampSize(item.dim?.h || 1) 
+  };
+}
+
+export function collide(a, b) {
+  const ax2 = a.pos.x + a.dim.w;
+  const ay2 = a.pos.y + a.dim.h;
+  const bx2 = b.pos.x + b.dim.w;
+  const by2 = b.pos.y + b.dim.h;
+  return !(ax2 <= b.pos.x || bx2 <= a.pos.x || ay2 <= b.pos.y || by2 <= a.pos.y);
+}
+
+export function findFreeSpot(items, dim) {
+  for (let y = 0; y < 50; y++) {
+    for (let x = 0; x <= 6 - dim.w; x++) {
+      const candidate = { 
+        pos: { x, y }, 
+        dim,
+        id: 'temp',
+        kind: 'widget'
+      };
+      const hit = items.some(item => collide(candidate, item));
+      if (!hit) return { x, y };
+    }
+  }
+  return { x: 0, y: 0 };
+}
+
 // Apps Store
 export const apps = writable([
   {
     id: 'wikipedia-app',
     name: 'Wikipedia',
-    type: 'custom',
+    kind: 'app',
     icon: '📚',
     url: 'https://de.wikipedia.org',
     color: '#3b82f6',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 0, y: 0 },
+    dim: { w: 1, h: 1 }
   },
   {
     id: 'calculator-app',
     name: 'Calculator',
-    type: 'custom',
+    kind: 'app',
     icon: '🧮',
     url: 'https://www.calculator.net',
     color: '#10b981',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 1, y: 0 },
+    dim: { w: 1, h: 1 }
   },
   {
     id: 'notes-app',
     name: 'Notes',
-    type: 'custom',
+    kind: 'app',
     icon: '📝',
     url: 'https://keep.google.com',
     color: '#f59e0b',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 2, y: 0 },
+    dim: { w: 1, h: 1 }
   },
   {
     id: 'weather-app',
     name: 'Weather',
-    type: 'custom',
+    kind: 'app',
     icon: '🌤️',
     url: 'https://weather.com',
     color: '#8b5cf6',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 3, y: 0 },
+    dim: { w: 1, h: 1 }
   },
   {
     id: 'calendar-app',
     name: 'Calendar',
-    type: 'custom',
+    kind: 'app',
     icon: '📅',
     url: 'https://calendar.google.com',
     color: '#ef4444',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 4, y: 0 },
+    dim: { w: 1, h: 1 }
   },
   {
     id: 'github-app',
     name: 'GitHub',
-    type: 'custom',
+    kind: 'app',
     icon: '💻',
     url: 'https://github.com',
     color: '#6b7280',
-    status: 'Installiert'
+    status: 'Installiert',
+    pos: { x: 5, y: 0 },
+    dim: { w: 1, h: 1 }
   }
 ]);
 
@@ -64,7 +113,8 @@ export const widgets = writable([
   {
     id: 'welcome-widget',
     title: 'Willkommen bei LibreWorkspace',
-    type: 'markdown',
+    kind: 'widget',
+    widgetType: 'markdown',
     content: `# 👋 Willkommen!
 
 **LibreWorkspace** ist Ihr persönlicher Arbeitsbereich für maximale Produktivität.
@@ -80,15 +130,17 @@ export const widgets = writable([
 - [Community Forum](https://community.libreworkspace.com)
 
 > 💡 **Tipp**: Passen Sie Ihr Dashboard mit eigenen Widgets an!`,
-    position: { x: 20, y: 20 },
-    size: { width: 380, height: 320 },
+    pos: { x: 0, y: 1 },
+    dim: { w: 2, h: 2 },
     visible: true,
-    color: 'blue'
+    color: 'blue',
+    props: {}
   },
   {
     id: 'productivity-stats',
     title: 'Produktivitäts-Übersicht',
-    type: 'html',
+    kind: 'widget',
+    widgetType: 'html',
     content: `<div class="stats-container">
   <div class="stats-grid">
     <div class="stat-card primary">
@@ -214,15 +266,17 @@ export const widgets = writable([
   transition: width 0.3s ease;
 }
 </style>`,
-    position: { x: 420, y: 20 },
-    size: { width: 320, height: 280 },
+    pos: { x: 2, y: 1 },
+    dim: { w: 2, h: 2 },
     visible: true,
-    color: 'green'
+    color: 'green',
+    props: {}
   },
   {
     id: 'quick-notes',
     title: 'Schnelle Notizen',
-    type: 'markdown',
+    kind: 'widget',
+    widgetType: 'markdown',
     content: `## 📝 Heute erledigen
 
 ### Priorität Hoch
@@ -243,15 +297,17 @@ export const widgets = writable([
 ---
 
 **Letzte Aktualisierung:** ${new Date().toLocaleDateString('de-DE')}`,
-    position: { x: 20, y: 360 },
-    size: { width: 380, height: 300 },
+    pos: { x: 4, y: 1 },
+    dim: { w: 2, h: 3 },
     visible: true,
-    color: 'purple'
+    color: 'purple',
+    props: {}
   },
   {
     id: 'system-info',
     title: 'System Status',
-    type: 'html',
+    kind: 'widget',
+    widgetType: 'html',
     content: `<div class="system-info">
   <div class="status-grid">
     <div class="status-item online">
@@ -377,19 +433,43 @@ export const widgets = writable([
   background: var(--bg-hover);
 }
 </style>`,
-    position: { x: 760, y: 20 },
-    size: { width: 300, height: 260 },
+    pos: { x: 0, y: 3 },
+    dim: { w: 2, h: 2 },
     visible: true,
-    color: 'orange'
+    color: 'orange',
+    props: {}
   }
 ]);
 
+// Dashboard Items Store (kombiniert Apps und Widgets)
+export const dashboardItems = writable([]);
+
+// Initialisiere Dashboard Items
+apps.subscribe(appList => {
+  widgets.subscribe(widgetList => {
+    const allItems = [
+      ...appList.map(app => ({ ...app, kind: 'app' })),
+      ...widgetList.map(widget => ({ ...widget, kind: 'widget' }))
+    ];
+    dashboardItems.set(allItems);
+  });
+});
+
 export function addApp(app) {
-  apps.update(a => [...a, {
+  const newApp = {
     ...app,
     id: crypto.randomUUID(),
-    status: 'Installiert'
-  }]);
+    kind: 'app',
+    status: 'Installiert',
+    dim: { w: 1, h: 1 }
+  };
+  
+  // Finde freien Platz
+  dashboardItems.subscribe(items => {
+    newApp.pos = findFreeSpot(items, newApp.dim);
+  })();
+  
+  apps.update(a => [...a, newApp]);
 }
 
 export function deleteApp(id) {
@@ -397,21 +477,35 @@ export function deleteApp(id) {
 }
 
 export function addWidget(widget) {
-  widgets.update(w => [...w, {
+  const newWidget = {
     ...widget,
     id: crypto.randomUUID(),
-    position: widget.position || { x: 50, y: 50 },
-    size: widget.size || { width: 300, height: 200 },
+    kind: 'widget',
+    widgetType: widget.type || 'markdown',
+    dim: normalizeDim({ kind: 'widget', dim: widget.dim || { w: 2, h: 2 } }),
     visible: true,
-    color: widget.color || 'blue'
-  }]);
+    color: widget.color || 'blue',
+    props: widget.props || {}
+  };
+  
+  // Finde freien Platz
+  dashboardItems.subscribe(items => {
+    newWidget.pos = findFreeSpot(items, newWidget.dim);
+  })();
+  
+  widgets.update(w => [...w, newWidget]);
 }
 
 export function updateWidget(id, updates) {
+  const normalizedUpdates = {
+    ...updates,
+    dim: updates.dim ? normalizeDim({ kind: 'widget', dim: updates.dim }) : undefined
+  };
+  
   widgets.update(w => 
     w.map(widget => 
       widget.id === id 
-        ? { ...widget, ...updates }
+        ? { ...widget, ...normalizedUpdates }
         : widget
     )
   );
@@ -439,13 +533,34 @@ export function duplicateWidget(id) {
         ...widget,
         id: crypto.randomUUID(),
         title: `${widget.title} (Kopie)`,
-        position: { 
-          x: widget.position.x + 20, 
-          y: widget.position.y + 20 
-        }
+        pos: findFreeSpot(w, widget.dim)
       };
       return [...w, duplicate];
     }
     return w;
   });
 }
+
+export function moveItem(id, pos) {
+  apps.update(a => a.map(app => app.id === id ? { ...app, pos } : app));
+  widgets.update(w => w.map(widget => widget.id === id ? { ...widget, pos } : widget));
+}
+
+export function resizeItem(id, dim) {
+  // Nur Widgets können resized werden
+  widgets.update(w => 
+    w.map(widget => 
+      widget.id === id 
+        ? { ...widget, dim: normalizeDim({ kind: 'widget', dim }) }
+        : widget
+    )
+  );
+}
+
+// Context Menu Store
+export const contextMenu = writable({
+  open: false,
+  x: 0,
+  y: 0,
+  item: null
+});

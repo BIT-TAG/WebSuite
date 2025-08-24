@@ -1,12 +1,14 @@
 <script>
-  import { widgets, addWidget, apps, addApp } from '$lib/stores/widgets';
+  import { dashboardItems, addWidget, apps, addApp, contextMenu, moveItem, resizeItem } from '$lib/stores/widgets';
   import { windows, openWindow } from '$lib/stores/windows';
   import { switchToDesktop } from '$lib/stores/view';
-  import Widget from './Widget.svelte';
+  import DashboardTile from './DashboardTile.svelte';
+  import ContextMenu from './ContextMenu.svelte';
 
   let showAddModal = false;
   let addType = 'app'; // 'app' or 'widget'
   let showAddMenu = false;
+  let editingItem = null;
   
   // App form data
   let newAppName = '';
@@ -22,6 +24,8 @@
   let newWidgetType = 'markdown';
   let newWidgetContent = '';
   let newWidgetColor = 'blue';
+  let newWidgetWidth = 2;
+  let newWidgetHeight = 2;
 
   const colorOptions = [
     { name: 'Blau', value: 'blue', color: '#3b82f6' },
@@ -86,7 +90,7 @@
   function launchApp(app) {
     openWindow({
       title: app.name,
-      iframeSrc: app.type === 'libreworkspace' ? `${app.domain}/${app.addon}` : app.url
+      iframeSrc: app.url
     });
     switchToDesktop();
   }
@@ -119,7 +123,11 @@
         title: newWidgetTitle.trim(),
         type: newWidgetType,
         content: newWidgetContent.trim(),
-        color: newWidgetColor
+        color: newWidgetColor,
+        dim: {
+          w: newWidgetWidth,
+          h: newWidgetHeight
+        }
       });
       resetWidgetForm();
       showAddModal = false;
@@ -147,6 +155,8 @@
     newWidgetContent = '';
     newWidgetType = 'markdown';
     newWidgetColor = 'blue';
+    newWidgetWidth = 2;
+    newWidgetHeight = 2;
   }
 
   function closeModal() {
@@ -172,8 +182,7 @@
     }
   }
 
-  $: visibleWidgets = $widgets.filter(w => w.visible);
-  $: totalItems = visibleWidgets.length + $apps.length;
+  $: totalItems = $dashboardItems.length;
   
   const appIcons = ['🔧', '📱', '💻', '🌐', '📊', '📝', '📚', '🎵', '🎮', '📷', '🗂️', '⚙️'];
   const appColors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#6b7280'];
@@ -226,6 +235,32 @@
               </svg>
               Widget hinzufügen
             </button>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="widget-width">Breite (1-6)</label>
+                <input 
+                  id="widget-width"
+                  type="number" 
+                  bind:value={newWidgetWidth}
+                  min="1" 
+                  max="6"
+                  class="form-input"
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="widget-height">Höhe (1-6)</label>
+                <input 
+                  id="widget-height"
+                  type="number" 
+                  bind:value={newWidgetHeight}
+                  min="1" 
+                  max="6"
+                  class="form-input"
+                />
+              </div>
+            </div>
           </div>
         {/if}
       </div>
@@ -251,64 +286,9 @@
         </button>
       </div>
     {:else}
-      <div class="apps-grid">
-        <!-- Apps -->
-        {#each $apps as app}
-          <div class="app-card" on:click={() => launchApp(app)}>
-            <div class="app-icon" style="background: {app.color}">
-              <span class="icon-emoji">{app.icon}</span>
-            </div>
-            <div class="app-info">
-              <h3 class="app-name">{app.name}</h3>
-              <p class="app-status">{app.status}</p>
-            </div>
-            <div class="app-actions">
-              <button class="action-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="5,3 19,12 5,21"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        {/each}
-        
-        <!-- Widgets als Apps -->
-        {#each visibleWidgets as widget (widget.id)}
-          <div class="app-card widget-app">
-            <div class="widget-preview">
-              <div class="widget-header">
-                <div class="widget-color-indicator" style="background: {colorOptions.find(c => c.value === widget.color)?.color || '#3b82f6'}"></div>
-                <h3 class="widget-title">{widget.title}</h3>
-                <span class="widget-type-badge">{widget.type === 'markdown' ? 'MD' : 'HTML'}</span>
-              </div>
-              <div class="widget-content-preview">
-                {#if widget.type === 'html'}
-                  {@html widget.content}
-                {:else if widget.type === 'markdown'}
-                  <div class="markdown-preview">
-                    {@html renderMarkdown(widget.content)}
-                  </div>
-                {/if}
-              </div>
-            </div>
-            <div class="app-icon" style="background: {colorOptions.find(c => c.value === widget.color)?.color || '#3b82f6'}">
-              <span class="icon-emoji">
-                {#if widget.type === 'markdown'}📝{:else}🔧{/if}
-              </span>
-            </div>
-            <div class="app-info">
-              <h3 class="app-name">{widget.title}</h3>
-              <p class="app-status">Widget</p>
-            </div>
-            <div class="app-actions">
-              <button class="action-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                  <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+      <div class="dashboard-grid">
+        {#each $dashboardItems as item (item.id)}
+          <DashboardTile {item} />
         {/each}
       </div>
     {/if}
@@ -552,6 +532,8 @@
       </div>
     </div>
   {/if}
+  
+  <ContextMenu />
 </div>
 
 
@@ -756,10 +738,31 @@
     color: #8b5cf6;
   }
   
-  .apps-grid {
+  .dashboard-grid {
+    --cell: 96px;
+    --gap: 12px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(6, var(--cell));
+    grid-auto-rows: var(--cell);
+    gap: var(--gap);
+    padding: 1rem;
+    justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-grid {
+      --cell: 72px;
+      --gap: 8px;
+      grid-template-columns: repeat(4, var(--cell));
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .dashboard-grid {
+      --cell: 64px;
+      --gap: 6px;
+      grid-template-columns: repeat(3, var(--cell));
+    }
   }
   
   .app-card {
