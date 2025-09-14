@@ -198,7 +198,7 @@
       </div>
     {:else if currentView === 'tree'}
       <DashboardTree 
-        {onNodeClick}
+        onNodeClick={handleNodeClick}
         onNodeContextMenu={handleNodeContextMenu}
       />
     {:else if currentView === 'list'}
