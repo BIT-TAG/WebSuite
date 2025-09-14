@@ -81,7 +81,7 @@
   tabindex="0"
   role="button"
   aria-label={item.kind === 'app' ? `App: ${item.name}` : `Widget: ${item.title}`}
->
+> tets
   {#if item.kind === 'app'}
     <!-- App Content -->
     <div class="app-content">
