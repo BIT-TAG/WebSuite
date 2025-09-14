@@ -18,8 +18,8 @@
         "y": 0
       },
       "metadata": {
-        "createdAt": "2025-09-14T14:52:40.227Z",
-        "updatedAt": "2025-09-14T14:52:40.227Z",
+        "createdAt": "2025-09-14T14:52:51.702Z",
+        "updatedAt": "2025-09-14T14:52:51.702Z",
         "createdBy": "system",
         "tags": [],
         "isTemplate": false
@@ -54,8 +54,8 @@
         "y": 150
       },
       "metadata": {
-        "createdAt": "2025-09-14T14:52:40.227Z",
-        "updatedAt": "2025-09-14T14:52:40.227Z",
+        "createdAt": "2025-09-14T14:52:51.702Z",
+        "updatedAt": "2025-09-14T14:52:51.702Z",
         "createdBy": "system",
         "tags": [
           "personal"
@@ -92,8 +92,8 @@
         "y": 150
       },
       "metadata": {
-        "createdAt": "2025-09-14T14:52:40.227Z",
-        "updatedAt": "2025-09-14T14:52:40.227Z",
+        "createdAt": "2025-09-14T14:52:51.702Z",
+        "updatedAt": "2025-09-14T14:52:51.702Z",
         "createdBy": "system",
         "tags": [
           "projects"
@@ -130,8 +130,8 @@
         "y": 150
       },
       "metadata": {
-        "createdAt": "2025-09-14T14:52:40.227Z",
-        "updatedAt": "2025-09-14T14:52:40.227Z",
+        "createdAt": "2025-09-14T14:52:51.702Z",
+        "updatedAt": "2025-09-14T14:52:51.702Z",
         "createdBy": "system",
         "tags": [
           "teams"
@@ -156,5 +156,5 @@
     }
   },
   "rootId": "main",
-  "lastModified": "2025-09-14T14:52:40.227Z"
+  "lastModified": "2025-09-14T14:52:51.702Z"
 }
