@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "nodes": {
+    "main": {
+      "id": "main",
+      "name": "WebSuite IO",
+      "type": "main",
+      "description": "Hauptdashboard für alle Bereiche",
+      "icon": "🏠",
+      "color": "#3b82f6",
+      "children": [
+        "personal",
+        "projects",
+        "teams"
+      ],
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "metadata": {
+        "createdAt": "2025-09-14T14:51:24.769Z",
+        "updatedAt": "2025-09-14T14:51:24.769Z",
+        "createdBy": "system",
+        "tags": [],
+        "isTemplate": false
+      },
+      "config": {
+        "widgets": [],
+        "layout": "grid",
+        "permissions": {
+          "view": [
+            "*"
+          ],
+          "edit": [
+            "admin"
+          ],
+          "admin": [
+            "admin"
+          ]
+        }
+      }
+    },
+    "personal": {
+      "id": "personal",
+      "name": "Persönliches Dashboard",
+      "type": "personal",
+      "description": "Ihr persönlicher Arbeitsbereich",
+      "icon": "👤",
+      "color": "#10b981",
+      "parentId": "main",
+      "children": [],
+      "position": {
+        "x": -200,
+        "y": 150
+      },
+      "metadata": {
+        "createdAt": "2025-09-14T14:51:24.769Z",
+        "updatedAt": "2025-09-14T14:51:24.769Z",
+        "createdBy": "system",
+        "tags": [
+          "personal"
+        ],
+        "isTemplate": false
+      },
+      "config": {
+        "widgets": [],
+        "layout": "grid",
+        "permissions": {
+          "view": [
+            "user"
+          ],
+          "edit": [
+            "user"
+          ],
+          "admin": [
+            "user"
+          ]
+        }
+      }
+    },
+    "projects": {
+      "id": "projects",
+      "name": "Projekte",
+      "type": "project",
+      "description": "Alle Projekt-Dashboards",
+      "icon": "📁",
+      "color": "#8b5cf6",
+      "parentId": "main",
+      "children": [],
+      "position": {
+        "x": 0,
+        "y": 150
+      },
+      "metadata": {
+        "createdAt": "2025-09-14T14:51:24.769Z",
+        "updatedAt": "2025-09-14T14:51:24.769Z",
+        "createdBy": "system",
+        "tags": [
+          "projects"
+        ],
+        "isTemplate": false
+      },
+      "config": {
+        "widgets": [],
+        "layout": "grid",
+        "permissions": {
+          "view": [
+            "*"
+          ],
+          "edit": [
+            "project-manager"
+          ],
+          "admin": [
+            "admin"
+          ]
+        }
+      }
+    },
+    "teams": {
+      "id": "teams",
+      "name": "Teams",
+      "type": "team",
+      "description": "Alle Team-Dashboards",
+      "icon": "👥",
+      "color": "#f59e0b",
+      "parentId": "main",
+      "children": [],
+      "position": {
+        "x": 200,
+        "y": 150
+      },
+      "metadata": {
+        "createdAt": "2025-09-14T14:51:24.769Z",
+        "updatedAt": "2025-09-14T14:51:24.769Z",
+        "createdBy": "system",
+        "tags": [
+          "teams"
+        ],
+        "isTemplate": false
+      },
+      "config": {
+        "widgets": [],
+        "layout": "grid",
+        "permissions": {
+          "view": [
+            "*"
+          ],
+          "edit": [
+            "team-lead"
+          ],
+          "admin": [
+            "admin"
+          ]
+        }
+      }
+    }
+  },
+  "rootId": "main",
+  "lastModified": "2025-09-14T14:51:24.769Z"
+}
