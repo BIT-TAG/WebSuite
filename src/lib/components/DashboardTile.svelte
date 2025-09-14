@@ -111,7 +111,7 @@
     <div class="resize-handle bottom-right" title="Größe ändern"></div>
   {/if}
 </div>
-
+test
 <style>
   .tile {
     position: relative;
